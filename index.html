@@ -9,7 +9,8 @@
         body {
             margin: 0;
             padding: 0;
-            background: url('bg.jpg') no-repeat center center fixed;
+            /* Изменили на .png */
+            background: url('bg.png') no-repeat center center fixed;
             background-size: cover;
             font-family: 'Segoe UI', sans-serif;
             color: white;
@@ -18,10 +19,9 @@
             align-items: center;
         }
 
-        /* Контейнер для прокрутки */
         .content-scroll {
             width: 100%;
-            padding: 20px 0 100px 0; /* Отступ снизу под кнопку меню */
+            padding: 20px 0 100px 0;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -29,13 +29,13 @@
             overflow-y: auto;
         }
 
-        /* Общий стиль карточек (Кейсы, Банк, Игра) */
         .module-card {
             width: 90%;
             max-width: 350px;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.5); /* Чуть темнее, чтобы на png было лучше видно */
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 25px;
             padding: 20px;
             text-align: center;
@@ -57,14 +57,13 @@
         h2 { margin: 0; font-size: 22px; color: #f1c40f; }
         p { margin: 5px 0 0 0; opacity: 0.8; font-size: 14px; }
 
-        /* Кнопка меню внизу */
         .bottom-nav {
             position: fixed;
             bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
-            width: 60px;
-            height: 60px;
+            width: 65px;
+            height: 65px;
             background: linear-gradient(45deg, #f39c12, #f1c40f);
             border-radius: 50%;
             display: flex;
@@ -79,9 +78,8 @@
             font-size: 30px;
         }
 
-        /* Тень для текста, чтобы читалось на любом фото */
         .shadow-text {
-            text-shadow: 1px 1px 10px rgba(0,0,0,0.8);
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.9);
         }
     </style>
 </head>
@@ -90,29 +88,25 @@
     <div class="content-scroll">
         <h1 class="shadow-text">Honey Project</h1>
 
-        <!-- БЛОК: КЕЙСЫ -->
         <div class="module-card" onclick="openCases()">
-            <img src="cases.jpg" alt="Кейсы">
+            <img src="cases.png" alt="Кейсы">
             <h2>Кейсы</h2>
             <p>Испытай удачу и выбей редкий мёд</p>
         </div>
 
-        <!-- БЛОК: БАНК МЕДА -->
         <div class="module-card" onclick="openBank()">
-            <img src="bank.jpg" alt="Банк">
+            <img src="bank.png" alt="Банк">
             <h2>Банки меда</h2>
             <p>Храни и приумножай свои запасы</p>
         </div>
 
-        <!-- БЛОК: ИГРА -->
         <div class="module-card" onclick="openGame()">
-            <img src="game.jpg" alt="Игра">
+            <img src="game.png" alt="Игра">
             <h2>Мини-игра</h2>
             <p>Зарабатывай мёд в реальном времени</p>
         </div>
     </div>
 
-    <!-- КНОПКА МЕНЮ СНИЗУ -->
     <div class="bottom-nav" onclick="toggleMenu()">
         <span>☰</span>
     </div>
@@ -123,21 +117,26 @@
 
         function toggleMenu() {
             tg.showPopup({
-                title: 'Меню',
-                message: 'Выберите раздел',
+                title: 'Меню проекта',
+                message: 'Выберите нужный раздел',
                 buttons: [
-                    {id: 'stats', type: 'default', text: 'Статистика'},
-                    {id: 'friends', type: 'default', text: 'Друзья'},
+                    {id: 'stats', type: 'default', text: '📈 Моя статистика'},
+                    {id: 'friends', type: 'default', text: '👥 Друзья'},
                     {id: 'close', type: 'destructive', text: 'Закрыть'}
                 ]
             });
-            if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+            if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
         }
 
-        // Функции-заглушки для кликов
-        function openCases() { console.log("Кейсы открыты"); }
-        function openBank() { console.log("Банк открыт"); }
-        function openGame() { console.log("Игра открыта"); }
+        function openCases() { 
+            tg.showAlert("Раздел 'Кейсы' скоро будет доступен!");
+        }
+        function openBank() { 
+            tg.showAlert("Банк мёда находится на техобслуживании");
+        }
+        function openGame() { 
+            tg.showAlert("Игра запустится после подключения базы данных");
+        }
     </script>
 </body>
 </html>
