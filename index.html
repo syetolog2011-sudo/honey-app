@@ -3,63 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Honey App</title>
+    <title>Honey Project</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         body {
             margin: 0;
             padding: 0;
-            /* Изменили на .png */
+            /* Твой фон */
             background: url('bg.png') no-repeat center center fixed;
             background-size: cover;
-            font-family: 'Segoe UI', sans-serif;
-            color: white;
+            font-family: sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
+            min-height: 100vh;
         }
 
         .content-scroll {
             width: 100%;
-            padding: 20px 0 100px 0;
+            /* Отступы, чтобы карточки не прилипали */
+            padding: 40px 0 120px 0; 
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 20px;
+            gap: 25px; /* Расстояние между карточками */
             overflow-y: auto;
         }
 
-        .module-card {
+        /* СТИЛЬ КАРТОЧКИ (ТЕПЕРЬ ЭТО ТОЛЬКО КАРТИНКА) */
+        .image-card {
             width: 90%;
             max-width: 350px;
-            background: rgba(0, 0, 0, 0.5); /* Чуть темнее, чтобы на png было лучше видно */
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            /* Убрали фон и обводку, оставили только тень и скругление */
             border-radius: 25px;
-            padding: 20px;
-            text-align: center;
-            transition: transform 0.2s;
+            overflow: hidden; /* Чтобы картинка не вылезала за углы */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transition: transform 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+            /* Убираем синее выделение при клике на мобильных */
+            -webkit-tap-highlight-color: transparent; 
         }
 
-        .module-card:active {
-            transform: scale(0.97);
+        /* Эффект при нажатии */
+        .image-card:active {
+            transform: scale(0.96);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.7);
         }
 
-        .module-card img {
+        /* Сама картинка внутри карточки */
+        .image-card img {
             width: 100%;
-            height: 150px;
-            object-fit: cover;
-            border-radius: 15px;
-            margin-bottom: 15px;
+            height: auto;
+            display: block; /* Убирает отступ снизу у img */
+            object-fit: cover; /* Заполняет всю площадь */
         }
 
-        h2 { margin: 0; font-size: 22px; color: #f1c40f; }
-        p { margin: 5px 0 0 0; opacity: 0.8; font-size: 14px; }
-
+        /* КНОПКА МЕНЮ СНИЗУ */
         .bottom-nav {
             position: fixed;
-            bottom: 20px;
+            bottom: 25px;
             left: 50%;
             transform: translateX(-50%);
             width: 65px;
@@ -69,73 +71,61 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            box-shadow: 0 5px 25px rgba(0,0,0,0.6);
             cursor: pointer;
             z-index: 100;
-        }
-
-        .bottom-nav span {
+            border: none;
+            color: white;
             font-size: 30px;
-        }
-
-        .shadow-text {
-            text-shadow: 2px 2px 10px rgba(0,0,0,0.9);
         }
     </style>
 </head>
 <body>
 
     <div class="content-scroll">
-        <h1 class="shadow-text">Honey Project</h1>
-
-        <div class="module-card" onclick="openCases()">
+        <div class="image-card" onclick="openCases()">
             <img src="cases.png" alt="Кейсы">
-            <h2>Кейсы</h2>
-            <p>Испытай удачу и выбей редкий мёд</p>
         </div>
 
-        <div class="module-card" onclick="openBank()">
+        <div class="image-card" onclick="openBank()">
             <img src="bank.png" alt="Банк">
-            <h2>Банки меда</h2>
-            <p>Храни и приумножай свои запасы</p>
         </div>
 
-        <div class="module-card" onclick="openGame()">
+        <div class="image-card" onclick="openGame()">
             <img src="game.png" alt="Игра">
-            <h2>Мини-игра</h2>
-            <p>Зарабатывай мёд в реальном времени</p>
         </div>
     </div>
 
-    <div class="bottom-nav" onclick="toggleMenu()">
-        <span>☰</span>
-    </div>
+    <button class="bottom-nav" onclick="toggleMenu()">☰</button>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.expand();
 
         function toggleMenu() {
+            if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
             tg.showPopup({
-                title: 'Меню проекта',
-                message: 'Выберите нужный раздел',
+                title: 'Меню',
+                message: 'Куда отправимся?',
                 buttons: [
-                    {id: 'stats', type: 'default', text: '📈 Моя статистика'},
+                    {id: 'stats', type: 'default', text: '📊 Статистика'},
                     {id: 'friends', type: 'default', text: '👥 Друзья'},
                     {id: 'close', type: 'destructive', text: 'Закрыть'}
                 ]
             });
-            if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
         }
 
         function openCases() { 
-            tg.showAlert("Раздел 'Кейсы' скоро будет доступен!");
+            if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+            tg.showAlert("Открываем кейсы..."); 
         }
         function openBank() { 
-            tg.showAlert("Банк мёда находится на техобслуживании");
+            if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+            tg.showAlert("Заходим в банк..."); 
         }
         function openGame() { 
-            tg.showAlert("Игра запустится после подключения базы данных");
+            if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+            tg.showAlert("Запускаем игру..."); 
         }
     </script>
 </body>
