@@ -5,23 +5,23 @@ export default function App() {
   const [, setActiveTab] = useState('banks');
 
   return (
-    <div className="min-h-screen bg-white text-slate-900 font-sans flex flex-col items-center pt-4 px-4 select-none">
+    <div className="min-h-screen bg-white text-slate-900 font-sans flex flex-col items-center pt-2 px-4 select-none">
       
-      <div className="flex flex-col items-center mb-3">
-        <span className="text-2xl font-black tracking-tight">{balance.toLocaleString('ru-RU')}</span>
-        <img src="/honey.png" alt="" className="w-10 h-10 object-contain mt-1" />
+      <div className="flex flex-col items-center mb-2">
+        <span className="text-xl font-black tracking-tight">{balance.toLocaleString('ru-RU')}</span>
+        <img src="/honey.png" alt="" className="w-8 h-8 object-contain mt-0.5" />
       </div>
 
-      <div className="w-full max-w-[280px] flex flex-col space-y-1">
-        <button onClick={() => setActiveTab('banks')} className="w-full active:scale-98 transition-transform focus:outline-none">
+      <div className="w-full max-w-[180px] flex flex-col space-y-1">
+        <button onClick={() => setActiveTab('banks')} className="w-full active:scale-95 transition-transform focus:outline-none">
           <img src="/banka.png" alt="" className="w-full h-auto block" />
         </button>
 
-        <button onClick={() => setActiveTab('cases')} className="w-full active:scale-98 transition-transform focus:outline-none">
+        <button onClick={() => setActiveTab('cases')} className="w-full active:scale-95 transition-transform focus:outline-none">
           <img src="/case.png" alt="" className="w-full h-auto block" />
         </button>
 
-        <button onClick={() => setActiveTab('games')} className="w-full active:scale-98 transition-transform focus:outline-none">
+        <button onClick={() => setActiveTab('games')} className="w-full active:scale-95 transition-transform focus:outline-none">
           <img src="/igra.png" alt="" className="w-full h-auto block" />
         </button>
       </div>
