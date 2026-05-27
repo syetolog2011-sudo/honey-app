@@ -23,36 +23,45 @@
         .keys-container {
             display: flex;
             justify-content: center;
-            gap: 10px;
-            margin-top: 20px;
-            margin-bottom: 20px;
+            gap: 12px;
+            margin-top: 25px;
+            margin-bottom: 25px;
         }
+        
         .key-slot {
-            width: 50px;
-            height: 50px;
+            position: relative;
+            width: 60px;
+            height: 60px;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 12px;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
-        /* Баланс (мёд сдвинут вправо) */
+        /* Текст с количеством ключей (внизу) */
+        .key-count {
+            position: absolute;
+            bottom: 4px;
+            left: 6px;
+            font-size: 12px;
+            font-weight: bold;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 1px 4px;
+            border-radius: 4px;
+        }
+
+        /* Баланс */
         .balance-container {
             display: flex;
             align-items: center;
-            gap: 15px; /* Увеличил отступ для сдвига */
+            gap: 15px;
             margin-bottom: 40px;
         }
-        .balance-number {
-            font-size: 28px;
-            font-weight: 900;
-        }
-        .honey-icon {
-            width: 32px;
-            height: 32px;
-        }
+        .balance-number { font-size: 28px; font-weight: 900; }
+        .honey-icon { width: 32px; height: 32px; }
 
         /* Список кнопок */
         .buttons-list {
@@ -63,13 +72,8 @@
             width: 100%;
         }
         .menu-btn {
-            background: none;
-            border: none;
-            padding: 0;
-            cursor: pointer;
-            width: 92%;
-            max-width: 360px;
-            transition: transform 0.1s ease;
+            background: none; border: none; padding: 0; cursor: pointer;
+            width: 92%; max-width: 360px; transition: transform 0.1s ease;
         }
         .menu-btn:active { transform: scale(0.95); }
         .menu-btn img { width: 100%; height: auto; display: block; filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.4)); }
@@ -78,10 +82,22 @@
 <body>
 
     <div class="keys-container">
-        <div class="key-slot"><img src="key1.png" width="30"></div>
-        <div class="key-slot"><img src="key2.png" width="30"></div>
-        <div class="key-slot"><img src="key3.png" width="30"></div>
-        <div class="key-slot"><img src="key4.png" width="30"></div>
+        <div class="key-slot">
+            <img src="key1.png" width="30">
+            <div class="key-count">0</div>
+        </div>
+        <div class="key-slot">
+            <img src="key2.png" width="30">
+            <div class="key-count">0</div>
+        </div>
+        <div class="key-slot">
+            <img src="key3.png" width="30">
+            <div class="key-count">0</div>
+        </div>
+        <div class="key-slot">
+            <img src="key4.png" width="30">
+            <div class="key-count">0</div>
+        </div>
     </div>
 
     <div class="balance-container">
