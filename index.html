@@ -19,13 +19,13 @@
             -webkit-user-select: none;
         }
 
-        /* Блок баланса: теперь всё в одну строку по центру */
+        /* Блок баланса по центру */
         .balance-container {
             display: flex;
-            flex-direction: row; /* Выстраиваем в линию */
+            flex-direction: row;
             align-items: center;
             justify-content: center;
-            gap: 8px; /* Расстояние между цифрами и мёдом */
+            gap: 8px;
             margin-top: 30px;
             margin-bottom: 25px;
         }
@@ -52,15 +52,15 @@
             width: 100%;
         }
 
-        /* Кнопки стали чуть побольше */
+        /* КНОПКИ СТАЛИ ЕЩЁ БОЛЬШЕ (85% ширины экрана) */
         .menu-btn {
             background: none;
             border: none;
             padding: 0;
             cursor: pointer;
             outline: none;
-            width: 65%; /* Увеличил ширину под телефон до 65% */
-            max-width: 240px; /* Ограничение для больших экранов */
+            width: 85%; /* Увеличил до 85% */
+            max-width: 320px; /* Ограничение для экранов побольше */
             transition: transform 0.1s ease;
         }
 
