@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Mini App</title>
     <style>
-        /* Обнуляем стили, делаем чистый белый фон */
+        /* Чистый белый фон */
         body {
             margin: 0;
             padding: 0;
@@ -19,58 +19,59 @@
             -webkit-user-select: none;
         }
 
-        /* Блок баланса сверху */
+        /* Блок баланса: теперь всё в одну строку по центру */
         .balance-container {
             display: flex;
-            flex-direction: column;
+            flex-direction: row; /* Выстраиваем в линию */
             align-items: center;
-            margin-top: 25px;
-            margin-bottom: 20px;
+            justify-content: center;
+            gap: 8px; /* Расстояние между цифрами и мёдом */
+            margin-top: 30px;
+            margin-bottom: 25px;
         }
 
         .balance-number {
-            font-size: 24px;
+            font-size: 26px;
             font-weight: 900;
             letter-spacing: -0.05em;
-            margin-bottom: 4px;
+            line-height: 1;
         }
 
         .honey-icon {
-            width: 22px;
-            height: 22px;
+            width: 26px;
+            height: 26px;
             object-fit: contain;
         }
 
-        /* Контейнер для кнопок-картинок */
+        /* Список кнопок */
         .buttons-list {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 12px; /* Расстояние между кнопками */
+            gap: 14px; /* Отступы между кнопками */
             width: 100%;
         }
 
-        /* Сами кнопки — теперь они будут аккуратными на телефоне */
+        /* Кнопки стали чуть побольше */
         .menu-btn {
             background: none;
             border: none;
             padding: 0;
             cursor: pointer;
             outline: none;
-            width: 45%; /* Зажимаем кнопку до 45% от ширины экрана телефона */
-            max-width: 180px; /* Чтобы на компе не растягивалось слишком сильно */
+            width: 65%; /* Увеличил ширину под телефон до 65% */
+            max-width: 240px; /* Ограничение для больших экранов */
             transition: transform 0.1s ease;
         }
 
         .menu-btn:active {
-            transform: scale(0.96); /* Эффект нажатия */
+            transform: scale(0.96);
         }
 
         .menu-btn img {
             width: 100%;
             height: auto;
             display: block;
-            border-radius: 15px; /* Скругление, если картинка без него */
         }
     </style>
 </head>
