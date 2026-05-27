@@ -1,87 +1,76 @@
 import React, { useState } from 'react';
 
 export default function App() {
-  // Баланс мёда (только число)
+  // Баланс мёда (сделан меньше)
   const [balance, setBalance] = useState(12500);
   
-  // Активная вкладка
+  // Состояние активной кнопки
   const [activeTab, setActiveTab] = useState('banks');
 
   return (
-    // Чистый белый фон для всего приложения
-    <div className="min-h-screen bg-white text-slate-900 font-sans flex flex-col items-center p-4 pb-12">
+    // Компактный контейнер под размер экрана Telegram Mini App
+    <div className="min-h-screen bg-white text-slate-900 font-sans flex flex-col items-center p-3 max-w-md mx-auto select-none">
       
-      {/* 1. БЛОК БАЛАНСА (Сверху по центру) */}
-      <div className="flex flex-col items-center justify-center pt-6 mb-8 space-y-2 text-center">
-        {/* Число баланса */}
-        <span className="text-5xl font-black tracking-tight text-slate-900">
+      {/* 1. БАЛАНС (Компактный, сверху по центру) */}
+      <div className="flex flex-col items-center justify-center pt-2 mb-3 space-y-1">
+        {/* Число баланса стало меньше (text-3xl вместо text-6xl) */}
+        <span className="text-3xl font-black tracking-tight text-slate-900">
           {balance.toLocaleString('ru-RU')}
         </span>
 
-        {/* Твоя банка мёда рядом/под балансом */}
+        {/* Твоя банка мёда (тоже уменьшена) */}
         <img 
           src="/honey.png" 
-          alt="honey" 
-          className="w-20 h-20 object-contain"
-          onError={(e) => {
-            // Если картинки нет, она просто не будет ломать верстку
-            e.target.style.opacity = '0.3';
-          }}
+          alt="" 
+          className="w-14 h-14 object-contain"
         />
       </div>
 
-      {/* 2. НАВИГАЦИЯ: Вертикальный ряд чистых кнопок-картинок */}
-      <div className="w-full max-w-sm flex flex-col items-center space-y-4">
+      {/* 2. КНОПКИ (Строго друг под другом, без текста) */}
+      <div className="w-full flex flex-col space-y-2">
         
-        {/* Кнопка 1: Банки */}
+        {/* Кнопка: Банки */}
         <button 
           onClick={() => setActiveTab('banks')}
-          className={`w-full block transition-transform active:scale-98 focus:outline-none ${
-            activeTab === 'banks' ? 'opacity-100 drop-shadow-md' : 'opacity-80'
+          className={`w-full block transition-all active:scale-98 focus:outline-none ${
+            activeTab === 'banks' ? 'opacity-100' : 'opacity-65'
           }`}
         >
           <img 
             src="/banka.png" 
-            alt="Банки" 
-            className="w-full h-auto block mx-auto"
+            alt="" 
+            className="w-full h-auto block"
           />
         </button>
 
-        {/* Кнопка 2: Кейсы */}
+        {/* Кнопка: Кейсы */}
         <button 
           onClick={() => setActiveTab('cases')}
-          className={`w-full block transition-transform active:scale-98 focus:outline-none ${
-            activeTab === 'cases' ? 'opacity-100 drop-shadow-md' : 'opacity-80'
+          className={`w-full block transition-all active:scale-98 focus:outline-none ${
+            activeTab === 'cases' ? 'opacity-100' : 'opacity-65'
           }`}
         >
           <img 
             src="/case.png" 
-            alt="Кейсы" 
-            className="w-full h-auto block mx-auto"
+            alt="" 
+            className="w-full h-auto block"
           />
         </button>
 
-        {/* Кнопка 3: Игры */}
+        {/* Кнопка: Игры */}
         <button 
           onClick={() => setActiveTab('games')}
-          className={`w-full block transition-transform active:scale-98 focus:outline-none ${
-            activeTab === 'games' ? 'opacity-100 drop-shadow-md' : 'opacity-80'
+          className={`w-full block transition-all active:scale-98 focus:outline-none ${
+            activeTab === 'games' ? 'opacity-100' : 'opacity-65'
           }`}
         >
           <img 
             src="/igra.png" 
-            alt="Игра" 
-            className="w-full h-auto block mx-auto"
+            alt="" 
+            className="w-full h-auto block"
           />
         </button>
 
-      </div>
-
-      {/* 3. КОНТЕНТНАЯ ЧАСТЬ (Отображает логику разделов под кнопками, если нужно) */}
-      <div className="w-full max-w-sm mt-8 p-4 text-center text-xs text-slate-400 border-t border-slate-100">
-        {activeTab === 'banks' && <div>[Контент подраздела Банки]</div>}
-        {activeTab === 'cases' && <div>[Контент подраздела Кейсы]</div>}
-        {activeTab === 'games' && <div>[Контент подраздела Игры]</div>}
       </div>
 
     </div>
