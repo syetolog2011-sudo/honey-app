@@ -5,47 +5,53 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Mini App</title>
     <style>
-        /* Плавный переливающийся серо-серочерный фон */
         body {
             margin: 0;
             padding: 0;
-            /* В центре #334155 (стильный серый), по бокам переходит в #0f172a (серо-чёрный) */
             background: radial-gradient(circle, #334155 0%, #0f172a 100%);
             background-attachment: fixed;
-            color: #ffffff; /* Текст теперь белый, чтобы круто смотрелся на тёмном */
+            color: #ffffff;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
             user-select: none;
-            -webkit-user-select: none;
             min-height: 100vh;
         }
 
-        /* Блок баланса по центру */
-        .balance-container {
+        /* Верхняя панель с ключами */
+        .keys-container {
             display: flex;
-            flex-direction: row;
-            align-items: center;
             justify-content: center;
             gap: 10px;
-            margin-top: 40px;
-            margin-bottom: 45px; /* Хороший отступ от баланса до первой кнопки */
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        .key-slot {
+            width: 50px;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
+        /* Баланс (мёд сдвинут вправо) */
+        .balance-container {
+            display: flex;
+            align-items: center;
+            gap: 15px; /* Увеличил отступ для сдвига */
+            margin-bottom: 40px;
+        }
         .balance-number {
-            font-size: 30px; /* Слегка увеличил шрифт баланса под крупные кнопки */
+            font-size: 28px;
             font-weight: 900;
-            letter-spacing: -0.05em;
-            line-height: 1;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Легкая тень для объема */
         }
-
         .honey-icon {
-            width: 30px;
-            height: 30px;
-            object-fit: contain;
-            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+            width: 32px;
+            height: 32px;
         }
 
         /* Список кнопок */
@@ -53,35 +59,30 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 36px; /* ЕЩЁ СИЛЬНЕЕ ОТДАЛИЛ КНОПКИ ДРУГ ОТ ДРУГА */
+            gap: 36px;
             width: 100%;
         }
-
-        /* КНОПКИ СТАЛИ ЕЩЁ БОЛЬШЕ (92% ширины экрана телефона) */
         .menu-btn {
             background: none;
             border: none;
             padding: 0;
             cursor: pointer;
-            outline: none;
-            width: 92%; /* Почти на всю ширину, выглядят массивно и сочно */
+            width: 92%;
             max-width: 360px;
             transition: transform 0.1s ease;
         }
-
-        .menu-btn:active {
-            transform: scale(0.95); /* Прикольный отклик при нажатии */
-        }
-
-        .menu-btn img {
-            width: 100%;
-            height: auto;
-            display: block;
-            filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.4)); /* Тень кнопкам под тёмный фон */
-        }
+        .menu-btn:active { transform: scale(0.95); }
+        .menu-btn img { width: 100%; height: auto; display: block; filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.4)); }
     </style>
 </head>
 <body>
+
+    <div class="keys-container">
+        <div class="key-slot"><img src="key1.png" width="30"></div>
+        <div class="key-slot"><img src="key2.png" width="30"></div>
+        <div class="key-slot"><img src="key3.png" width="30"></div>
+        <div class="key-slot"><img src="key4.png" width="30"></div>
+    </div>
 
     <div class="balance-container">
         <div class="balance-number">12 500</div>
@@ -89,19 +90,9 @@
     </div>
 
     <div class="buttons-list">
-        
-        <button class="menu-btn" onclick="console.log('Кейсы')">
-            <img src="case.png" alt="Кейсы">
-        </button>
-
-        <button class="menu-btn" onclick="console.log('Банки')">
-            <img src="banka.png" alt="Банки">
-        </button>
-
-        <button class="menu-btn" onclick="console.log('Игры')">
-            <img src="igra.png" alt="Игры">
-        </button>
-
+        <button class="menu-btn"><img src="case.png" alt="Кейсы"></button>
+        <button class="menu-btn"><img src="banka.png" alt="Банки"></button>
+        <button class="menu-btn"><img src="igra.png" alt="Игры"></button>
     </div>
 
 </body>
