@@ -5,14 +5,16 @@ export default function App() {
   const [, setActiveTab] = useState('banks');
 
   return (
-    <div className="min-h-screen bg-white text-slate-900 font-sans flex flex-col items-center pt-2 px-4 select-none">
+    <div className="min-h-screen bg-white text-slate-900 font-sans flex flex-col items-center pt-4 select-none">
       
-      <div className="flex flex-col items-center mb-2">
-        <span className="text-xl font-black tracking-tight">{balance.toLocaleString('ru-RU')}</span>
-        <img src="/honey.png" alt="" className="w-8 h-8 object-contain mt-0.5" />
+      {/* Микро-баланс */}
+      <div className="flex flex-col items-center mb-4">
+        <span className="text-lg font-black tracking-tight">{balance.toLocaleString('ru-RU')}</span>
+        <img src="/honey.png" alt="" className="w-6 h-6 object-contain mt-0.5" />
       </div>
 
-      <div className="w-full max-w-[180px] flex flex-col space-y-1">
+      {/* Ультра-компактные кнопки (зажаты до 130px, точно влезут на любой экран ТГ) */}
+      <div className="flex flex-col space-y-2 w-[130px]">
         <button onClick={() => setActiveTab('banks')} className="w-full active:scale-95 transition-transform focus:outline-none">
           <img src="/banka.png" alt="" className="w-full h-auto block" />
         </button>
