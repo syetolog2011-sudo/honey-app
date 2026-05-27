@@ -8,111 +8,82 @@ export default function App() {
   const [activeTab, setActiveTab] = useState('banks');
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white font-sans flex flex-col justify-between p-4 pb-8 space-y-6">
+    // Чистый белый фон для всего приложения
+    <div className="min-h-screen bg-white text-slate-900 font-sans flex flex-col items-center p-4 pb-12">
       
-      {/* 1. БЛОК БАЛАНСА (По центру сверху) */}
-      <div className="flex flex-col items-center justify-center pt-8 text-center space-y-4">
+      {/* 1. БЛОК БАЛАНСА (Сверху по центру) */}
+      <div className="flex flex-col items-center justify-center pt-6 mb-8 space-y-2 text-center">
         {/* Число баланса */}
-        <span className="text-6xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-white to-slate-300 drop-shadow-[0_4px_12px_rgba(255,255,255,0.1)]">
+        <span className="text-5xl font-black tracking-tight text-slate-900">
           {balance.toLocaleString('ru-RU')}
         </span>
 
-        {/* МЕСТО ДЛЯ ВАШЕЙ БАНКИ МЁДА */}
-        <div className="w-28 h-28 flex items-center justify-center">
-          <img 
-            src="/honey.png" 
-            alt="Баланс" 
-            className="w-full h-full object-contain"
-            onError={(e) => {
-              // Если картинки пока нет, показываем аккуратную рамку-заглушку
-              e.target.style.display = 'none';
-              e.target.parentNode.className = "w-24 h-24 bg-slate-900/40 rounded-3xl border border-dashed border-slate-800 flex items-center justify-center text-xs text-slate-600";
-              e.target.parentNode.innerText = "honey.png";
-            }}
-          />
-        </div>
+        {/* Твоя банка мёда рядом/под балансом */}
+        <img 
+          src="/honey.png" 
+          alt="honey" 
+          className="w-20 h-20 object-contain"
+          onError={(e) => {
+            // Если картинки нет, она просто не будет ломать верстку
+            e.target.style.opacity = '0.3';
+          }}
+        />
       </div>
 
-      {/* 2. КОНТЕНТНАЯ ЧАСТЬ (Отображение выбранного раздела) */}
-      <div className="flex-1 bg-slate-900/20 border border-slate-900/40 rounded-3xl p-6 flex flex-col items-center justify-center min-h-[160px] backdrop-blur-sm">
-        {activeTab === 'banks' && (
-          <div className="text-center animate-fadeIn">
-            <p className="text-slate-500 text-sm">Контент раздела «Банки»</p>
-          </div>
-        )}
-        {activeTab === 'cases' && (
-          <div className="text-center animate-fadeIn">
-            <p className="text-slate-500 text-sm">Контент раздела «Кейсы»</p>
-          </div>
-        )}
-        {activeTab === 'games' && (
-          <div className="text-center animate-fadeIn">
-            <p className="text-slate-500 text-sm">Контент раздела «Игры»</p>
-          </div>
-        )}
-      </div>
-
-      {/* 3. НАВИГАЦИЯ: Вертикальный ряд кнопок-картинок */}
-      <div className="flex flex-col gap-3">
+      {/* 2. НАВИГАЦИЯ: Вертикальный ряд чистых кнопок-картинок */}
+      <div className="w-full max-w-sm flex flex-col items-center space-y-4">
         
-        <MenuButton 
-          imageSrc="/banka.png"
-          fallbackText="banka.png"
-          isActive={activeTab === 'banks'}
+        {/* Кнопка 1: Банки */}
+        <button 
           onClick={() => setActiveTab('banks')}
-        />
+          className={`w-full block transition-transform active:scale-98 focus:outline-none ${
+            activeTab === 'banks' ? 'opacity-100 drop-shadow-md' : 'opacity-80'
+          }`}
+        >
+          <img 
+            src="/banka.png" 
+            alt="Банки" 
+            className="w-full h-auto block mx-auto"
+          />
+        </button>
 
-        <MenuButton 
-          imageSrc="/case.png"
-          fallbackText="case.png"
-          isActive={activeTab === 'cases'}
+        {/* Кнопка 2: Кейсы */}
+        <button 
           onClick={() => setActiveTab('cases')}
-        />
+          className={`w-full block transition-transform active:scale-98 focus:outline-none ${
+            activeTab === 'cases' ? 'opacity-100 drop-shadow-md' : 'opacity-80'
+          }`}
+        >
+          <img 
+            src="/case.png" 
+            alt="Кейсы" 
+            className="w-full h-auto block mx-auto"
+          />
+        </button>
 
-        <MenuButton 
-          imageSrc="/igra.png"
-          fallbackText="igra.png"
-          isActive={activeTab === 'games'}
+        {/* Кнопка 3: Игры */}
+        <button 
           onClick={() => setActiveTab('games')}
-        />
+          className={`w-full block transition-transform active:scale-98 focus:outline-none ${
+            activeTab === 'games' ? 'opacity-100 drop-shadow-md' : 'opacity-80'
+          }`}
+        >
+          <img 
+            src="/igra.png" 
+            alt="Игра" 
+            className="w-full h-auto block mx-auto"
+          />
+        </button>
 
+      </div>
+
+      {/* 3. КОНТЕНТНАЯ ЧАСТЬ (Отображает логику разделов под кнопками, если нужно) */}
+      <div className="w-full max-w-sm mt-8 p-4 text-center text-xs text-slate-400 border-t border-slate-100">
+        {activeTab === 'banks' && <div>[Контент подраздела Банки]</div>}
+        {activeTab === 'cases' && <div>[Контент подраздела Кейсы]</div>}
+        {activeTab === 'games' && <div>[Контент подраздела Игры]</div>}
       </div>
 
     </div>
-  );
-}
-
-// Компонент чистой кнопки-картинки без лишнего текста
-function MenuButton({ imageSrc, fallbackText, isActive, onClick }) {
-  const [imgError, setImgError] = React.useState(false);
-
-  return (
-    <button 
-      onClick={onClick}
-      className={`w-full overflow-hidden rounded-2xl transition-all duration-300 relative ${
-        isActive 
-          ? 'ring-2 ring-blue-500 scale-[1.01] shadow-[0_0_20px_rgba(59,130,246,0.45)]' 
-          : 'opacity-70 hover:opacity-100'
-      }`}
-    >
-      {imgError ? (
-        // Заглушка, если файл еще не добавлен в папку public
-        <div className="w-full h-16 bg-slate-900 border border-slate-800 flex items-center justify-center text-sm font-semibold text-slate-500 tracking-wider">
-          {fallbackText}
-        </div>
-      ) : (
-        <img 
-          src={imageSrc} 
-          alt={fallbackText} 
-          onError={() => setImgError(true)}
-          className="w-full h-auto object-cover block"
-        />
-      )}
-      
-      {/* Легкое затемнение для неактивных кнопок */}
-      {!isActive && (
-        <div className="absolute inset-0 bg-slate-950/10 pointer-events-none" />
-      )}
-    </button>
   );
 }
