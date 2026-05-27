@@ -5,41 +5,80 @@ export default function App() {
   const [, setActiveTab] = useState('banks');
 
   return (
-    <div style={{ 
-      backgroundColor: '#ffffff', 
-      color: '#0f172a', 
-      minHeight: '100vh', 
-      display: 'flex', 
-      flexDirection: 'column', 
-      alignItems: 'center', 
-      paddingTop: '20px',
-      fontFamily: 'sans-serif',
-      userSelect: 'none',
-      width: '100%'
-    }}>
+    <div className="tma-container">
+      
+      {/* ЭТОТ БЛОК СТИЛЕЙ ПРИНУДИТЕЛЬНО УБЬЕТ ЛЮБЫЕ ДРУГИЕ РАЗМЕРЫ В ТВОЕМ ПРОЕКТЕ */}
+      <style>{`
+        .tma-container {
+          background-color: #ffffff !important;
+          color: #0f172a !important;
+          min-height: 100vh !important;
+          display: flex !important;
+          flex-direction: column !important;
+          align-items: center !important;
+          padding-top: 20px !important;
+          font-family: sans-serif !important;
+          user-select: none !important;
+          width: 100% !important;
+          box-sizing: border-box !important;
+        }
+        .tma-balance {
+          display: flex !important;
+          flex-direction: column !important;
+          align-items: center !important;
+          margin-bottom: 15px !important;
+        }
+        .tma-balance-num {
+          font-size: 16px !important;
+          font-weight: 900 !important;
+        }
+        .tma-honey-img {
+          width: 18px !important;
+          height: 18px !important;
+          object-fit: contain !important;
+          margin-top: 2px !important;
+        }
+        .tma-buttons-box {
+          display: flex !important;
+          flex-direction: column !important;
+          gap: 6px !important;
+          align-items: center !important;
+          width: 100% !important;
+        }
+        .tma-btn {
+          background: none !important;
+          border: none !important;
+          padding: 0 !important;
+          cursor: pointer !important;
+          outline: none !important;
+        }
+        .tma-btn-img {
+          width: 100px !important; /* ЖЕСТКО: ВСЕГО 100 ПИКСЕЛЕЙ В ШИРИНУ */
+          height: auto !important;
+          display: block !important;
+          margin: 0 auto !important;
+        }
+      `}</style>
       
       {/* Баланс */}
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '20px' }}>
-        <span style={{ fontSize: '18px', fontWeight: '900' }}>
-          {balance.toLocaleString('ru-RU')}
-        </span>
-        <img src="/honey.png" alt="" style={{ width: '20px', height: '20px', objectFit: 'contain', marginTop: '4px' }} />
+      <div className="tma-balance">
+        <span className="tma-balance-num">{balance.toLocaleString('ru-RU')}</span>
+        <img src="/honey.png" alt="" className="tma-honey-img" />
       </div>
 
-      {/* Кнопки с ЖЁСТКИМ ограничением ВЫСОТЫ */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'center', width: '100%' }}>
+      {/* Кнопки */}
+      <div className="tma-buttons-box">
         
-        <button onClick={() => setActiveTab('banks')} style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
-          {/* Максимальная высота 50px — они будут аккуратными полосками */}
-          <img src="/banka.png" alt="" style={{ height: '50px', maxHeight: '50px', width: 'auto', objectFit: 'contain', display: 'block' }} />
+        <button onClick={() => setActiveTab('banks')} className="tma-btn">
+          <img src="/banka.png" alt="" className="tma-btn-img" />
         </button>
 
-        <button onClick={() => setActiveTab('cases')} style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
-          <img src="/case.png" alt="" style={{ height: '50px', maxHeight: '50px', width: 'auto', objectFit: 'contain', display: 'block' }} />
+        <button onClick={() => setActiveTab('cases')} className="tma-btn">
+          <img src="/case.png" alt="" className="tma-btn-img" />
         </button>
 
-        <button onClick={() => setActiveTab('games')} style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
-          <img src="/igra.png" alt="" style={{ height: '50px', maxHeight: '50px', width: 'auto', objectFit: 'contain', display: 'block' }} />
+        <button onClick={() => setActiveTab('games')} className="tma-btn">
+          <img src="/igra.png" alt="" className="tma-btn-img" />
         </button>
 
       </div>
