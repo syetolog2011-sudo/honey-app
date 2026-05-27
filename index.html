@@ -5,18 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Mini App</title>
     <style>
-        /* Чистый белый фон */
+        /* Плавный переливающийся серо-серочерный фон */
         body {
             margin: 0;
             padding: 0;
-            background-color: #ffffff;
-            color: #0f172a;
+            /* В центре #334155 (стильный серый), по бокам переходит в #0f172a (серо-чёрный) */
+            background: radial-gradient(circle, #334155 0%, #0f172a 100%);
+            background-attachment: fixed;
+            color: #ffffff; /* Текст теперь белый, чтобы круто смотрелся на тёмном */
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
             user-select: none;
             -webkit-user-select: none;
+            min-height: 100vh;
         }
 
         /* Блок баланса по центру */
@@ -25,22 +28,24 @@
             flex-direction: row;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            margin-top: 30px;
-            margin-bottom: 35px; /* Чуть увеличил отступ снизу от баланса */
+            gap: 10px;
+            margin-top: 40px;
+            margin-bottom: 45px; /* Хороший отступ от баланса до первой кнопки */
         }
 
         .balance-number {
-            font-size: 26px;
+            font-size: 30px; /* Слегка увеличил шрифт баланса под крупные кнопки */
             font-weight: 900;
             letter-spacing: -0.05em;
             line-height: 1;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* Легкая тень для объема */
         }
 
         .honey-icon {
-            width: 26px;
-            height: 26px;
+            width: 30px;
+            height: 30px;
             object-fit: contain;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
         }
 
         /* Список кнопок */
@@ -48,30 +53,31 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 24px; /* ОТДАЛИЛ КНОПКИ ДРУГ ОТ ДРУГА (было 14px) */
+            gap: 36px; /* ЕЩЁ СИЛЬНЕЕ ОТДАЛИЛ КНОПКИ ДРУГ ОТ ДРУГА */
             width: 100%;
         }
 
-        /* Кнопки (85% ширины экрана) */
+        /* КНОПКИ СТАЛИ ЕЩЁ БОЛЬШЕ (92% ширины экрана телефона) */
         .menu-btn {
             background: none;
             border: none;
             padding: 0;
             cursor: pointer;
             outline: none;
-            width: 85%;
-            max-width: 320px;
+            width: 92%; /* Почти на всю ширину, выглядят массивно и сочно */
+            max-width: 360px;
             transition: transform 0.1s ease;
         }
 
         .menu-btn:active {
-            transform: scale(0.96);
+            transform: scale(0.95); /* Прикольный отклик при нажатии */
         }
 
         .menu-btn img {
             width: 100%;
             height: auto;
             display: block;
+            filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.4)); /* Тень кнопкам под тёмный фон */
         }
     </style>
 </head>
