@@ -1,88 +1,101 @@
-import React, { useState } from 'react';
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Mini App</title>
+    <style>
+        /* Обнуляем стили, делаем чистый белый фон */
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+            color: #0f172a;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            user-select: none;
+            -webkit-user-select: none;
+        }
 
-export default function App() {
-  const [balance] = useState(12500);
-  const [, setActiveTab] = useState('banks');
+        /* Блок баланса сверху */
+        .balance-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 25px;
+            margin-bottom: 20px;
+        }
 
-  return (
-    <div className="tma-container">
-      
-      {/* ЭТОТ БЛОК СТИЛЕЙ ПРИНУДИТЕЛЬНО УБЬЕТ ЛЮБЫЕ ДРУГИЕ РАЗМЕРЫ В ТВОЕМ ПРОЕКТЕ */}
-      <style>{`
-        .tma-container {
-          background-color: #ffffff !important;
-          color: #0f172a !important;
-          min-height: 100vh !important;
-          display: flex !important;
-          flex-direction: column !important;
-          align-items: center !important;
-          padding-top: 20px !important;
-          font-family: sans-serif !important;
-          user-select: none !important;
-          width: 100% !important;
-          box-sizing: border-box !important;
+        .balance-number {
+            font-size: 24px;
+            font-weight: 900;
+            letter-spacing: -0.05em;
+            margin-bottom: 4px;
         }
-        .tma-balance {
-          display: flex !important;
-          flex-direction: column !important;
-          align-items: center !important;
-          margin-bottom: 15px !important;
-        }
-        .tma-balance-num {
-          font-size: 16px !important;
-          font-weight: 900 !important;
-        }
-        .tma-honey-img {
-          width: 18px !important;
-          height: 18px !important;
-          object-fit: contain !important;
-          margin-top: 2px !important;
-        }
-        .tma-buttons-box {
-          display: flex !important;
-          flex-direction: column !important;
-          gap: 6px !important;
-          align-items: center !important;
-          width: 100% !important;
-        }
-        .tma-btn {
-          background: none !important;
-          border: none !important;
-          padding: 0 !important;
-          cursor: pointer !important;
-          outline: none !important;
-        }
-        .tma-btn-img {
-          width: 100px !important; /* ЖЕСТКО: ВСЕГО 100 ПИКСЕЛЕЙ В ШИРИНУ */
-          height: auto !important;
-          display: block !important;
-          margin: 0 auto !important;
-        }
-      `}</style>
-      
-      {/* Баланс */}
-      <div className="tma-balance">
-        <span className="tma-balance-num">{balance.toLocaleString('ru-RU')}</span>
-        <img src="/honey.png" alt="" className="tma-honey-img" />
-      </div>
 
-      {/* Кнопки */}
-      <div className="tma-buttons-box">
+        .honey-icon {
+            width: 22px;
+            height: 22px;
+            object-fit: contain;
+        }
+
+        /* Контейнер для кнопок-картинок */
+        .buttons-list {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px; /* Расстояние между кнопками */
+            width: 100%;
+        }
+
+        /* Сами кнопки — теперь они будут аккуратными на телефоне */
+        .menu-btn {
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            outline: none;
+            width: 45%; /* Зажимаем кнопку до 45% от ширины экрана телефона */
+            max-width: 180px; /* Чтобы на компе не растягивалось слишком сильно */
+            transition: transform 0.1s ease;
+        }
+
+        .menu-btn:active {
+            transform: scale(0.96); /* Эффект нажатия */
+        }
+
+        .menu-btn img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 15px; /* Скругление, если картинка без него */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="balance-container">
+        <div class="balance-number">12 500</div>
+        <img src="honey.png" alt="🍯" class="honey-icon">
+    </div>
+
+    <div class="buttons-list">
         
-        <button onClick={() => setActiveTab('banks')} className="tma-btn">
-          <img src="/banka.png" alt="" className="tma-btn-img" />
+        <button class="menu-btn" onclick="console.log('Кейсы')">
+            <img src="case.png" alt="Кейсы">
         </button>
 
-        <button onClick={() => setActiveTab('cases')} className="tma-btn">
-          <img src="/case.png" alt="" className="tma-btn-img" />
+        <button class="menu-btn" onclick="console.log('Банки')">
+            <img src="banka.png" alt="Банки">
         </button>
 
-        <button onClick={() => setActiveTab('games')} className="tma-btn">
-          <img src="/igra.png" alt="" className="tma-btn-img" />
+        <button class="menu-btn" onclick="console.log('Игры')">
+            <img src="igra.png" alt="Игры">
         </button>
-
-      </div>
 
     </div>
-  );
-}
+
+</body>
+</html>
