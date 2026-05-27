@@ -10,35 +10,39 @@ export default function App() {
       color: '#0f172a', 
       minHeight: '100vh', 
       display: 'flex', 
-      flexDirection: 'column', // Исправлено: теперь колонки работают правильно
-      alignItems: 'center',    // Строго по центру по горизонтали
-      paddingTop: '24px',
+      flexDirection: 'column', 
+      alignItems: 'center', 
+      paddingTop: '15px',
       fontFamily: 'sans-serif',
       userSelect: 'none',
-      width: '100%'
+      width: '100%',
+      boxSizing: 'border-box'
     }}>
       
-      {/* Баланс строго по центру */}
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '20px' }}>
-        <span style={{ fontSize: '20px', fontWeight: '900', letterSpacing: '-0.05em' }}>
+      {/* Компактный баланс */}
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '15px' }}>
+        <span style={{ fontSize: '16px', fontWeight: '900' }}>
           {balance.toLocaleString('ru-RU')}
         </span>
-        <img src="/honey.png" alt="" style={{ width: '24px', height: '24px', objectFit: 'contain', marginTop: '4px' }} />
+        <img src="/honey.png" alt="" style={{ width: '18px', height: '18px', objectFit: 'contain', marginTop: '2px' }} />
       </div>
 
-      {/* Кнопки — теперь точно аккуратные, маленькие и по центру */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', width: '160px' }}>
+      {/* Вертикальный ряд маленьких кнопок */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', alignItems: 'center' }}>
         
-        <button onClick={() => setActiveTab('banks')} style={{ width: '100%', background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
-          <img src="/banka.png" alt="" style={{ width: '100%', height: 'auto', display: 'block' }} />
+        {/* Кнопка Банки */}
+        <button onClick={() => setActiveTab('banks')} style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer', outline: 'none' }}>
+          <img src="/banka.png" alt="" style={{ width: '110px', height: 'auto', display: 'block' }} />
         </button>
 
-        <button onClick={() => setActiveTab('cases')} style={{ width: '100%', background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
-          <img src="/case.png" alt="" style={{ width: '100%', height: 'auto', display: 'block' }} />
+        {/* Кнопка Кейсы */}
+        <button onClick={() => setActiveTab('cases')} style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer', outline: 'none' }}>
+          <img src="/case.png" alt="" style={{ width: '110px', height: 'auto', display: 'block' }} />
         </button>
 
-        <button onClick={() => setActiveTab('games')} style={{ width: '100%', background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
-          <img src="/igra.png" alt="" style={{ width: '100%', height: 'auto', display: 'block' }} />
+        {/* Кнопка Игры */}
+        <button onClick={() => setActiveTab('games')} style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer', outline: 'none' }}>
+          <img src="/igra.png" alt="" style={{ width: '110px', height: 'auto', display: 'block' }} />
         </button>
 
       </div>
