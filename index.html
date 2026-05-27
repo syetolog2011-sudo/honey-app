@@ -5,27 +5,41 @@ export default function App() {
   const [, setActiveTab] = useState('banks');
 
   return (
-    <div className="min-h-screen bg-white text-slate-900 font-sans flex flex-col items-center pt-4 select-none">
+    <div style={{ 
+      backgroundColor: '#ffffff', 
+      color: '#0f172a', 
+      minHeight: '100vh', 
+      display: 'flex', 
+      flexDirection: 'col', 
+      alignItems: 'center', 
+      paddingTop: '16px',
+      fontFamily: 'sans-serif',
+      userSelect: 'none'
+    }}>
       
       {/* Микро-баланс */}
-      <div className="flex flex-col items-center mb-4">
-        <span className="text-lg font-black tracking-tight">{balance.toLocaleString('ru-RU')}</span>
-        <img src="/honey.png" alt="" className="w-6 h-6 object-contain mt-0.5" />
+      <div style={{ display: 'flex', flexDirection: 'col', alignItems: 'center', marginBottom: '12px' }}>
+        <span style={{ fontSize: '18px', fontWeight: '900', letterSpacing: '-0.05em' }}>
+          {balance.toLocaleString('ru-RU')}
+        </span>
+        <img src="/honey.png" alt="" style={{ width: '20px', height: '20px', objectFit: 'contain', marginTop: '2px' }} />
       </div>
 
-      {/* Ультра-компактные кнопки (зажаты до 130px, точно влезут на любой экран ТГ) */}
-      <div className="flex flex-col space-y-2 w-[130px]">
-        <button onClick={() => setActiveTab('banks')} className="w-full active:scale-95 transition-transform focus:outline-none">
-          <img src="/banka.png" alt="" className="w-full h-auto block" />
+      {/* Кнопки — жестко зажаты до 90px в ширину */}
+      <div style={{ display: 'flex', flexDirection: 'col', gap: '6px', width: '90px' }}>
+        
+        <button onClick={() => setActiveTab('banks')} style={{ width: '100%', background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
+          <img src="/banka.png" alt="" style={{ width: '100%', height: 'auto', display: 'block' }} />
         </button>
 
-        <button onClick={() => setActiveTab('cases')} className="w-full active:scale-95 transition-transform focus:outline-none">
-          <img src="/case.png" alt="" className="w-full h-auto block" />
+        <button onClick={() => setActiveTab('cases')} style={{ width: '100%', background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
+          <img src="/case.png" alt="" style={{ width: '100%', height: 'auto', display: 'block' }} />
         </button>
 
-        <button onClick={() => setActiveTab('games')} className="w-full active:scale-95 transition-transform focus:outline-none">
-          <img src="/igra.png" alt="" className="w-full h-auto block" />
+        <button onClick={() => setActiveTab('games')} style={{ width: '100%', background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}>
+          <img src="/igra.png" alt="" style={{ width: '100%', height: 'auto', display: 'block' }} />
         </button>
+
       </div>
 
     </div>
