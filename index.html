@@ -1,132 +1,105 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Honey Project</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            /* Твой фон */
-            background: url('bg.png') no-repeat center center fixed;
-            background-size: cover;
-            font-family: sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-        }
+import React, { useState } from 'react';
 
-        .content-scroll {
-            width: 100%;
-            /* Отступы, чтобы карточки не прилипали */
-            padding: 40px 0 120px 0; 
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 25px; /* Расстояние между карточками */
-            overflow-y: auto;
-        }
+export default function App() {
+  // Баланс мёда (только число)
+  const [balance, setBalance] = useState(12500);
+  
+  // Активная вкладка
+  const [activeTab, setActiveTab] = useState('banks');
 
-        /* СТИЛЬ КАРТОЧКИ (ТЕПЕРЬ ЭТО ТОЛЬКО КАРТИНКА) */
-        .image-card {
-            width: 90%;
-            max-width: 350px;
-            /* Убрали фон и обводку, оставили только тень и скругление */
-            border-radius: 25px;
-            overflow: hidden; /* Чтобы картинка не вылезала за углы */
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            transition: transform 0.2s, box-shadow 0.2s;
-            cursor: pointer;
-            /* Убираем синее выделение при клике на мобильных */
-            -webkit-tap-highlight-color: transparent; 
-        }
+  return (
+    <div className="min-h-screen bg-slate-950 text-white font-sans flex flex-col justify-between p-4 pb-8 space-y-6">
+      
+      {/* 1. БЛОК БАЛАНСА (Строго по центру сверху) */}
+      <div className="flex flex-col items-center justify-center pt-8 text-center space-y-4">
+        {/* Само число баланса */}
+        <span className="text-6xl font-black tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-white to-slate-300 drop-shadow-[0_4px_12px_rgba(255,255,255,0.1)]">
+          {balance.toLocaleString('ru-RU')}
+        </span>
 
-        /* Эффект при нажатии */
-        .image-card:active {
-            transform: scale(0.96);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.7);
-        }
-
-        /* Сама картинка внутри карточки */
-        .image-card img {
-            width: 100%;
-            height: auto;
-            display: block; /* Убирает отступ снизу у img */
-            object-fit: cover; /* Заполняет всю площадь */
-        }
-
-        /* КНОПКА МЕНЮ СНИЗУ */
-        .bottom-nav {
-            position: fixed;
-            bottom: 25px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 65px;
-            height: 65px;
-            background: linear-gradient(45deg, #f39c12, #f1c40f);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 5px 25px rgba(0,0,0,0.6);
-            cursor: pointer;
-            z-index: 100;
-            border: none;
-            color: white;
-            font-size: 30px;
-        }
-    </style>
-</head>
-<body>
-
-    <div class="content-scroll">
-        <div class="image-card" onclick="openCases()">
-            <img src="cases.png" alt="Кейсы">
+        {/* МЕСТО ДЛЯ ТВОЕЙ СОБСТВЕННОЙ БАНКИ МЁДА */}
+        {/* Замени 'https://placehold.co/180x180/1e293b/ffffff?text=Твоя+Банка' на путь к своей картинке (например: '/honey_jar.png') */}
+        <div className="w-24 h-24 bg-slate-900/40 rounded-3xl flex items-center justify-center p-2 border border-slate-800/80 shadow-inner">
+          <img 
+            src="https://placehold.co/180x180/1e293b/ffffff?text=Твоя+Банка" 
+            alt="Банка Мёда" 
+            className="w-full h-full object-contain"
+          />
         </div>
+      </div>
 
-        <div class="image-card" onclick="openBank()">
-            <img src="bank.png" alt="Банк">
-        </div>
+      {/* 2. КОНТЕНТНАЯ ЧАСТЬ (Отображение выбранного раздела) */}
+      <div className="flex-1 bg-slate-900/30 border border-slate-900/60 rounded-3xl p-6 flex flex-col items-center justify-center min-h-[160px] backdrop-blur-sm">
+        {activeTab === 'banks' && (
+          <div className="text-center space-y-1 animate-fadeIn">
+            <h3 className="text-lg font-bold text-blue-400">Вклады и Банки</h3>
+            <p className="text-slate-400 text-sm">Тут будут твои медовые накопления.</p>
+          </div>
+        )}
+        {activeTab === 'cases' && (
+          <div className="text-center space-y-1 animate-fadeIn">
+            <h3 className="text-lg font-bold text-purple-400">Открытие Кейсов</h3>
+            <p className="text-slate-400 text-sm">Тут можно будет испытывать удачу.</p>
+          </div>
+        )}
+        {activeTab === 'games' && (
+          <div className="text-center space-y-1 animate-fadeIn">
+            <h3 className="text-lg font-bold text-emerald-400">Мини-Игры</h3>
+            <p className="text-slate-400 text-sm">Тут будут игры для заработка мёда.</p>
+          </div>
+        )}
+      </div>
 
-        <div class="image-card" onclick="openGame()">
-            <img src="game.png" alt="Игра">
-        </div>
+      {/* 3. НАВИГАЦИЯ: Кнопки-картинки вертикально друг под другом */}
+      <div className="flex flex-col gap-3">
+        
+        <MenuButton 
+          // Замени эту ссылку на свою картинку банки (например: "/btn_banks.png")
+          imageSrc="https://placehold.co/600x150/1e3a8a/ffffff?text=Кнопка+Банки"
+          isActive={activeTab === 'banks'}
+          onClick={() => setActiveTab('banks')}
+        />
+
+        <MenuButton 
+          // Замени эту ссылку на свою картинку кейсов (например: "/btn_cases.png")
+          imageSrc="https://placehold.co/600x150/1e3a8a/ffffff?text=Кнопка+Кейсы"
+          isActive={activeTab === 'cases'}
+          onClick={() => setActiveTab('cases')}
+        />
+
+        <MenuButton 
+          // Замени эту ссылку на свою картинку игр (например: "/btn_games.png")
+          imageSrc="https://placehold.co/600x150/1e3a8a/ffffff?text=Кнопка+Игры"
+          isActive={activeTab === 'games'}
+          onClick={() => setActiveTab('games')}
+        />
+
+      </div>
+
     </div>
+  );
+}
 
-    <button class="bottom-nav" onclick="toggleMenu()">☰</button>
-
-    <script>
-        const tg = window.Telegram.WebApp;
-        tg.expand();
-
-        function toggleMenu() {
-            if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
-            tg.showPopup({
-                title: 'Меню',
-                message: 'Куда отправимся?',
-                buttons: [
-                    {id: 'stats', type: 'default', text: '📊 Статистика'},
-                    {id: 'friends', type: 'default', text: '👥 Друзья'},
-                    {id: 'close', type: 'destructive', text: 'Закрыть'}
-                ]
-            });
-        }
-
-        function openCases() { 
-            if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-            tg.showAlert("Открываем кейсы..."); 
-        }
-        function openBank() { 
-            if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-            tg.showAlert("Заходим в банк..."); 
-        }
-        function openGame() { 
-            if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-            tg.showAlert("Запускаем игру..."); 
-        }
-    </script>
-</body>
-</html>
+// Компонент кнопки-картинки без лишнего встроенного текста
+function MenuButton({ imageSrc, isActive, onClick }) {
+  return (
+    <button 
+      onClick={onClick}
+      className={`w-full overflow-hidden rounded-2xl transition-all duration-300 relative ${
+        isActive 
+          ? 'ring-2 ring-blue-500 scale-[1.01] shadow-[0_0_20px_rgba(59,130,246,0.4)]' 
+          : 'opacity-70 hover:opacity-100'
+      }`}
+    >
+      <img 
+        src={imageSrc} 
+        alt="Раздел меню" 
+        className="w-full h-auto object-cover block"
+      />
+      {/* Легкий оверлей для неактивных кнопок, чтобы подчеркнуть активную */}
+      {!isActive && (
+        <div className="absolute inset-0 bg-slate-950/20 pointer-events-none" />
+      )}
+    </button>
+  );
+}
