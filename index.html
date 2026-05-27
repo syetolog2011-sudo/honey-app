@@ -27,7 +27,7 @@
             justify-content: center;
             gap: 8px;
             margin-top: 30px;
-            margin-bottom: 25px;
+            margin-bottom: 35px; /* Чуть увеличил отступ снизу от баланса */
         }
 
         .balance-number {
@@ -48,19 +48,19 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 14px; /* Отступы между кнопками */
+            gap: 24px; /* ОТДАЛИЛ КНОПКИ ДРУГ ОТ ДРУГА (было 14px) */
             width: 100%;
         }
 
-        /* КНОПКИ СТАЛИ ЕЩЁ БОЛЬШЕ (85% ширины экрана) */
+        /* Кнопки (85% ширины экрана) */
         .menu-btn {
             background: none;
             border: none;
             padding: 0;
             cursor: pointer;
             outline: none;
-            width: 85%; /* Увеличил до 85% */
-            max-width: 320px; /* Ограничение для экранов побольше */
+            width: 85%;
+            max-width: 320px;
             transition: transform 0.1s ease;
         }
 
