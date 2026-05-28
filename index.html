@@ -21,38 +21,12 @@
             position: relative;
         }
 
-        /* КНОПКА ВЫХОДА (КРЕСТИК) */
-        .close-app-btn {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            width: 36px;
-            height: 36px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 22px;
-            color: #ffffff;
-            cursor: pointer;
-            line-height: 1;
-            transition: background 0.2s, transform 0.1s ease;
-            z-index: 100;
-        }
-
-        .close-app-btn:active {
-            background: rgba(255, 255, 255, 0.25);
-            transform: scale(0.92);
-        }
-
-        /* Контейнер для 5 ключей */
+        /* КОНТЕЙНЕР ДЛЯ 5 КЛЮЧЕЙ */
         .keys-container {
             display: flex;
             justify-content: center;
             gap: 6px; 
-            margin-top: 65px; /* Отступ сверху, чтобы не перекрывать крестик */
+            margin-top: 25px; /* Вернул аккуратный отступ, так как общего крестика больше нет */
             margin-bottom: 25px;
             width: 98%;
         }
@@ -90,7 +64,7 @@
             border-radius: 5px;
         }
 
-        /* Блок баланса */
+        /* БЛОК БАЛАНСА */
         .balance-container {
             display: flex;
             align-items: center;
@@ -106,13 +80,14 @@
             flex-direction: column;
             align-items: center;
             width: 100%;
+            position: relative; /* Чтобы кнопка «Назад» позиционировалась внутри экрана банок */
         }
 
         .active-screen {
             display: flex; 
         }
 
-        /* Главное меню */
+        /* ГЛАВНОЕ МЕНЮ */
         .buttons-list {
             display: flex;
             flex-direction: column;
@@ -134,8 +109,36 @@
             align-items: center;
             gap: 25px;
             width: 100%;
+            margin-top: 20px; /* Отступ, чтобы банки не слипались с верхней панелью */
         }
 
+        /* Кнопка возврата (стрелочка) внутри экрана банок */
+        .back-arrow-btn {
+            position: absolute;
+            top: -20px; /* Размещается на уровне баланса/ключей справа */
+            right: 15px;
+            width: 36px;
+            height: 36px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: #ffffff;
+            cursor: pointer;
+            line-height: 1;
+            transition: background 0.2s, transform 0.1s ease;
+            z-index: 10;
+        }
+
+        .back-arrow-btn:active {
+            background: rgba(255, 255, 255, 0.25);
+            transform: scale(0.92);
+        }
+
+        /* Карточки для банок */
         .bank-card {
             width: 92%;
             max-width: 360px;
@@ -177,29 +180,14 @@
             transform: scale(0.97); 
         }
 
-        .back-btn {
-            margin-top: 25px;
-            margin-bottom: 35px;
-            background: rgba(255, 255, 255, 0.12);
-            color: white;
-            border: none;
-            padding: 12px 32px;
-            font-size: 15px;
-            font-weight: bold;
-            border-radius: 12px;
-            cursor: pointer;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: transform 0.1s ease;
-        }
-        .back-btn:active { 
-            background: rgba(255, 255, 255, 0.2); 
-            transform: scale(0.96);
+        /* Нижний отступ для экрана банок */
+        .banks-screen-padding {
+            height: 40px;
+            width: 100%;
         }
     </style>
 </head>
 <body>
-
-    <div class="close-app-btn" onclick="closeTelegramApp()">×</div>
 
     <div class="keys-container">
         <div class="key-slot"><img src="key1.png"><div class="key-count">0</div></div>
@@ -223,6 +211,9 @@
     </div>
 
     <div id="banks-screen" class="screen">
+        
+        <div class="back-arrow-btn" onclick="switchScreen('main-screen')">←</div>
+
         <div class="banks-list">
             
             <div class="bank-card">
@@ -242,22 +233,15 @@
 
         </div>
 
-        <button class="back-btn" onclick="switchScreen('main-screen')">Назад</button>
+        <div class="banks-screen-padding"></div>
     </div>
 
     <script>
+        // Функция мгновенного переключения экранов
         function switchScreen(screenId) {
             document.getElementById('main-screen').classList.remove('active-screen');
             document.getElementById('banks-screen').classList.remove('active-screen');
             document.getElementById(screenId).classList.add('active-screen');
-        }
-
-        function closeTelegramApp() {
-            if (window.Telegram && window.Telegram.WebApp) {
-                window.Telegram.WebApp.close();
-            } else {
-                alert('Приложение закроется внутри Telegram!');
-            }
         }
     </script>
 
