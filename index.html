@@ -19,9 +19,10 @@
             -webkit-user-select: none;
             min-height: 100vh;
             position: relative;
+            overflow-x: hidden;
         }
 
-        /* КОНТЕЙНЕР ДЛЯ 5 КЛЮЧЕЙ */
+        /* ПАНЕЛЬ КЛЮЧЕЙ */
         .keys-container {
             display: flex;
             justify-content: center;
@@ -113,7 +114,6 @@
             margin-top: 20px;
         }
 
-        /* Кнопка возврата (стрелочка) */
         .back-arrow-btn {
             position: absolute;
             top: -20px; 
@@ -138,7 +138,6 @@
             transform: scale(0.92);
         }
 
-        /* КАРТОЧКА БАНКИ ТЕПЕРЬ САМА ЯВЛЯЕТСЯ КНОПКОЙ */
         .bank-card {
             width: calc(50% - 7px); 
             aspect-ratio: 1 / 1;    
@@ -150,45 +149,193 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center; /* Центрируем банку внутри квадрата */
+            justify-content: center;
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
             cursor: pointer;
             transition: transform 0.1s ease, background 0.2s;
-            -webkit-tap-highlight-color: transparent; /* Убирает синюю рамку при тапе на смартфонах */
+            -webkit-tap-highlight-color: transparent;
         }
 
-        /* Эффект при нажатии на саму банку */
         .bank-card:active {
             background: rgba(255, 255, 255, 0.15);
             transform: scale(0.96); 
         }
 
         .bank-img {
-            width: 95px; /* Немного увеличил банку, так как кнопки внизу больше нет */
+            width: 95px; 
             height: 95px;
             object-fit: contain;
             display: block;
             filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.5)); 
         }
 
-        .banks-screen-padding {
-            height: 40px;
-            width: 100%;
+        /* МОДАЛЬНОЕ ОКНО (ПОП-АП БАНКИ 3) */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
         }
+
+        .modal-content {
+            width: 90%;
+            max-width: 360px;
+            background: #1e293b;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 28px;
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+        }
+
+        .close-modal-btn {
+            position: absolute;
+            top: 15px; right: 15px;
+            width: 30px; height: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px; cursor: pointer;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        /* БЛОК ПОКУПКИ С КНОПКОЙ И МЕДОМ */
+        .buy-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .buy-btn {
+            flex: 1;
+            background: #eab308;
+            color: #0f172a;
+            border: none;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: 900;
+            border-radius: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: transform 0.1s;
+        }
+        .buy-btn:active { transform: scale(0.97); }
+        .buy-btn img { width: 20px; height: 20px; }
+
+        /* КРУТАЯ ГОРИЗОНТАЛЬНАЯ РУЛЕТКА */
+        .roulette-wrapper {
+            position: relative;
+            width: 100%;
+            height: 80px;
+            background: #0f172a;
+            border-radius: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        /* Центральный маркер (указатель) */
+        .roulette-marker {
+            position: absolute;
+            top: 0; left: 50%;
+            transform: translateX(-50%);
+            width: 4px; height: 100%;
+            background: #ef4444;
+            z-index: 5;
+            box-shadow: 0 0 10px #ef4444;
+        }
+
+        .roulette-tape {
+            display: flex;
+            align-items: center;
+            position: absolute;
+            left: 0; top: 0;
+            height: 100%;
+            transition: transform 0s cubic-bezier(0.1, 0.8, 0.1, 1); /* Динамически меняется в JS */
+            will-change: transform;
+        }
+
+        /* Слот внутри рулетки */
+        .roulette-item {
+            width: 110px;
+            height: 70px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: bold;
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            background: #1e293b;
+            gap: 4px;
+        }
+        .roulette-item img { width: 22px; height: 22px; object-fit: contain; }
+
+        /* Оформление разных типов наград в рулетке */
+        .item-honey { color: #facc15; }
+        .item-empty { color: #94a3b8; }
+        .item-key { color: #38bdf8; background: radial-gradient(circle, rgba(56,189,248,0.1) 0%, #1e293b 100%); }
+
+        /* ШАНСЫ (ДРОП) */
+        .drop-info {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 14px;
+            padding: 12px;
+            box-sizing: border-box;
+            font-size: 13px;
+        }
+        .drop-title {
+            color: #94a3b8;
+            margin-bottom: 8px;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+        }
+        .drop-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+        .drop-row:last-child { margin-bottom: 0; }
+        .drop-chance { font-weight: bold; }
+
+        .banks-screen-padding { height: 40px; width: 100%; }
     </style>
 </head>
 <body>
 
     <div class="keys-container">
-        <div class="key-slot"><img src="key1.png"><div class="key-count">0</div></div>
-        <div class="key-slot"><img src="key2.png"><div class="key-count">0</div></div>
-        <div class="key-slot"><img src="key3.png"><div class="key-count">0</div></div>
-        <div class="key-slot"><img src="key4.png"><div class="key-count">0</div></div>
-        <div class="key-slot"><img src="key5.png"><div class="key-count">0</div></div>
+        <div class="key-slot"><img src="key1.png"><div class="key-count" id="ui-key1">0</div></div>
+        <div class="key-slot"><img src="key2.png"><div class="key-count" id="ui-key2">0</div></div>
+        <div class="key-slot"><img src="key3.png"><div class="key-count" id="ui-key3">0</div></div>
+        <div class="key-slot"><img src="key4.png"><div class="key-count" id="ui-key4">0</div></div>
+        <div class="key-slot"><img src="key5.png"><div class="key-count" id="ui-key5">0</div></div>
     </div>
 
     <div class="balance-container">
-        <div class="balance-number">12 500</div>
+        <div class="balance-number" id="ui-balance">12 500</div>
         <img src="honey.png" alt="🍯" class="honey-icon">
     </div>
 
@@ -201,33 +348,185 @@
     </div>
 
     <div id="banks-screen" class="screen">
-        
         <div class="back-arrow-btn" onclick="switchScreen('main-screen')">←</div>
 
         <div class="banks-list">
-            
-            <div class="bank-card" onclick="alert('Открываем Банку 1!')">
-                <img src="banka1.png" alt="Банка 1" class="bank-img">
-            </div>
-
-            <div class="bank-card" onclick="alert('Открываем Банку 2!')">
-                <img src="banka2.png" alt="Банка 2" class="bank-img">
-            </div>
-
-            <div class="bank-card" onclick="alert('Открываем Банку 3!')">
-                <img src="banka3.png" alt="Банка 3" class="bank-img">
-            </div>
-
+            <div class="bank-card" onclick="alert('Открываем Банку 1!')"><img src="banka1.png" class="bank-img"></div>
+            <div class="bank-card" onclick="alert('Открываем Банку 2!')"><img src="banka2.png" class="bank-img"></div>
+            <div class="bank-card" onclick="openBank3Modal()"><img src="banka3.png" class="bank-img"></div>
         </div>
 
         <div class="banks-screen-padding"></div>
     </div>
 
+    <div id="bank3-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="close-modal-btn" onclick="closeBank3Modal()">×</div>
+            <div class="modal-title">Банка Сюрприз</div>
+
+            <div class="buy-section">
+                <button class="buy-btn" id="btn-buy-action" onclick="playRoulette()">
+                    Купить за 700 <img src="honey.png">
+                </button>
+            </div>
+
+            <div class="roulette-wrapper">
+                <div class="roulette-marker"></div>
+                <div class="roulette-tape" id="rouletteTape"></div>
+            </div>
+
+            <div class="drop-info">
+                <div class="drop-title">Что может выпасть:</div>
+                <div class="drop-row"><span style="color:#facc15;">🍯 600 - 850 мёда</span><span class="drop-chance" style="color:#facc15;">50%</span></div>
+                <div class="drop-row"><span style="color:#94a3b8;">💨 Пусто</span><span class="drop-chance" style="color:#94a3b8;">49%</span></div>
+                <div class="drop-row"><span style="color:#38bdf8;">🔑 КЛЮЧ 5</span><span class="drop-chance" style="color:#38bdf8;">1%</span></div>
+            </div>
+        </div>
+    </div>
+
     <script>
+        // Игровой баланс внутри JS для тестов локально
+        let playerData = {
+            honey: 12500,
+            key5: 0
+        };
+
+        // Обновление интерфейса
+        function updateUI() {
+            document.getElementById('ui-balance').innerText = playerData.honey.toLocaleString();
+            document.getElementById('ui-key5').innerText = playerData.key5;
+        }
+        updateUI();
+
         function switchScreen(screenId) {
             document.getElementById('main-screen').classList.remove('active-screen');
             document.getElementById('banks-screen').classList.remove('active-screen');
             document.getElementById(screenId).classList.add('active-screen');
+        }
+
+        // Поп-ап Банки 3
+        function openBank3Modal() {
+            document.getElementById('bank3-modal').style.display = 'flex';
+            generateRouletteItems(); // Сразу готовим ленту призов
+        }
+
+        function closeBank3Modal() {
+            if(isRolling) return; // Нельзя закрыть во время кручения
+            document.getElementById('bank3-modal').style.display = 'none';
+        }
+
+        // РУЛЕТКА ГЕЙМПЛЕЙ
+        const tape = document.getElementById('rouletteTape');
+        const itemWidth = 110; // Ширина одного элемента в CSS
+        let isRolling = false;
+
+        // Варианты генерации для наполнения ленты
+        const prizePool = [
+            { type: 'honey', text: '600 🍯', val: 600 },
+            { type: 'honey', text: '750 🍯', val: 750 },
+            { type: 'honey', text: '850 🍯', val: 850 },
+            { type: 'empty', text: 'Пусто', val: 0 },
+            { type: 'empty', text: 'Пусто', val: 0 },
+            { type: 'key', text: 'Ключ 5', val: 1 }
+        ];
+
+        function generateRouletteItems() {
+            tape.style.transition = 'none';
+            tape.style.transform = 'translateX(0px)';
+            tape.innerHTML = '';
+
+            // Создаем длинную ленту из 35 элементов для эффекта прокрутки
+            for (let i = 0; i < 35; i++) {
+                // Случайный элемент чисто для визуального наполнения
+                const rand = prizePool[Math.floor(Math.random() * prizePool.length)];
+                const item = document.createElement('div');
+                item.className = `roulette-item item-${rand.type}`;
+                
+                if(rand.type === 'honey') {
+                    item.innerHTML = `<img src="honey.png"> <span>${rand.text}</span>`;
+                } else if(rand.type === 'key') {
+                    item.innerHTML = `<img src="key5.png"> <span>${rand.text}</span>`;
+                } else {
+                    item.innerHTML = `<span>${rand.text}</span>`;
+                }
+                tape.appendChild(item);
+            }
+        }
+
+        function playRoulette() {
+            if (isRolling) return;
+            if (playerData.honey < 700) {
+                alert('Недостаточно мёда для покупки!');
+                return;
+            }
+
+            // Блокируем кнопку и списываем баланс
+            isRolling = true;
+            playerData.honey -= 700;
+            updateUI();
+            document.getElementById('btn-buy-action').disabled = true;
+            document.getElementById('btn-buy-action').style.opacity = '0.5';
+
+            // 1. Рассчитываем РЕАЛЬНЫЙ выигрыш на основе твоих процентов
+            let randPercent = Math.random() * 100;
+            let finalPrize = {};
+
+            if (randPercent <= 50) {
+                // 50% - Мёд (выдаем случайное число от 600 до 850)
+                let honeyAmount = Math.floor(Math.random() * (850 - 600 + 1)) + 600;
+                finalPrize = { type: 'honey', text: `${honeyAmount} 🍯`, val: honeyAmount };
+            } else if (randPercent <= 99) {
+                // 49% - Пусто (50 + 49 = 99)
+                finalPrize = { type: 'empty', text: 'Пусто', val: 0 };
+            } else {
+                // 1% - Ключ 5
+                finalPrize = { type: 'key', text: 'Ключ 5', val: 1 };
+            }
+
+            // 2. Внедряем победный элемент на 28-ю позицию в рулетке
+            const winIndex = 28; 
+            const targetItem = tape.children[winIndex];
+            targetItem.className = `roulette-item item-${finalPrize.type}`;
+            if(finalPrize.type === 'honey') {
+                targetItem.innerHTML = `<img src="honey.png"> <span>${finalPrize.text}</span>`;
+            } else if(finalPrize.type === 'key') {
+                targetItem.innerHTML = `<img src="key5.png"> <span>${finalPrize.text}</span>`;
+            } else {
+                targetItem.innerHTML = `<span>${finalPrize.text}</span>`;
+            }
+
+            // 3. Запускаем кручение
+            // Центрируем рулетку: (ширина обертки / 2) - (смещение до выигрышного элемента + половина элемента)
+            const wrapperWidth = document.querySelector('.roulette-wrapper').offsetWidth;
+            const stopPosition = -((winIndex * itemWidth) + (itemWidth / 2) - (wrapperWidth / 2));
+            
+            // Рандомное смещение внутри самой ячейки для реалистичности остановки
+            const innerCellOffset = Math.floor(Math.random() * 40) - 20; 
+
+            setTimeout(() => {
+                tape.style.transition = 'transform 4s cubic-bezier(0.1, 0.8, 0.1, 1)';
+                tape.style.transform = `translateX(${stopPosition + innerCellOffset}px)`;
+            }, 50);
+
+            // 4. Финал кручения
+            setTimeout(() => {
+                isRolling = false;
+                document.getElementById('btn-buy-action').disabled = false;
+                document.getElementById('btn-buy-action').style.opacity = '1';
+
+                // Начисляем награду
+                if (finalPrize.type === 'honey') {
+                    playerData.honey += finalPrize.val;
+                    alert(`Вы выиграли: ${finalPrize.text}`);
+                } else if (finalPrize.type === 'key') {
+                    playerData.key5 += 1;
+                    alert('Ура! Вам выпал Ключ 5!');
+                } else {
+                    alert('Эх, в этой банке оказалось пусто!');
+                }
+                
+                updateUI();
+            }, 4100);
         }
     </script>
 
