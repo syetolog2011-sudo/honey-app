@@ -159,10 +159,11 @@
         let isSpinning = false;
 
         const itemWidth = 110; 
+        // Пул для заполнения фона ленты (декоративный, для случайных элементов)
         const poolItems = [
-            { type: 'honey', text: '750', img: 'honey.png' },
+            { type: 'honey', text: '850', img: 'honey.png' },
             { type: 'honey', text: '1000', img: 'honey.png' },
-            { type: 'honey', text: '600', img: 'honey.png' },
+            { type: 'honey', text: '700', img: 'honey.png' },
             { type: 'empty', text: 'Ничего', img: '' },
             { type: 'key', text: 'Ключ', img: 'key5.png' }
         ];
@@ -238,7 +239,7 @@
             parentTape.appendChild(block);
         }
 
-        // КРУЧЕНИЕ
+        // КРУЧЕНИЕ С ОБНОВЛЕННЫМИ ШАНСАМИ ДЛЯ БАНКИ 3
         function spinHorizontalSlots() {
             if (isSpinning) return;
             const totalCost = currentLines * 700;
@@ -261,14 +262,17 @@
                 let prize = {};
                 let rand = Math.random() * 100;
 
-                // ЧЕСТНЫЕ ШАНСЫ: 3% Ключ, 50% Мед (до 1000), 47% Ничего
-                if (rand <= 3) {
-                    prize = { type: 'key', text: 'Ключ', val: 1, img: 'key5.png' };
-                } else if (rand <= 53) {
-                    let hAmount = Math.floor(Math.random() * (1000 - 600 + 1)) + 600;
+                // НОВЫЕ ШАНСЫ БАНКИ 3: 35% Пусто, 64% Мед (700-1000), 1% Ключ 5
+                if (rand <= 35) {
+                    // 35% Шанс — Пусто
+                    prize = { type: 'empty', text: 'Ничего', val: 0, img: '' };
+                } else if (rand <= 99) {
+                    // 64% Шанс — Мёд от 700 до 1000
+                    let hAmount = Math.floor(Math.random() * (1000 - 700 + 1)) + 700;
                     prize = { type: 'honey', text: `${hAmount}`, val: hAmount, img: 'honey.png' };
                 } else {
-                    prize = { type: 'empty', text: 'Ничего', val: 0, img: '' };
+                    // 1% Шанс — Элитный кейс (Ключ 5)
+                    prize = { type: 'key', text: 'Ключ', val: 1, img: 'key5.png' };
                 }
                 calculatedResults.push(prize);
 
@@ -277,7 +281,7 @@
                 tape.style.transform = 'translateX(0px)';
                 tape.innerHTML = '';
 
-                // Заполнение ленты — БАЙТЫ ПОЛНОСТЬЮ УБРАНЫ, всё рендерится случайно
+                // Заполнение ленты без фейковых перекатов
                 for (let i = 0; i < 42; i++) {
                     if (i === winIndex) {
                         createSlotDomItem(tape, prize);
@@ -297,12 +301,11 @@
                 }, 40);
             }
 
-            // Окончание прокрутки
+            // Тихое зачисление финала
             setTimeout(() => {
                 isSpinning = false;
                 document.getElementById('btnSpinAction').disabled = false;
 
-                // Зачисление выигрыша БЕЗ всплывающих окон и сообщений
                 calculatedResults.forEach(res => {
                     if (res.type === 'honey') {
                         playerData.honey += res.val;
