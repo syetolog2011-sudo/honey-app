@@ -22,7 +22,7 @@
             overflow-x: hidden;
         }
 
-        /* ПАНЕЛЬ КЛЮЧЕЙ */
+        /* КЛЮЧИ И БАЛАНС */
         .keys-container {
             display: flex;
             justify-content: center;
@@ -31,7 +31,6 @@
             margin-bottom: 25px;
             width: 98%;
         }
-        
         .key-slot {
             position: relative;
             width: 90px;
@@ -45,281 +44,167 @@
             border: 1px solid rgba(255, 255, 255, 0.2);
             box-sizing: border-box;
         }
-
-        .key-slot img {
-            width: 50px;
-            height: 50px;
-            object-fit: contain;
-            display: block;
-            margin-bottom: 12px;
-        }
-
-        .key-count {
-            position: absolute;
-            bottom: 6px;
-            left: 8px;
-            font-size: 13px;
-            font-weight: bold;
-            background: rgba(0, 0, 0, 0.6);
-            padding: 2px 6px;
-            border-radius: 5px;
-        }
-
-        /* БЛОК БАЛАНСА */
-        .balance-container {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 40px;
-        }
+        .key-slot img { width: 50px; height: 50px; object-fit: contain; display: block; margin-bottom: 12px; }
+        .key-count { position: absolute; bottom: 6px; left: 8px; font-size: 13px; font-weight: bold; background: rgba(0, 0, 0, 0.6); padding: 2px 6px; border-radius: 5px; }
+        .balance-container { display: flex; align-items: center; gap: 15px; margin-bottom: 40px; }
         .balance-number { font-size: 28px; font-weight: 900; }
         .honey-icon { width: 32px; height: 32px; }
 
         /* ЭКРАНЫ */
-        .screen {
-            display: none; 
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-            position: relative;
-        }
+        .screen { display: none; flex-direction: column; align-items: center; width: 100%; position: relative; }
+        .active-screen { display: flex; }
 
-        .active-screen {
-            display: flex; 
-        }
-
-        /* ГЛАВНОЕ МЕНЮ */
-        .buttons-list {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 36px;
-            width: 100%;
-        }
-        .menu-btn {
-            background: none; border: none; padding: 0; cursor: pointer;
-            width: 92%; max-width: 360px; transition: transform 0.1s ease;
-        }
+        /* МЕНЮ */
+        .buttons-list { display: flex; flex-direction: column; align-items: center; gap: 36px; width: 100%; }
+        .menu-btn { background: none; border: none; padding: 0; cursor: pointer; width: 92%; max-width: 360px; transition: transform 0.1s ease; }
         .menu-btn:active { transform: scale(0.95); }
         .menu-btn img { width: 100%; height: auto; display: block; filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.4)); }
 
-        /* ЭКРАН БАНОК */
-        .banks-list {
-            display: flex;
-            flex-wrap: wrap;       
-            justify-content: center; 
-            gap: 14px;             
-            width: 95%;
-            max-width: 380px;      
-            margin-top: 20px;
-        }
+        /* СЕТКА БАНОК */
+        .banks-list { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; width: 95%; max-width: 380px; margin-top: 20px; }
+        .back-arrow-btn { position: absolute; top: -20px; right: 15px; width: 36px; height: 36px; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; color: #ffffff; cursor: pointer; z-index: 10; }
+        .bank-card { width: calc(50% - 7px); aspect-ratio: 1 / 1; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 20px; padding: 12px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4); cursor: pointer; transition: transform 0.1s ease; -webkit-tap-highlight-color: transparent; }
+        .bank-card:active { background: rgba(255, 255, 255, 0.15); transform: scale(0.96); }
+        .bank-img { width: 95px; height: 95px; object-fit: contain; display: block; filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.5)); }
 
-        .back-arrow-btn {
-            position: absolute;
-            top: -20px; 
-            right: 15px;
-            width: 36px;
-            height: 36px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            color: #ffffff;
-            cursor: pointer;
-            line-height: 1;
-            transition: background 0.2s, transform 0.1s ease;
-            z-index: 10;
-        }
-        .back-arrow-btn:active {
-            background: rgba(255, 255, 255, 0.25);
-            transform: scale(0.92);
-        }
-
-        .bank-card {
-            width: calc(50% - 7px); 
-            aspect-ratio: 1 / 1;    
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 20px;
-            padding: 12px;
-            box-sizing: border-box;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
-            cursor: pointer;
-            transition: transform 0.1s ease, background 0.2s;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        .bank-card:active {
-            background: rgba(255, 255, 255, 0.15);
-            transform: scale(0.96); 
-        }
-
-        .bank-img {
-            width: 95px; 
-            height: 95px;
-            object-fit: contain;
-            display: block;
-            filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.5)); 
-        }
-
-        /* МОДАЛЬНОЕ ОКНО (ПОП-АП БАНКИ 3) */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(15, 23, 42, 0.85);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .modal-content {
-            width: 90%;
+        /* ================= НОВЫЙ ЭКРАН КЕЙСА (ПОД ФОТО) ================= */
+        .roulette-screen-container {
+            width: 100%;
             max-width: 360px;
-            background: #1e293b;
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            border-radius: 28px;
-            padding: 20px;
-            box-sizing: border-box;
             display: flex;
             flex-direction: column;
             align-items: center;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        /* Вертикальное окно прокрутки */
+        .vertical-roulette-box {
             position: relative;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
-        }
-
-        .close-modal-btn {
-            position: absolute;
-            top: 15px; right: 15px;
-            width: 30px; height: 30px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 18px; cursor: pointer;
-        }
-
-        .modal-title {
-            font-size: 20px;
-            font-weight: bold;
-            margin-bottom: 15px;
-        }
-
-        /* БЛОК ПОКУПКИ С КНОПКОЙ И МЕДОМ */
-        .buy-section {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            width: 100%;
-            margin-bottom: 20px;
-        }
-
-        .buy-btn {
-            flex: 1;
-            background: #eab308;
-            color: #0f172a;
-            border: none;
-            padding: 14px;
-            font-size: 16px;
-            font-weight: 900;
-            border-radius: 14px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            transition: transform 0.1s;
-        }
-        .buy-btn:active { transform: scale(0.97); }
-        .buy-btn img { width: 20px; height: 20px; }
-
-        /* КРУТАЯ ГОРИЗОНТАЛЬНАЯ РУЛЕТКА */
-        .roulette-wrapper {
-            position: relative;
-            width: 100%;
-            height: 80px;
-            background: #0f172a;
-            border-radius: 16px;
-            border: 2px solid rgba(255, 255, 255, 0.1);
+            width: 180px;
+            height: 320px; /* Высота под 3 элемента (один в центре, два по краям) */
+            background: transparent;
             overflow: hidden;
             margin-bottom: 20px;
-        }
-
-        /* Центральный маркер (указатель) */
-        .roulette-marker {
-            position: absolute;
-            top: 0; left: 50%;
-            transform: translateX(-50%);
-            width: 4px; height: 100%;
-            background: #ef4444;
-            z-index: 5;
-            box-shadow: 0 0 10px #ef4444;
-        }
-
-        .roulette-tape {
             display: flex;
-            align-items: center;
+            justify-content: center;
+        }
+
+        /* Указатели-стрелочки сверху и снизу как на фото */
+        .arrow-indicator-top {
             position: absolute;
-            left: 0; top: 0;
-            height: 100%;
-            transition: transform 0s cubic-bezier(0.1, 0.8, 0.1, 1); /* Динамически меняется в JS */
+            top: 5px; left: 50%;
+            transform: translateX(-50%);
+            font-size: 24px; color: rgba(255, 255, 255, 0.4);
+            z-index: 15;
+        }
+        .arrow-indicator-bottom {
+            position: absolute;
+            bottom: 5px; left: 50%;
+            transform: translateX(-50%);
+            font-size: 24px; color: rgba(255, 255, 255, 0.4);
+            z-index: 15;
+        }
+
+        /* Вертикальная лента с призами */
+        .roulette-tape-vertical {
+            display: flex;
+            flex-direction: column;
+            position: absolute;
+            top: 0;
+            width: 100%;
+            transition: transform 0s cubic-bezier(0.1, 0.8, 0.1, 1);
             will-change: transform;
         }
 
-        /* Слот внутри рулетки */
-        .roulette-item {
-            width: 110px;
-            height: 70px;
+        /* Слот внутри вертикальной рулетки */
+        .slot-item-vertical {
+            width: 100%;
+            height: 100px; /* Строгая фиксированная высота одной ячейки */
             flex-shrink: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            font-size: 13px;
-            font-weight: bold;
-            border-right: 1px solid rgba(255, 255, 255, 0.05);
-            background: #1e293b;
-            gap: 4px;
-        }
-        .roulette-item img { width: 22px; height: 22px; object-fit: contain; }
-
-        /* Оформление разных типов наград в рулетке */
-        .item-honey { color: #facc15; }
-        .item-empty { color: #94a3b8; }
-        .item-key { color: #38bdf8; background: radial-gradient(circle, rgba(56,189,248,0.1) 0%, #1e293b 100%); }
-
-        /* ШАНСЫ (ДРОП) */
-        .drop-info {
-            width: 100%;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 14px;
-            padding: 12px;
             box-sizing: border-box;
-            font-size: 13px;
         }
-        .drop-title {
-            color: #94a3b8;
-            margin-bottom: 8px;
+
+        /* Полупрозрачные плашки под предметами, как на скриншоте */
+        .slot-badge {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 6px 14px;
+            font-size: 14px;
             font-weight: bold;
-            text-transform: uppercase;
-            font-size: 11px;
-            letter-spacing: 0.5px;
-        }
-        .drop-row {
             display: flex;
-            justify-content: space-between;
-            margin-bottom: 5px;
+            align-items: center;
+            gap: 4px;
+            margin-top: 8px;
+            min-width: 70px;
+            justify-content: center;
         }
-        .drop-row:last-child { margin-bottom: 0; }
-        .drop-chance { font-weight: bold; }
+
+        .slot-item-vertical img {
+            width: 55px;
+            height: 55px;
+            object-fit: contain;
+        }
+
+        /* ДОПОЛНИТЕЛЬНЫЕ НАСТРОЙКИ (ОПЦИИ) */
+        .options-container {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            width: 90%;
+            justify-content: center;
+        }
+
+        .checkbox-label {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 10px 16px;
+            border-radius: 14px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+        }
+        .checkbox-label:active { background: rgba(255, 255, 255, 0.12); }
+        .checkbox-label input { transform: scale(1.2); cursor: pointer; }
+
+        /* КНОПКА КРУТИТЬ (ТОЧЬ-В-ТОЧЬ КАК НА ФОТО) */
+        .spin-action-btn {
+            width: 92%;
+            max-width: 340px;
+            background: #2563eb; /* Яркий синий цвет с фото */
+            color: #ffffff;
+            border: none;
+            padding: 16px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+            transition: transform 0.1s ease, background 0.2s;
+        }
+        .spin-action-btn:active {
+            transform: scale(0.97);
+            background: #1d4ed8;
+        }
+        .spin-action-btn:disabled {
+            background: #1e293b;
+            color: #64748b;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+        .spin-action-btn img { width: 20px; height: 20px; }
 
         .banks-screen-padding { height: 40px; width: 100%; }
     </style>
@@ -349,49 +234,46 @@
 
     <div id="banks-screen" class="screen">
         <div class="back-arrow-btn" onclick="switchScreen('main-screen')">←</div>
-
         <div class="banks-list">
             <div class="bank-card" onclick="alert('Открываем Банку 1!')"><img src="banka1.png" class="bank-img"></div>
             <div class="bank-card" onclick="alert('Открываем Банку 2!')"><img src="banka2.png" class="bank-img"></div>
-            <div class="bank-card" onclick="openBank3Modal()"><img src="banka3.png" class="bank-img"></div>
+            <div class="bank-card" onclick="openBank3Roulette()"><img src="banka3.png" class="bank-img"></div>
         </div>
-
         <div class="banks-screen-padding"></div>
     </div>
 
-    <div id="bank3-modal" class="modal-overlay">
-        <div class="modal-content">
-            <div class="close-modal-btn" onclick="closeBank3Modal()">×</div>
-            <div class="modal-title">Банка Сюрприз</div>
+    <div id="roulette-screen" class="screen">
+        <div class="back-arrow-btn" onclick="switchScreen('banks-screen')">←</div>
 
-            <div class="buy-section">
-                <button class="buy-btn" id="btn-buy-action" onclick="playRoulette()">
-                    Купить за 700 <img src="honey.png">
-                </button>
+        <div class="roulette-screen-container">
+            
+            <div class="vertical-roulette-box">
+                <div class="arrow-indicator-top">∨</div>
+                <div class="arrow-indicator-bottom">∧</div>
+                
+                <div class="roulette-tape-vertical" id="tapeVertical"></div>
             </div>
 
-            <div class="roulette-wrapper">
-                <div class="roulette-marker"></div>
-                <div class="roulette-tape" id="rouletteTape"></div>
+            <div class="options-container">
+                <label class="checkbox-label">
+                    <input type="checkbox" id="checkFastSpin"> Быстро
+                </label>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="checkTripleSpin" onchange="toggleTripleMode()"> Открыть х3
+                </label>
             </div>
 
-            <div class="drop-info">
-                <div class="drop-title">Что может выпасть:</div>
-                <div class="drop-row"><span style="color:#facc15;">🍯 600 - 850 мёда</span><span class="drop-chance" style="color:#facc15;">50%</span></div>
-                <div class="drop-row"><span style="color:#94a3b8;">💨 Пусто</span><span class="drop-chance" style="color:#94a3b8;">49%</span></div>
-                <div class="drop-row"><span style="color:#38bdf8;">🔑 КЛЮЧ 5</span><span class="drop-chance" style="color:#38bdf8;">1%</span></div>
-            </div>
+            <button class="spin-action-btn" id="btnSpinAction" onclick="startVerticalSpin()">
+                <span id="spinBtnText">Крутить за 700</span> <img src="honey.png">
+            </button>
+
         </div>
+        <div class="banks-screen-padding"></div>
     </div>
 
     <script>
-        // Игровой баланс внутри JS для тестов локально
-        let playerData = {
-            honey: 12500,
-            key5: 0
-        };
+        let playerData = { honey: 12500, key5: 0 };
 
-        // Обновление интерфейса
         function updateUI() {
             document.getElementById('ui-balance').innerText = playerData.honey.toLocaleString();
             document.getElementById('ui-key5').innerText = playerData.key5;
@@ -401,132 +283,159 @@
         function switchScreen(screenId) {
             document.getElementById('main-screen').classList.remove('active-screen');
             document.getElementById('banks-screen').classList.remove('active-screen');
+            document.getElementById('roulette-screen').classList.remove('active-screen');
             document.getElementById(screenId).classList.add('active-screen');
         }
 
-        // Поп-ап Банки 3
-        function openBank3Modal() {
-            document.getElementById('bank3-modal').style.display = 'flex';
-            generateRouletteItems(); // Сразу готовим ленту призов
+        // Переключение текста цены при активации х3
+        function toggleTripleMode() {
+            const isTriple = document.getElementById('checkTripleSpin').checked;
+            document.getElementById('spinBtnText').innerText = isTriple ? 'Крутить х3 за 2100' : 'Крутить за 700';
         }
 
-        function closeBank3Modal() {
-            if(isRolling) return; // Нельзя закрыть во время кручения
-            document.getElementById('bank3-modal').style.display = 'none';
+        // Открытие экрана рулетки
+        function openBank3Roulette() {
+            switchScreen('roulette-screen');
+            buildVerticalTape(); // Сразу генерируем начальный вид
         }
 
-        // РУЛЕТКА ГЕЙМПЛЕЙ
-        const tape = document.getElementById('rouletteTape');
-        const itemWidth = 110; // Ширина одного элемента в CSS
-        let isRolling = false;
+        const verticalTape = document.getElementById('tapeVertical');
+        const itemHeight = 100; // Фиксированная высота одной ячейки в пикселях
+        let isSpinning = false;
 
-        // Варианты генерации для наполнения ленты
-        const prizePool = [
-            { type: 'honey', text: '600 🍯', val: 600 },
-            { type: 'honey', text: '750 🍯', val: 750 },
-            { type: 'honey', text: '850 🍯', val: 850 },
-            { type: 'empty', text: 'Пусто', val: 0 },
-            { type: 'empty', text: 'Пусто', val: 0 },
-            { type: 'key', text: 'Ключ 5', val: 1 }
+        // Набор элементов пула
+        const poolItems = [
+            { type: 'honey', text: '600', img: 'honey.png' },
+            { type: 'honey', text: '750', img: 'honey.png' },
+            { type: 'honey', text: '850', img: 'honey.png' },
+            { type: 'empty', text: 'Пусто', img: '' },
+            { type: 'key', text: 'Ключ 5', img: 'key5.png' }
         ];
 
-        function generateRouletteItems() {
-            tape.style.transition = 'none';
-            tape.style.transform = 'translateX(0px)';
-            tape.innerHTML = '';
+        // Первичная сборка чистой ленты
+        function buildVerticalTape() {
+            verticalTape.style.transition = 'none';
+            // Сдвигаем на 100px вниз, чтобы изначально в центре (на позиции 110px от верха) стоял красивый элемент
+            verticalTape.style.transform = `translateY(100px)`; 
+            verticalTape.innerHTML = '';
 
-            // Создаем длинную ленту из 35 элементов для эффекта прокрутки
-            for (let i = 0; i < 35; i++) {
-                // Случайный элемент чисто для визуального наполнения
-                const rand = prizePool[Math.floor(Math.random() * prizePool.length)];
-                const item = document.createElement('div');
-                item.className = `roulette-item item-${rand.type}`;
-                
-                if(rand.type === 'honey') {
-                    item.innerHTML = `<img src="honey.png"> <span>${rand.text}</span>`;
-                } else if(rand.type === 'key') {
-                    item.innerHTML = `<img src="key5.png"> <span>${rand.text}</span>`;
-                } else {
-                    item.innerHTML = `<span>${rand.text}</span>`;
-                }
-                tape.appendChild(item);
+            for (let i = 0; i < 45; i++) {
+                const rand = poolItems[Math.floor(Math.random() * poolItems.length)];
+                createSlotElement(rand);
             }
         }
 
-        function playRoulette() {
-            if (isRolling) return;
-            if (playerData.honey < 700) {
-                alert('Недостаточно мёда для покупки!');
+        // Вспомогательная функция создания элемента ячейки
+        function createSlotElement(info) {
+            const row = document.createElement('div');
+            row.className = 'slot-item-vertical';
+            
+            if (info.type === 'empty') {
+                row.innerHTML = `<div style="font-size:32px; line-height:1;">💨</div><div class="slot-badge">Пусто</div>`;
+            } else {
+                row.innerHTML = `<img src="${info.img}"><div class="slot-badge">⭐ ${info.text}</div>`;
+            }
+            verticalTape.appendChild(row);
+        }
+
+        function startVerticalSpin() {
+            if (isSpinning) return;
+
+            const isFast = document.getElementById('checkFastSpin').checked;
+            const isTriple = document.getElementById('checkTripleSpin').checked;
+            const cost = isTriple ? 2100 : 700;
+
+            if (playerData.honey < cost) {
+                alert('Недостаточно мёда!');
                 return;
             }
 
-            // Блокируем кнопку и списываем баланс
-            isRolling = true;
-            playerData.honey -= 700;
+            // Списание средств
+            isSpinning = true;
+            playerData.honey -= cost;
             updateUI();
-            document.getElementById('btn-buy-action').disabled = true;
-            document.getElementById('btn-buy-action').style.opacity = '0.5';
 
-            // 1. Рассчитываем РЕАЛЬНЫЙ выигрыш на основе твоих процентов
-            let randPercent = Math.random() * 100;
-            let finalPrize = {};
+            document.getElementById('btnSpinAction').disabled = true;
 
-            if (randPercent <= 50) {
-                // 50% - Мёд (выдаем случайное число от 600 до 850)
-                let honeyAmount = Math.floor(Math.random() * (850 - 600 + 1)) + 600;
-                finalPrize = { type: 'honey', text: `${honeyAmount} 🍯`, val: honeyAmount };
-            } else if (randPercent <= 99) {
-                // 49% - Пусто (50 + 49 = 99)
-                finalPrize = { type: 'empty', text: 'Пусто', val: 0 };
-            } else {
-                // 1% - Ключ 5
-                finalPrize = { type: 'key', text: 'Ключ 5', val: 1 };
-            }
+            // Генерируем массив наград (1 или 3 штуки)
+            let sessionPrizes = [];
+            const count = isTriple ? 3 : 1;
 
-            // 2. Внедряем победный элемент на 28-ю позицию в рулетке
-            const winIndex = 28; 
-            const targetItem = tape.children[winIndex];
-            targetItem.className = `roulette-item item-${finalPrize.type}`;
-            if(finalPrize.type === 'honey') {
-                targetItem.innerHTML = `<img src="honey.png"> <span>${finalPrize.text}</span>`;
-            } else if(finalPrize.type === 'key') {
-                targetItem.innerHTML = `<img src="key5.png"> <span>${finalPrize.text}</span>`;
-            } else {
-                targetItem.innerHTML = `<span>${finalPrize.text}</span>`;
-            }
-
-            // 3. Запускаем кручение
-            // Центрируем рулетку: (ширина обертки / 2) - (смещение до выигрышного элемента + половина элемента)
-            const wrapperWidth = document.querySelector('.roulette-wrapper').offsetWidth;
-            const stopPosition = -((winIndex * itemWidth) + (itemWidth / 2) - (wrapperWidth / 2));
-            
-            // Рандомное смещение внутри самой ячейки для реалистичности остановки
-            const innerCellOffset = Math.floor(Math.random() * 40) - 20; 
-
-            setTimeout(() => {
-                tape.style.transition = 'transform 4s cubic-bezier(0.1, 0.8, 0.1, 1)';
-                tape.style.transform = `translateX(${stopPosition + innerCellOffset}px)`;
-            }, 50);
-
-            // 4. Финал кручения
-            setTimeout(() => {
-                isRolling = false;
-                document.getElementById('btn-buy-action').disabled = false;
-                document.getElementById('btn-buy-action').style.opacity = '1';
-
-                // Начисляем награду
-                if (finalPrize.type === 'honey') {
-                    playerData.honey += finalPrize.val;
-                    alert(`Вы выиграли: ${finalPrize.text}`);
-                } else if (finalPrize.type === 'key') {
-                    playerData.key5 += 1;
-                    alert('Ура! Вам выпал Ключ 5!');
+            for (let i = 0; i < count; i++) {
+                let rand = Math.random() * 100;
+                if (rand <= 50) {
+                    let hAmount = Math.floor(Math.random() * (850 - 600 + 1)) + 600;
+                    sessionPrizes.push({ type: 'honey', text: `${hAmount}`, val: hAmount, img: 'honey.png' });
+                } else if (rand <= 99) {
+                    sessionPrizes.push({ type: 'empty', text: 'Пусто', val: 0, img: '' });
                 } else {
-                    alert('Эх, в этой банке оказалось пусто!');
+                    sessionPrizes.push({ type: 'key', text: 'Ключ 5', val: 1, img: 'key5.png' });
                 }
+            }
+
+            // Для отображения в рулетке берем финальный (или единственный) приз
+            const mainPrize = sessionPrizes[sessionPrizes.length - 1];
+
+            // Пересобираем ленту под этот бросок
+            verticalTape.style.transition = 'none';
+            verticalTape.style.transform = `translateY(100px)`;
+            verticalTape.innerHTML = '';
+
+            // Генерируем первые ячейки случайно
+            const winIndex = 35; 
+            for (let i = 0; i < 45; i++) {
+                if (i === winIndex) {
+                    // Подставляем реальный выигрыш в целевую точку
+                    createSlotElement(mainPrize);
+                } 
+                // СТРАТЕГИЧЕСКИЙ БАЙТ (ПЕРЕКАТ): Сразу над или под выигрышным элементом ВСЕГДА ставим Ключ 5!
+                else if (i === winIndex - 1 || i === winIndex + 1) {
+                    createSlotElement({ type: 'key', text: 'Ключ 5', img: 'key5.png' });
+                } 
+                else {
+                    const rand = poolItems[Math.floor(Math.random() * poolItems.length)];
+                    createSlotElement(rand);
+                }
+            }
+
+            // Рассчитываем точную позицию остановки ленты
+            // Формула: сдвиг вверх на расстояние до элемента + корректировка центра
+            const targetPos = -(winIndex * itemHeight) + 100;
+
+            // Время анимации зависит от режима "Быстро"
+            const spinDuration = isFast ? 400 : 4000;
+            const transitionStyle = isFast 
+                ? 'transform 0.4s ease-out' 
+                : 'transform 4s cubic-bezier(0.1, 0.8, 0.1, 1)';
+
+            setTimeout(() => {
+                verticalTape.style.transition = transitionStyle;
+                verticalTape.style.transform = `translateY(${targetPos}px)`;
+            }, 40);
+
+            // Окончание прокрутки
+            setTimeout(() => {
+                isSpinning = false;
+                document.getElementById('btnSpinAction').disabled = false;
+
+                // Начисляем все выигранные награды из сессии
+                let alertText = isTriple ? "Вы получили призы:\n" : "Вы выиграли: ";
                 
+                sessionPrizes.forEach(prize => {
+                    if (prize.type === 'honey') {
+                        playerData.honey += prize.val;
+                        alertText += `🍯 ${prize.text} мёда\n`;
+                    } else if (prize.type === 'key') {
+                        playerData.key5 += 1;
+                        alertText += `🔑 Ключ 5!\n`;
+                    } else {
+                        alertText += `💨 Пусто\n`;
+                    }
+                });
+
+                alert(alertText.trim());
                 updateUI();
-            }, 4100);
+            }, spinDuration + 200);
         }
     </script>
 
