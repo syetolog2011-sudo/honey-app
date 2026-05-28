@@ -19,18 +19,20 @@
             min-height: 100vh;
         }
 
-        /* Верхняя панель с ключами */
+        /* Панель для 5 ключей */
         .keys-container {
             display: flex;
             justify-content: center;
-            gap: 12px;
+            gap: 8px; /* Немного уменьшил gap, чтобы влезли 5 штук */
             margin-top: 25px;
             margin-bottom: 25px;
+            width: 95%;
         }
         
         .key-slot {
             position: relative;
-            width: 60px;
+            flex: 1; /* Ключи равномерно распределяются */
+            max-width: 60px;
             height: 60px;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 12px;
@@ -41,12 +43,11 @@
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
-        /* Текст с количеством ключей (внизу) */
         .key-count {
             position: absolute;
             bottom: 4px;
             left: 6px;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: bold;
             background: rgba(0, 0, 0, 0.4);
             padding: 1px 4px;
@@ -82,22 +83,11 @@
 <body>
 
     <div class="keys-container">
-        <div class="key-slot">
-            <img src="key1.png" width="30">
-            <div class="key-count">0</div>
-        </div>
-        <div class="key-slot">
-            <img src="key2.png" width="30">
-            <div class="key-count">0</div>
-        </div>
-        <div class="key-slot">
-            <img src="key3.png" width="30">
-            <div class="key-count">0</div>
-        </div>
-        <div class="key-slot">
-            <img src="key4.png" width="30">
-            <div class="key-count">0</div>
-        </div>
+        <div class="key-slot"><img src="key1.png" width="25"><div class="key-count">0</div></div>
+        <div class="key-slot"><img src="key2.png" width="25"><div class="key-count">0</div></div>
+        <div class="key-slot"><img src="key3.png" width="25"><div class="key-count">0</div></div>
+        <div class="key-slot"><img src="key4.png" width="25"><div class="key-count">0</div></div>
+        <div class="key-slot"><img src="key5.png" width="25"><div class="key-count">0</div></div>
     </div>
 
     <div class="balance-container">
