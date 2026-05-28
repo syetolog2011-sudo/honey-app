@@ -67,128 +67,27 @@
         .bank-card:active { background: rgba(255, 255, 255, 0.15); transform: scale(0.96); }
         .bank-img { width: 95px; height: 95px; object-fit: contain; display: block; filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.5)); }
 
-        /* ================= ГОРИЗОНТАЛЬНЫЙ СЛОТ-ЭКРАН ================= --> */
-        .roulette-container-horizontal {
-            width: 100%;
-            max-width: 360px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 0 10px;
-            box-sizing: border-box;
-        }
-
-        /* Общий блок для всех линий рулеток */
-        .slots-lines-holder {
-            display: flex;
-            flex-direction: column;
-            gap: 10px; /* Расстояние между параллельными дорожками */
-            width: 100%;
-            margin-bottom: 25px;
-        }
-
-        /* Одиночная горизонтальная дорожка */
-        .roulette-wrapper-horizontal {
-            position: relative;
-            width: 100%;
-            height: 75px;
-            background: #0f172a;
-            border-radius: 16px;
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            overflow: hidden;
-        }
-
-        /* Вертикальная красная линия-маркер по центру */
-        .roulette-marker-horizontal {
-            position: absolute;
-            top: 0; left: 50%;
-            transform: translateX(-50%);
-            width: 4px; height: 100%;
-            background: #ef4444;
-            z-index: 10;
-            box-shadow: 0 0 10px #ef4444;
-            pointer-events: none;
-        }
-
-        /* Горизонтальная лента внутри дорожки */
-        .roulette-tape-horizontal {
-            display: flex;
-            align-items: center;
-            position: absolute;
-            left: 0; top: 0;
-            height: 100%;
-            transition: transform 0s cubic-bezier(0.1, 0.8, 0.1, 1);
-            will-change: transform;
-        }
-
-        /* Ячейка внутри горизонтальной рулетки */
-        .slot-item-horizontal {
-            width: 110px; /* Фиксированная ширина ячейки */
-            height: 100%;
-            flex-shrink: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            font-size: 13px;
-            font-weight: bold;
-            border-right: 1px solid rgba(255, 255, 255, 0.05);
-            background: #1e293b;
-            gap: 2px;
-            box-sizing: border-box;
-        }
+        /* МУЛЬТИ-СЛОТЫ */
+        .roulette-container-horizontal { width: 100%; max-width: 360px; display: flex; flex-direction: column; align-items: center; padding: 0 10px; box-sizing: border-box; }
+        .slots-lines-holder { display: flex; flex-direction: column; gap: 10px; width: 100%; margin-bottom: 25px; }
+        .roulette-wrapper-horizontal { position: relative; width: 100%; height: 75px; background: #0f172a; border-radius: 16px; border: 2px solid rgba(255, 255, 255, 0.1); overflow: hidden; }
+        .roulette-marker-horizontal { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 4px; height: 100%; background: #ef4444; z-index: 10; box-shadow: 0 0 10px #ef4444; pointer-events: none; }
+        .roulette-tape-horizontal { display: flex; align-items: center; position: absolute; left: 0; top: 0; height: 100%; transition: transform 0s cubic-bezier(0.1, 0.8, 0.1, 1); will-change: transform; }
+        
+        .slot-item-horizontal { width: 110px; height: 100%; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 13px; font-weight: bold; border-right: 1px solid rgba(255, 255, 255, 0.05); background: #1e293b; gap: 2px; box-sizing: border-box; }
         .slot-item-horizontal img { width: 24px; height: 24px; object-fit: contain; }
 
         .item-honey { color: #facc15; }
-        .item-empty { color: #94a3b8; }
+        .item-empty { color: #ef4444; }
         .item-key { color: #38bdf8; background: radial-gradient(circle, rgba(56,189,248,0.08) 0%, #1e293b 100%); }
 
-        /* СЕЛЕКТОР КОЛИЧЕСТВА КЕЙСОВ (1, 2, 3) */
-        .count-selector-box {
-            display: flex;
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 14px;
-            padding: 4px;
-            gap: 5px;
-            margin-bottom: 20px;
-        }
+        /* СЕЛЕКТОРЫ */
+        .count-selector-box { display: flex; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 14px; padding: 4px; gap: 5px; margin-bottom: 20px; }
+        .selector-btn { background: transparent; border: none; color: #94a3b8; padding: 8px 20px; font-size: 14px; font-weight: bold; border-radius: 10px; cursor: pointer; transition: all 0.2s; }
+        .selector-btn.active { background: rgba(255, 255, 255, 0.15); color: #ffffff; }
 
-        .selector-btn {
-            background: transparent;
-            border: none;
-            color: #94a3b8;
-            padding: 8px 20px;
-            font-size: 14px;
-            font-weight: bold;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .selector-btn.active {
-            background: rgba(255, 255, 255, 0.15);
-            color: #ffffff;
-        }
-
-        /* КНОПКА КРУТИТЬ С КРАСИВЫМ СИНИМ ДИЗАЙНОМ */
-        .spin-action-btn {
-            width: 95%;
-            max-width: 340px;
-            background: #2563eb;
-            color: #ffffff;
-            border: none;
-            padding: 16px;
-            font-size: 18px;
-            font-weight: bold;
-            border-radius: 20px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
-            transition: transform 0.1s ease, background 0.2s;
-        }
+        /* СИНЯЯ КНОПКА КРУТИТЬ */
+        .spin-action-btn { width: 95%; max-width: 340px; background: #2563eb; color: #ffffff; border: none; padding: 16px; font-size: 18px; font-weight: bold; border-radius: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3); transition: transform 0.1s ease, background 0.2s; }
         .spin-action-btn:active { transform: scale(0.97); background: #1d4ed8; }
         .spin-action-btn:disabled { background: #1e293b; color: #64748b; cursor: not-allowed; box-shadow: none; }
         .spin-action-btn img { width: 22px; height: 22px; }
@@ -252,15 +151,15 @@
 
     <script>
         let playerData = { honey: 12500, key5: 0 };
-        let currentLines = 1; // По умолчанию крутим 1 дорожку
+        let currentLines = 1; 
         let isSpinning = false;
 
-        const itemWidth = 110; // Ширина ячейки
+        const itemWidth = 110; 
         const poolItems = [
             { type: 'honey', text: '600', img: 'honey.png' },
             { type: 'honey', text: '750', img: 'honey.png' },
             { type: 'honey', text: '850', img: 'honey.png' },
-            { type: 'empty', text: 'Пусто', img: '' },
+            { type: 'empty', text: 'Ничего', img: '' },
             { type: 'key', text: 'Ключ 5', img: 'key5.png' }
         ];
 
@@ -282,24 +181,19 @@
             renderRouletteLines();
         }
 
-        // Изменение количества активных линий (1, 2 или 3)
         function changeLinesCount(count) {
             if (isSpinning) return;
             currentLines = count;
 
-            // Сброс и назначение активных классов кнопкам
             for(let i=1; i<=3; i++) {
                 document.getElementById(`btn-mode-${i}`).classList.remove('active');
             }
             document.getElementById(`btn-mode-${count}`).classList.add('active');
-
-            // Обновляем ценник на кнопке
             document.getElementById('spinCostText').innerText = count * 700;
 
             renderRouletteLines();
         }
 
-        // Генерация дорожек рулеток на экране
         function renderRouletteLines() {
             const holder = document.getElementById('slotsHolder');
             holder.innerHTML = '';
@@ -316,7 +210,6 @@
             }
         }
 
-        // Заполнение дорожки стартовыми фейковыми элементами
         function buildSingleTape(lineIndex) {
             const tape = document.getElementById(`tape-${lineIndex}`);
             tape.style.transition = 'none';
@@ -334,14 +227,14 @@
             block.className = `slot-item-horizontal item-${itemData.type}`;
             
             if (itemData.type === 'empty') {
-                block.innerHTML = `<span style="font-size:20px;">💨</span><span>${itemData.text}</span>`;
+                block.innerHTML = `<span style="font-size:20px; line-height:1;">❌</span><span>${itemData.text}</span>`;
             } else {
                 block.innerHTML = `<img src="${itemData.img}"><span>${itemData.text}</span>`;
             }
             parentTape.appendChild(block);
         }
 
-        // КРУЧЕНИЕ ГОРИЗОНТАЛЬНЫХ СЛОТОВ
+        // КРУЧЕНИЕ
         function spinHorizontalSlots() {
             if (isSpinning) return;
             const totalCost = currentLines * 700;
@@ -357,40 +250,36 @@
 
             document.getElementById('btnSpinAction').disabled = true;
 
-            const winIndex = 30; // Индекс, на котором остановится рулетка
-
-            // Массив для сохранения результатов расчетов каждой линии
+            const winIndex = 30; 
             let calculatedResults = [];
 
-            // Просчитываем математику выигрыша отдельно для каждой активной дорожки
             for (let l = 0; l < currentLines; l++) {
                 let prize = {};
                 let rand = Math.random() * 100;
 
-                if (rand <= 50) {
+                // ОБНОВЛЕННЫЕ ПРОЦЕНТЫ: 3% Ключ, 50% Мед, 47% Ничего
+                if (rand <= 3) {
+                    prize = { type: 'key', text: 'Ключ 5', val: 1, img: 'key5.png' };
+                } else if (rand <= 53) {
                     let hAmount = Math.floor(Math.random() * (850 - 600 + 1)) + 600;
                     prize = { type: 'honey', text: `${hAmount}`, val: hAmount, img: 'honey.png' };
-                } else if (rand <= 99) {
-                    prize = { type: 'empty', text: 'Пусто', val: 0, img: '' };
                 } else {
-                    prize = { type: 'key', text: 'Ключ 5', val: 1, img: 'key5.png' };
+                    prize = { type: 'empty', text: 'Ничего', val: 0, img: '' };
                 }
                 calculatedResults.push(prize);
 
-                // Перестраиваем ленту под этот бросок
                 const tape = document.getElementById(`tape-${l}`);
                 tape.style.transition = 'none';
                 tape.style.transform = 'translateX(0px)';
                 tape.innerHTML = '';
 
-                // Рандомный шанс в 15% на беспалевный байт (появление ключа прямо перед или после выигрыша)
-                let shouldByte = Math.random() < 0.15; 
+                // РЕДКИЙ БАЙТ (шанс всего 8%, чтобы не спалиться)
+                let shouldByte = Math.random() < 0.08; 
 
                 for (let i = 0; i < 42; i++) {
                     if (i === winIndex) {
                         createSlotDomItem(tape, prize);
                     } else if (shouldByte && (i === winIndex - 1 || i === winIndex + 1)) {
-                        // Редкий беспалевный байт
                         createSlotDomItem(tape, { type: 'key', text: 'Ключ 5', img: 'key5.png' });
                     } else {
                         const randItem = poolItems[Math.floor(Math.random() * poolItems.length)];
@@ -398,11 +287,8 @@
                     }
                 }
 
-                // Анимация прокрутки конкретной ленты
                 const wrapperWidth = document.querySelector('.roulette-wrapper-horizontal').offsetWidth;
                 const stopPos = -((winIndex * itemWidth) + (itemWidth / 2) - (wrapperWidth / 2));
-                
-                // Легкое случайное смещение внутри ячейки, чтобы маркер не вставал идеально по центру
                 const pixelOffset = Math.floor(Math.random() * 30) - 15; 
 
                 setTimeout(() => {
@@ -411,12 +297,12 @@
                 }, 40);
             }
 
-            // Конец кручения (Спустя 4 секунды)
+            // Окончание прокрутки
             setTimeout(() => {
                 isSpinning = false;
                 document.getElementById('btnSpinAction').disabled = false;
 
-                // Начисляем все награды абсолютно тихо (БЕЗ АЛЕРТОВ)
+                // Начисляем ресурсы ТИХО
                 calculatedResults.forEach(res => {
                     if (res.type === 'honey') {
                         playerData.honey += res.val;
@@ -425,7 +311,6 @@
                     }
                 });
 
-                // Просто тихо и плавно обновляем баланс на экране
                 updateUI();
             }, 4100);
         }
@@ -433,3 +318,5 @@
 
 </body>
 </html>
+
+
