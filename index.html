@@ -102,14 +102,14 @@
         .menu-btn:active { transform: scale(0.95); }
         .menu-btn img { width: 100%; height: auto; display: block; filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.4)); }
 
-        /* ЭКРАН БАНОК (СЕТКА) */
+        /* ЭКРАН БАНОК */
         .banks-list {
             display: flex;
-            flex-wrap: wrap;       /* Позволяет карточкам переноситься на новую строку */
-            justify-content: center; /* Центрирует банку на второй строке */
-            gap: 14px;             /* Расстояние между карточками */
+            flex-wrap: wrap;       
+            justify-content: center; 
+            gap: 14px;             
             width: 95%;
-            max-width: 380px;      /* Ограничение под ширину экрана телефона */
+            max-width: 380px;      
             margin-top: 20px;
         }
 
@@ -138,10 +138,10 @@
             transform: scale(0.92);
         }
 
-        /* КВАДРАТНЫЕ КАРТОЧКИ ДЛЯ БАНОК */
+        /* КАРТОЧКА БАНКИ ТЕПЕРЬ САМА ЯВЛЯЕТСЯ КНОПКОЙ */
         .bank-card {
-            width: calc(50% - 7px); /* Ровно половина ширины с учетом gap */
-            aspect-ratio: 1 / 1;    /* Делает карточку строго квадратной */
+            width: calc(50% - 7px); 
+            aspect-ratio: 1 / 1;    
             background: rgba(255, 255, 255, 0.08);
             border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 20px;
@@ -150,35 +150,25 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: space-between; /* Распределяет банку вверх, а кнопку вниз */
+            justify-content: center; /* Центрируем банку внутри квадрата */
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+            cursor: pointer;
+            transition: transform 0.1s ease, background 0.2s;
+            -webkit-tap-highlight-color: transparent; /* Убирает синюю рамку при тапе на смартфонах */
+        }
+
+        /* Эффект при нажатии на саму банку */
+        .bank-card:active {
+            background: rgba(255, 255, 255, 0.15);
+            transform: scale(0.96); 
         }
 
         .bank-img {
-            width: 75px;        /* Чуть уменьшил размер под компактный квадрат */
-            height: 75px;
+            width: 95px; /* Немного увеличил банку, так как кнопки внизу больше нет */
+            height: 95px;
             object-fit: contain;
             display: block;
-            margin-top: 5px;
-            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5)); 
-        }
-
-        /* Кнопка открыть внутри квадрата */
-        .open-btn {
-            width: 100%;
-            background: #eab308; 
-            color: #0f172a;
-            border: none;
-            padding: 10px;
-            font-size: 14px;
-            font-weight: 900;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: transform 0.1s ease, background 0.2s;
-        }
-        .open-btn:active { 
-            background: #ca8a04;
-            transform: scale(0.96); 
+            filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.5)); 
         }
 
         .banks-screen-padding {
@@ -189,7 +179,6 @@
 </head>
 <body>
 
-    <!-- 1. Панель ключей -->
     <div class="keys-container">
         <div class="key-slot"><img src="key1.png"><div class="key-count">0</div></div>
         <div class="key-slot"><img src="key2.png"><div class="key-count">0</div></div>
@@ -198,13 +187,11 @@
         <div class="key-slot"><img src="key5.png"><div class="key-count">0</div></div>
     </div>
 
-    <!-- 2. Баланс -->
     <div class="balance-container">
         <div class="balance-number">12 500</div>
         <img src="honey.png" alt="🍯" class="honey-icon">
     </div>
 
-    <!-- ================= ЭКРАН 1: ГЛАВНОЕ МЕНЮ ================= -->
     <div id="main-screen" class="screen active-screen">
         <div class="buttons-list">
             <button class="menu-btn"><img src="case.png" alt="Кейсы"></button>
@@ -213,31 +200,22 @@
         </div>
     </div>
 
-    <!-- ================= ЭКРАН 2: ОТКРЫТИЕ БАНОК ================= -->
     <div id="banks-screen" class="screen">
         
-        <!-- Кнопка возврата в меню -->
         <div class="back-arrow-btn" onclick="switchScreen('main-screen')">←</div>
 
-        <!-- Сетка банок (2 в ряд + 1 внизу по центру) -->
         <div class="banks-list">
             
-            <!-- Квадрат 1 -->
-            <div class="bank-card">
+            <div class="bank-card" onclick="alert('Открываем Банку 1!')">
                 <img src="banka1.png" alt="Банка 1" class="bank-img">
-                <button class="open-btn" onclick="alert('Открываем Банку 1!')">Открыть</button>
             </div>
 
-            <!-- Квадрат 2 -->
-            <div class="bank-card">
+            <div class="bank-card" onclick="alert('Открываем Банку 2!')">
                 <img src="banka2.png" alt="Банка 2" class="bank-img">
-                <button class="open-btn" onclick="alert('Открываем Банку 2!')">Открыть</button>
             </div>
 
-            <!-- Квадрат 3 -->
-            <div class="bank-card">
+            <div class="bank-card" onclick="alert('Открываем Банку 3!')">
                 <img src="banka3.png" alt="Банка 3" class="bank-img">
-                <button class="open-btn" onclick="alert('Открываем Банку 3!')">Открыть</button>
             </div>
 
         </div>
