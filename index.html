@@ -75,19 +75,18 @@
 
         /* ЭКРАНЫ */
         .screen {
-            display: none; 
+            display: none; /* По умолчанию все экраны скрыты */
             flex-direction: column;
             align-items: center;
             width: 100%;
         }
 
         .active-screen {
-            display: flex; 
+            display: flex; /* Показывается только активный экран */
         }
 
         /* Главное меню */
         .buttons-list {
-            display: flex;
             flex-direction: column;
             align-items: center;
             gap: 36px;
@@ -109,68 +108,64 @@
             width: 100%;
         }
 
-        /* Карточки для банок */
+        /* Отсеки для банок */
         .bank-card {
             width: 92%;
             max-width: 360px;
             background: rgba(255, 255, 255, 0.08);
             border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 24px;
-            padding: 24px;
+            border-radius: 20px;
+            padding: 20px;
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 20px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+            gap: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
         }
 
-        .bank-img {
-            width: 120px;        
-            height: 120px;
-            object-fit: contain;
-            display: block;
-            filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.5)); 
+        .bank-placeholder {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
         }
 
         /* Кнопка открыть */
         .open-btn {
             width: 100%;
-            background: #eab308; 
+            background: #eab308; /* Красивый желтый цвет под мед */
             color: #0f172a;
             border: none;
-            padding: 14px;
+            padding: 12px;
             font-size: 16px;
-            font-weight: 900;
-            border-radius: 14px;
-            cursor: pointer;
-            transition: transform 0.1s ease, background 0.2s;
-            box-shadow: 0 4px 12px rgba(234, 179, 8, 0.2);
-        }
-        .open-btn:active { 
-            background: #ca8a04;
-            transform: scale(0.97); 
-        }
-
-        /* Кнопка Назад */
-        .back-btn {
-            margin-top: 25px;
-            margin-bottom: 35px;
-            background: rgba(255, 255, 255, 0.12);
-            color: white;
-            border: none;
-            padding: 12px 32px;
-            font-size: 15px;
             font-weight: bold;
             border-radius: 12px;
             cursor: pointer;
+            transition: background 0.2s;
+        }
+        .open-btn:active { background: #ca8a04; }
+
+        /* Кнопка Назад */
+        .back-btn {
+            margin-top: 10px;
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            font-size: 14px;
+            font-weight: bold;
+            border-radius: 10px;
+            cursor: pointer;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: transform 0.1s ease;
         }
-        .back-btn:active { 
-            background: rgba(255, 255, 255, 0.2); 
-            transform: scale(0.96);
-        }
+        .back-btn:active { background: rgba(255, 255, 255, 0.25); }
     </style>
 </head>
 <body>
@@ -200,17 +195,17 @@
         <div class="banks-list">
             
             <div class="bank-card">
-                <img src="banka1.png" alt="Банка 1" class="bank-img">
+                <div class="bank-placeholder">Банка 1</div>
                 <button class="open-btn" onclick="alert('Открываем Банку 1!')">Открыть</button>
             </div>
 
             <div class="bank-card">
-                <img src="banka2.png" alt="Банка 2" class="bank-img">
+                <div class="bank-placeholder">Банка 2</div>
                 <button class="open-btn" onclick="alert('Открываем Банку 2!')">Открыть</button>
             </div>
 
             <div class="bank-card">
-                <img src="banka3.png" alt="Банка 3" class="bank-img">
+                <div class="bank-placeholder">Банка 3</div>
                 <button class="open-btn" onclick="alert('Открываем Банку 3!')">Открыть</button>
             </div>
 
@@ -221,9 +216,11 @@
 
     <script>
         function switchScreen(screenId) {
+            // Прячем все экраны
             document.getElementById('main-screen').classList.remove('active-screen');
             document.getElementById('banks-screen').classList.remove('active-screen');
             
+            // Показываем нужный
             document.getElementById(screenId).classList.add('active-screen');
         }
     </script>
