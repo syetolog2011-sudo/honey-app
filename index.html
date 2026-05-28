@@ -1,168 +1,232 @@
-<style>
-    body {
-        margin: 0;
-        padding: 0;
-        background: radial-gradient(circle, #334155 0%, #0f172a 100%);
-        background-attachment: fixed;
-        color: #ffffff;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        user-select: none;
-        -webkit-user-select: none;
-        min-height: 100vh;
-    }
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Mini App</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: radial-gradient(circle, #334155 0%, #0f172a 100%);
+            background-attachment: fixed;
+            color: #ffffff;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            user-select: none;
+            -webkit-user-select: none;
+            min-height: 100vh;
+        }
 
-    /* Контейнер для ключей */
-    .keys-container {
-        display: flex;
-        justify-content: center;
-        gap: 6px; 
-        margin-top: 25px;
-        margin-bottom: 25px;
-        width: 98%;
-    }
-    
-    .key-slot {
-        position: relative;
-        width: 90px;
-        height: 90px;
-        background: rgba(255, 255, 255, 0.1);
-        border-radius: 16px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        box-sizing: border-box;
-    }
+        /* Контейнер для ключей */
+        .keys-container {
+            display: flex;
+            justify-content: center;
+            gap: 6px; 
+            margin-top: 25px;
+            margin-bottom: 25px;
+            width: 98%;
+        }
+        
+        .key-slot {
+            position: relative;
+            width: 90px;
+            height: 90px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-sizing: border-box;
+        }
 
-    .key-slot img {
-        width: 50px;
-        height: 50px;
-        object-fit: contain;
-        display: block;
-        margin-bottom: 12px;
-    }
+        .key-slot img {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+            display: block;
+            margin-bottom: 12px;
+        }
 
-    .key-count {
-        position: absolute;
-        bottom: 6px;
-        left: 8px;
-        font-size: 13px;
-        font-weight: bold;
-        background: rgba(0, 0, 0, 0.6);
-        padding: 2px 6px;
-        border-radius: 5px;
-    }
+        .key-count {
+            position: absolute;
+            bottom: 6px;
+            left: 8px;
+            font-size: 13px;
+            font-weight: bold;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 2px 6px;
+            border-radius: 5px;
+        }
 
-    /* Блок баланса */
-    .balance-container {
-        display: flex;
-        align-items: center;
-        gap: 15px;
-        margin-bottom: 40px;
-    }
-    .balance-number { font-size: 28px; font-weight: 900; }
-    .honey-icon { width: 32px; height: 32px; }
+        /* Блок баланса */
+        .balance-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+        .balance-number { font-size: 28px; font-weight: 900; }
+        .honey-icon { width: 32px; height: 32px; }
 
-    /* ЭКРАНЫ */
-    .screen {
-        display: none; 
-        flex-direction: column;
-        align-items: center;
-        width: 100%;
-    }
+        /* ЭКРАНЫ */
+        .screen {
+            display: none; 
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
 
-    .active-screen {
-        display: flex; 
-    }
+        .active-screen {
+            display: flex; 
+        }
 
-    /* ИСПРАВЛЕНО: Главное меню теперь снова строго по центру и крупное */
-    .buttons-list {
-        display: flex; /* Вернул флекс, чтобы кнопки выстроились */
-        flex-direction: column;
-        align-items: center;
-        gap: 36px; /* Вернул большой отступ между кнопками */
-        width: 100%;
-    }
-    .menu-btn {
-        background: none; border: none; padding: 0; cursor: pointer;
-        width: 92%; max-width: 360px; transition: transform 0.1s ease;
-    }
-    .menu-btn:active { transform: scale(0.95); }
-    .menu-btn img { width: 100%; height: auto; display: block; filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.4)); }
+        /* Главное меню */
+        .buttons-list {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 36px;
+            width: 100%;
+        }
+        .menu-btn {
+            background: none; border: none; padding: 0; cursor: pointer;
+            width: 92%; max-width: 360px; transition: transform 0.1s ease;
+        }
+        .menu-btn:active { transform: scale(0.95); }
+        .menu-btn img { width: 100%; height: auto; display: block; filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.4)); }
 
-    /* ЭКРАН БАНОК */
-    .banks-list {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 25px;
-        width: 100%;
-    }
+        /* ЭКРАН БАНОК */
+        .banks-list {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 25px;
+            width: 100%;
+        }
 
-    /* Карточки для банок */
-    .bank-card {
-        width: 92%;
-        max-width: 360px;
-        background: rgba(255, 255, 255, 0.08);
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        border-radius: 24px;
-        padding: 24px;
-        box-sizing: border-box;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 20px;
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
-    }
+        /* Карточки для банок */
+        .bank-card {
+            width: 92%;
+            max-width: 360px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 24px;
+            padding: 24px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+        }
 
-    .bank-img {
-        width: 120px;        
-        height: 120px;
-        object-fit: contain;
-        display: block;
-        filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.5)); 
-    }
+        .bank-img {
+            width: 120px;        
+            height: 120px;
+            object-fit: contain;
+            display: block;
+            filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.5)); 
+        }
 
-    /* Кнопка открыть */
-    .open-btn {
-        width: 100%;
-        background: #eab308; 
-        color: #0f172a;
-        border: none;
-        padding: 14px;
-        font-size: 16px;
-        font-weight: 900;
-        border-radius: 14px;
-        cursor: pointer;
-        transition: transform 0.1s ease, background 0.2s;
-        box-shadow: 0 4px 12px rgba(234, 179, 8, 0.2);
-    }
-    .open-btn:active { 
-        background: #ca8a04;
-        transform: scale(0.97); 
-    }
+        /* Кнопка открыть */
+        .open-btn {
+            width: 100%;
+            background: #eab308; 
+            color: #0f172a;
+            border: none;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: 900;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: transform 0.1s ease, background 0.2s;
+            box-shadow: 0 4px 12px rgba(234, 179, 8, 0.2);
+        }
+        .open-btn:active { 
+            background: #ca8a04;
+            transform: scale(0.97); 
+        }
 
-    /* Кнопка Назад */
-    .back-btn {
-        margin-top: 25px;
-        margin-bottom: 35px;
-        background: rgba(255, 255, 255, 0.12);
-        color: white;
-        border: none;
-        padding: 12px 32px;
-        font-size: 15px;
-        font-weight: bold;
-        border-radius: 12px;
-        cursor: pointer;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        transition: transform 0.1s ease;
-    }
-    .back-btn:active { 
-        background: rgba(255, 255, 255, 0.2); 
-        transform: scale(0.96);
-    }
-</style>
+        /* Кнопка Назад */
+        .back-btn {
+            margin-top: 25px;
+            margin-bottom: 35px;
+            background: rgba(255, 255, 255, 0.12);
+            color: white;
+            border: none;
+            padding: 12px 32px;
+            font-size: 15px;
+            font-weight: bold;
+            border-radius: 12px;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.1s ease;
+        }
+        .back-btn:active { 
+            background: rgba(255, 255, 255, 0.2); 
+            transform: scale(0.96);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="keys-container">
+        <div class="key-slot"><img src="key1.png"><div class="key-count">0</div></div>
+        <div class="key-slot"><img src="key2.png"><div class="key-count">0</div></div>
+        <div class="key-slot"><img src="key3.png"><div class="key-count">0</div></div>
+        <div class="key-slot"><img src="key4.png"><div class="key-count">0</div></div>
+        <div class="key-slot"><img src="key5.png"><div class="key-count">0</div></div>
+    </div>
+
+    <div class="balance-container">
+        <div class="balance-number">12 500</div>
+        <img src="honey.png" alt="🍯" class="honey-icon">
+    </div>
+
+    <div id="main-screen" class="screen active-screen">
+        <div class="buttons-list">
+            <button class="menu-btn"><img src="case.png" alt="Кейсы"></button>
+            <button class="menu-btn" onclick="switchScreen('banks-screen')"><img src="banka.png" alt="Банки"></button>
+            <button class="menu-btn"><img src="igra.png" alt="Игры"></button>
+        </div>
+    </div>
+
+    <div id="banks-screen" class="screen">
+        <div class="banks-list">
+            
+            <div class="bank-card">
+                <img src="banka1.png" alt="Банка 1" class="bank-img">
+                <button class="open-btn" onclick="alert('Открываем Банку 1!')">Открыть</button>
+            </div>
+
+            <div class="bank-card">
+                <img src="banka2.png" alt="Банка 2" class="bank-img">
+                <button class="open-btn" onclick="alert('Открываем Банку 2!')">Открыть</button>
+            </div>
+
+            <div class="bank-card">
+                <img src="banka3.png" alt="Банка 3" class="bank-img">
+                <button class="open-btn" onclick="alert('Открываем Банку 3!')">Открыть</button>
+            </div>
+
+        </div>
+
+        <button class="back-btn" onclick="switchScreen('main-screen')">Назад</button>
+    </div>
+
+    <script>
+        function switchScreen(screenId) {
+            document.getElementById('main-screen').classList.remove('active-screen');
+            document.getElementById('banks-screen').classList.remove('active-screen');
+            
+            document.getElementById(screenId).classList.add('active-screen');
+        }
+    </script>
+
+</body>
+</html>
