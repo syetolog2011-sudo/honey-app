@@ -97,6 +97,7 @@
 </head>
 <body>
 
+    <!-- ВЕРХНЯЯ ПАНЕЛЬ -->
     <div class="keys-container">
         <div class="key-slot"><img src="key1.png"><div class="key-count" id="ui-key1">0</div></div>
         <div class="key-slot"><img src="key2.png"><div class="key-count" id="ui-key2">0</div></div>
@@ -110,6 +111,7 @@
         <img src="honey.png" alt="🍯" class="honey-icon">
     </div>
 
+    <!-- ================= ЭКРАН 1: ГЛАВНОЕ МЕНЮ ================= -->
     <div id="main-screen" class="screen active-screen">
         <div class="buttons-list">
             <button class="menu-btn"><img src="case.png" alt="Кейсы"></button>
@@ -118,6 +120,7 @@
         </div>
     </div>
 
+    <!-- ================= ЭКРАН 2: ОТКРЫТИЕ БАНОК ================= -->
     <div id="banks-screen" class="screen">
         <div class="back-arrow-btn" onclick="switchScreen('main-screen')">←</div>
         <div class="banks-list">
@@ -128,6 +131,7 @@
         <div class="banks-screen-padding"></div>
     </div>
 
+    <!-- ================= ЭКРАН 3: РУЛЕТКА ================= -->
     <div id="roulette-screen" class="screen">
         <div class="back-arrow-btn" onclick="switchScreen('banks-screen')">←</div>
 
@@ -156,11 +160,11 @@
 
         const itemWidth = 110; 
         const poolItems = [
-            { type: 'honey', text: '600', img: 'honey.png' },
             { type: 'honey', text: '750', img: 'honey.png' },
-            { type: 'honey', text: '850', img: 'honey.png' },
+            { type: 'honey', text: '1000', img: 'honey.png' },
+            { type: 'honey', text: '600', img: 'honey.png' },
             { type: 'empty', text: 'Ничего', img: '' },
-            { type: 'key', text: 'Ключ 5', img: 'key5.png' }
+            { type: 'key', text: 'Ключ', img: 'key5.png' }
         ];
 
         function updateUI() {
@@ -257,11 +261,11 @@
                 let prize = {};
                 let rand = Math.random() * 100;
 
-                // ОБНОВЛЕННЫЕ ПРОЦЕНТЫ: 3% Ключ, 50% Мед, 47% Ничего
+                // ЧЕСТНЫЕ ШАНСЫ: 3% Ключ, 50% Мед (до 1000), 47% Ничего
                 if (rand <= 3) {
-                    prize = { type: 'key', text: 'Ключ 5', val: 1, img: 'key5.png' };
+                    prize = { type: 'key', text: 'Ключ', val: 1, img: 'key5.png' };
                 } else if (rand <= 53) {
-                    let hAmount = Math.floor(Math.random() * (850 - 600 + 1)) + 600;
+                    let hAmount = Math.floor(Math.random() * (1000 - 600 + 1)) + 600;
                     prize = { type: 'honey', text: `${hAmount}`, val: hAmount, img: 'honey.png' };
                 } else {
                     prize = { type: 'empty', text: 'Ничего', val: 0, img: '' };
@@ -273,14 +277,10 @@
                 tape.style.transform = 'translateX(0px)';
                 tape.innerHTML = '';
 
-                // РЕДКИЙ БАЙТ (шанс всего 8%, чтобы не спалиться)
-                let shouldByte = Math.random() < 0.08; 
-
+                // Заполнение ленты — БАЙТЫ ПОЛНОСТЬЮ УБРАНЫ, всё рендерится случайно
                 for (let i = 0; i < 42; i++) {
                     if (i === winIndex) {
                         createSlotDomItem(tape, prize);
-                    } else if (shouldByte && (i === winIndex - 1 || i === winIndex + 1)) {
-                        createSlotDomItem(tape, { type: 'key', text: 'Ключ 5', img: 'key5.png' });
                     } else {
                         const randItem = poolItems[Math.floor(Math.random() * poolItems.length)];
                         createSlotDomItem(tape, randItem);
@@ -302,7 +302,7 @@
                 isSpinning = false;
                 document.getElementById('btnSpinAction').disabled = false;
 
-                // Начисляем ресурсы ТИХО
+                // Зачисление выигрыша БЕЗ всплывающих окон и сообщений
                 calculatedResults.forEach(res => {
                     if (res.type === 'honey') {
                         playerData.honey += res.val;
@@ -318,5 +318,3 @@
 
 </body>
 </html>
-
-
