@@ -79,11 +79,12 @@
 
         .item-honey { color: #facc15; }
         .item-empty { color: #ef4444; }
-        .item-key { color: #38bdf8; background: radial-gradient(circle, rgba(56,189,248,0.08) 0%, #1e293b 100%); }
+        .item-key4 { color: #a855f7; background: radial-gradient(circle, rgba(168,85,247,0.08) 0%, #1e293b 100%); }
+        .item-key5 { color: #38bdf8; background: radial-gradient(circle, rgba(56,189,248,0.08) 0%, #1e293b 100%); }
 
         /* СЕЛЕКТОРЫ */
         .count-selector-box { display: flex; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 14px; padding: 4px; gap: 5px; margin-bottom: 20px; }
-        .selector-btn { background: transparent; border: none; color: #94a3b8; padding: 8px 20px; font-size: 16px; font-weight: bold; border-radius: 10px; cursor: pointer; transition: all 0.2s; }
+        .selector-btn { background: transparent; border: none; color: #94a3b8; padding: 8px 25px; font-size: 16px; font-weight: bold; border-radius: 10px; cursor: pointer; transition: all 0.2s; }
         .selector-btn.active { background: rgba(255, 255, 255, 0.15); color: #ffffff; }
 
         /* СИНЯЯ КНОПКА КРУТИТЬ */
@@ -153,15 +154,15 @@
         let playerData = { honey: 12500, key1: 0, key2: 0, key3: 0, key4: 0, key5: 0 };
         let currentLines = 1; 
         let isSpinning = false;
-        const itemWidth = 110; 
 
-        // Декоративный пул для заполнения ленты (без знаков ?)
+        const itemWidth = 110; 
+        // Декоративный пул для безопасного случайного заполнения ленты по умолчанию
         const poolItems = [
             { type: 'honey', text: '850', img: 'honey.png' },
             { type: 'honey', text: '700', img: 'honey.png' },
             { type: 'empty', text: 'Ничего', img: '' },
-            { type: 'key', text: 'Ключ', img: 'key4.png' },
-            { type: 'key', text: 'Ультра', img: 'key5.png' }
+            { type: 'key4', text: 'Ключ', img: 'key4.png' },
+            { type: 'key5', text: 'Ультра', img: 'key5.png' }
         ];
 
         function updateUI() {
@@ -239,6 +240,7 @@
             parentTape.appendChild(block);
         }
 
+        // КРУЧЕНИЕ С ОБНОВЛЕННЫМИ ЧЕСТНЫМИ ШАНСАМИ
         function spinHorizontalSlots() {
             if (isSpinning) return;
             const totalCost = currentLines * 700;
@@ -261,7 +263,7 @@
                 let prize = {};
                 let rand = Math.random() * 100;
 
-                // ЧЕСТНЫЕ ШАНСЫ БАНКИ 3: 34.5% Пусто, 64% Мёд, 1% Элитный (key4), 0.5% Ультра (key5)
+                // СТРОГОЕ РАСПРЕДЕЛЕНИЕ: 34.5% Пусто, 64% Мёд (700-1000), 1% Элитный (key4), 0.5% Ультра (key5)
                 if (rand < 34.5) {
                     prize = { type: 'empty', text: 'Ничего', val: 0, img: '' };
                 } else if (rand < 98.5) {
@@ -279,7 +281,7 @@
                 tape.style.transform = 'translateX(0px)';
                 tape.innerHTML = '';
 
-                // Заполнение ленты перед прокруткой
+                // Рендер ленты без фейковых перекатов вокруг победного индекса
                 for (let i = 0; i < 45; i++) {
                     if (i === winIndex) {
                         createSlotDomItem(tape, prize);
@@ -299,13 +301,25 @@
                 }, 40);
             }
 
+            // Тихое зачисление финала без алертов
             setTimeout(() => {
                 isSpinning = false;
                 document.getElementById('btnSpinAction').disabled = false;
 
-                // Тихое начисление
                 calculatedResults.forEach(res => {
                     if (res.type === 'honey') {
                         playerData.honey += res.val;
-                    } else if (res.type === 'key4
-        
+                    } else if (res.type === 'key4') {
+                        playerData.key4 += 1;
+                    } else if (res.type === 'key5') {
+                        playerData.key5 += 1;
+                    }
+                });
+
+                updateUI();
+            }, 4100);
+        }
+    </script>
+
+</body>
+</html>
