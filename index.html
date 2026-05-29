@@ -79,8 +79,7 @@
 
         .item-honey { color: #facc15; }
         .item-empty { color: #ef4444; }
-        .item-key4 { color: #a855f7; background: radial-gradient(circle, rgba(168,85,247,0.08) 0%, #1e293b 100%); }
-        .item-key5 { color: #38bdf8; background: radial-gradient(circle, rgba(56,189,248,0.08) 0%, #1e293b 100%); }
+        .item-key { color: #38bdf8; background: radial-gradient(circle, rgba(56,189,248,0.08) 0%, #1e293b 100%); }
 
         /* СЕЛЕКТОРЫ */
         .count-selector-box { display: flex; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 14px; padding: 4px; gap: 5px; margin-bottom: 20px; }
@@ -122,9 +121,9 @@
     <div id="banks-screen" class="screen">
         <div class="back-arrow-btn" onclick="switchScreen('main-screen')">←</div>
         <div class="banks-list">
-            <div class="bank-card" onclick="alert('Открываем Банку 1!')"><img src="banka1.png" class="bank-img"></div>
-            <div class="bank-card" onclick="alert('Открываем Банку 2!')"><img src="banka2.png" class="bank-img"></div>
-            <div class="bank-card" onclick="openHorizontalSlots()"><img src="banka3.png" class="bank-img"></div>
+            <div class="bank-card" onclick="openHorizontalSlots(1)"><img src="banka1.png" class="bank-img"></div>
+            <div class="bank-card" onclick="openHorizontalSlots(2)"><img src="banka2.png" class="bank-img"></div>
+            <div class="bank-card" onclick="openHorizontalSlots(3)"><img src="banka3.png" class="bank-img"></div>
         </div>
         <div class="banks-screen-padding"></div>
     </div>
@@ -154,16 +153,27 @@
         let playerData = { honey: 12500, key1: 0, key2: 0, key3: 0, key4: 0, key5: 0 };
         let currentLines = 1; 
         let isSpinning = false;
+        let currentBankId = 3; // По умолчанию Банка 3
 
         const itemWidth = 110; 
-        // Декоративный пул для безопасного случайного заполнения ленты по умолчанию
+        
+        // Декоративный пул картинок для ленты (везде подпись просто "Ключ")
         const poolItems = [
-            { type: 'honey', text: '850', img: 'honey.png' },
-            { type: 'honey', text: '700', img: 'honey.png' },
+            { type: 'honey', text: '500', img: 'honey.png' },
             { type: 'empty', text: 'Ничего', img: '' },
-            { type: 'key4', text: 'Ключ', img: 'key4.png' },
-            { type: 'key5', text: 'Ультра', img: 'key5.png' }
+            { type: 'key', text: 'Ключ', img: 'key1.png' },
+            { type: 'key', text: 'Ключ', img: 'key2.png' },
+            { type: 'key', text: 'Ключ', img: 'key3.png' },
+            { type: 'key', text: 'Ключ', img: 'key4.png' },
+            { type: 'key', text: 'Ключ', img: 'key5.png' }
         ];
+
+        // Конфигурация банок: цена за 1 линию
+        const bankConfigs = {
+            1: { price: 300 },
+            2: { price: 500 },
+            3: { price: 700 }
+        };
 
         function updateUI() {
             document.getElementById('ui-balance').innerText = playerData.honey.toLocaleString();
@@ -182,8 +192,11 @@
             document.getElementById(screenId).classList.add('active-screen');
         }
 
-        function openHorizontalSlots() {
+        function openHorizontalSlots(bankId) {
+            currentBankId = bankId;
             switchScreen('roulette-screen');
+            // Сбрасываем выбор на 1 линию при входе для безопасности
+            changeLinesCount(1); 
             renderRouletteLines();
         }
 
@@ -195,7 +208,10 @@
                 document.getElementById(`btn-mode-${i}`).classList.remove('active');
             }
             document.getElementById(`btn-mode-${count}`).classList.add('active');
-            document.getElementById('spinCostText').innerText = count * 700;
+            
+            // Считаем стоимость на основе выбранной банки
+            let basePrice = bankConfigs[currentBankId].price;
+            document.getElementById('spinCostText').innerText = count * basePrice;
 
             renderRouletteLines();
         }
@@ -240,10 +256,10 @@
             parentTape.appendChild(block);
         }
 
-        // КРУЧЕНИЕ С ОБНОВЛЕННЫМИ ЧЕСТНЫМИ ШАНСАМИ
         function spinHorizontalSlots() {
             if (isSpinning) return;
-            const totalCost = currentLines * 700;
+            const basePrice = bankConfigs[currentBankId].price;
+            const totalCost = currentLines * basePrice;
 
             if (playerData.honey < totalCost) {
                 alert('Недостаточно мёда!');
@@ -263,17 +279,45 @@
                 let prize = {};
                 let rand = Math.random() * 100;
 
-                // СТРОГОЕ РАСПРЕДЕЛЕНИЕ: 34.5% Пусто, 64% Мёд (700-1000), 1% Элитный (key4), 0.5% Ультра (key5)
-                if (rand < 34.5) {
-                    prize = { type: 'empty', text: 'Ничего', val: 0, img: '' };
-                } else if (rand < 98.5) {
-                    let hAmount = Math.floor(Math.random() * (1000 - 700 + 1)) + 700;
-                    prize = { type: 'honey', text: `${hAmount}`, val: hAmount, img: 'honey.png' };
-                } else if (rand < 99.5) {
-                    prize = { type: 'key4', text: 'Ключ', val: 1, img: 'key4.png' };
-                } else {
-                    prize = { type: 'key5', text: 'Ультра', val: 1, img: 'key5.png' };
+                // ДИНАМИЧЕСКИЙ РАСЧЕТ ШАНСОВ В ЗАВИСИМОСТИ ОТ ВЫБРАННОЙ БАНКИ
+                if (currentBankId === 1) {
+                    // БАНКА 1: 40% Пусто, 59% Мёд (200-450), 1% Ключ 1
+                    if (rand < 40) {
+                        prize = { type: 'empty', text: 'Ничего', val: 0, img: '' };
+                    } else if (rand < 99) {
+                        let hAmount = Math.floor(Math.random() * (450 - 200 + 1)) + 200;
+                        prize = { type: 'honey', text: `${hAmount}`, val: hAmount, img: 'honey.png' };
+                    } else {
+                        prize = { type: 'key1', text: 'Ключ', val: 1, img: 'key1.png' };
+                    }
+                } 
+                else if (currentBankId === 2) {
+                    // БАНКА 2: 40% Пусто, 57% Мёд (400-700), 2% Ключ 2, 1% Ключ 3
+                    if (rand < 40) {
+                        prize = { type: 'empty', text: 'Ничего', val: 0, img: '' };
+                    } else if (rand < 97) {
+                        let hAmount = Math.floor(Math.random() * (700 - 400 + 1)) + 400;
+                        prize = { type: 'honey', text: `${hAmount}`, val: hAmount, img: 'honey.png' };
+                    } else if (rand < 99) {
+                        prize = { type: 'key2', text: 'Ключ', val: 1, img: 'key2.png' };
+                    } else {
+                        prize = { type: 'key3', text: 'Ключ', val: 1, img: 'key3.png' };
+                    }
+                } 
+                else {
+                    // БАНКА 3: 34.5% Пусто, 64% Мёд (700-1000), 1% Ключ 4, 0.5% Ключ 5
+                    if (rand < 34.5) {
+                        prize = { type: 'empty', text: 'Ничего', val: 0, img: '' };
+                    } else if (rand < 98.5) {
+                        let hAmount = Math.floor(Math.random() * (1000 - 700 + 1)) + 700;
+                        prize = { type: 'honey', text: `${hAmount}`, val: hAmount, img: 'honey.png' };
+                    } else if (rand < 99.5) {
+                        prize = { type: 'key4', text: 'Ключ', val: 1, img: 'key4.png' };
+                    } else {
+                        prize = { type: 'key5', text: 'Ключ', val: 1, img: 'key5.png' };
+                    }
                 }
+                
                 calculatedResults.push(prize);
 
                 const tape = document.getElementById(`tape-${l}`);
@@ -281,10 +325,13 @@
                 tape.style.transform = 'translateX(0px)';
                 tape.innerHTML = '';
 
-                // Рендер ленты без фейковых перекатов вокруг победного индекса
+                // Генерация ленты вокруг выигрыша
                 for (let i = 0; i < 45; i++) {
                     if (i === winIndex) {
-                        createSlotDomItem(tape, prize);
+                        // Для отображения на ленте приводим тип к общему 'key', чтобы работали стили
+                        let displayPrize = {...prize};
+                        if(displayPrize.type.startsWith('key')) displayPrize.type = 'key';
+                        createSlotDomItem(tape, displayPrize);
                     } else {
                         const randItem = poolItems[Math.floor(Math.random() * poolItems.length)];
                         createSlotDomItem(tape, randItem);
@@ -301,7 +348,7 @@
                 }, 40);
             }
 
-            // Тихое зачисление финала без алертов
+            // Тихое начисление
             setTimeout(() => {
                 isSpinning = false;
                 document.getElementById('btnSpinAction').disabled = false;
@@ -309,10 +356,8 @@
                 calculatedResults.forEach(res => {
                     if (res.type === 'honey') {
                         playerData.honey += res.val;
-                    } else if (res.type === 'key4') {
-                        playerData.key4 += 1;
-                    } else if (res.type === 'key5') {
-                        playerData.key5 += 1;
+                    } else if (playerData[res.type] !== undefined) {
+                        playerData[res.type] += 1;
                     }
                 });
 
