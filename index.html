@@ -237,7 +237,6 @@
                 backBtn.setAttribute('onclick', "switchScreen('cases-screen')");
             }
 
-            // Принудительно ставим 1 линию при входе
             currentLines = 1;
             for(let i=1; i<=3; i++) {
                 document.getElementById(`btn-mode-${i}`).classList.remove('active');
@@ -329,8 +328,6 @@
                     return;
                 }
                 playerData.honey -= totalCost;
-            } else {
-                // Заглушка для кейсов
             }
 
             isSpinning = true;
@@ -394,4 +391,7 @@
 
                 const wrapperWidth = document.querySelector('.roulette-wrapper-horizontal').offsetWidth;
                 const stopPos = -((winIndex * itemWidth) + (itemWidth / 2) - (wrapperWidth / 2));
-                const pixelOffset
+                const pixelOffset = Math.floor(Math.random() * 30) - 15; 
+
+                setTimeout(() => {
+                    tape.style.transi
