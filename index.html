@@ -113,7 +113,7 @@
 
     <div id="main-screen" class="screen active-screen">
         <div class="buttons-list">
-            <button class="menu-btn" onclick="switchScreen('cases-screen')"><img src="case.png" alt="Кейсы"></button>
+            <button class="menu-btn" onclick="switchScreen('case-screen')"><img src="case.png" alt="Кейсы"></button>
             <button class="menu-btn" onclick="switchScreen('banks-screen')"><img src="banka.png" alt="Банки"></button>
             <button class="menu-btn"><img src="igra.png" alt="Игры"></button>
         </div>
@@ -129,7 +129,7 @@
         <div class="bottom-screen-padding"></div>
     </div>
 
-    <div id="cases-screen" class="screen">
+    <div id="case-screen" class="screen">
         <div class="back-arrow-btn" onclick="switchScreen('main-screen')">←</div>
         <div class="grid-list">
             <div class="grid-card" onclick="openHorizontalSlots('case', 1)"><img src="case1.png" class="grid-img"></div>
@@ -219,7 +219,7 @@
         function switchScreen(screenId) {
             document.getElementById('main-screen').classList.remove('active-screen');
             document.getElementById('banks-screen').classList.remove('active-screen');
-            document.getElementById('cases-screen').classList.remove('active-screen');
+            document.getElementById('case-screen').classList.remove('active-screen');
             document.getElementById('roulette-screen').classList.remove('active-screen');
             document.getElementById(screenId).classList.add('active-screen');
         }
@@ -234,13 +234,14 @@
             if (type === 'bank') {
                 backBtn.setAttribute('onclick', "switchScreen('banks-screen')");
             } else {
-                backBtn.setAttribute('onclick', "switchScreen('cases-screen')");
+                backBtn.setAttribute('onclick', "switchScreen('case-screen')");
             }
 
             currentLines = 1;
             for(let i=1; i<=3; i++) {
                 document.getElementById(`btn-mode-${i}`).classList.remove('active');
             }
+            document.getElementById('btn-mode-1').add;
             document.getElementById('btn-mode-1').classList.add('active');
 
             updateButtonVisuals();
@@ -393,5 +394,4 @@
                 const stopPos = -((winIndex * itemWidth) + (itemWidth / 2) - (wrapperWidth / 2));
                 const pixelOffset = Math.floor(Math.random() * 30) - 15; 
 
-                setTimeout(() => {
-                    tape.style.transi
+                setTi
