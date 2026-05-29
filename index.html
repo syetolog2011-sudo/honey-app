@@ -216,7 +216,18 @@
         function openHorizontalSlots(bankId) {
             currentBankId = bankId;
             switchScreen('roulette-screen');
-            changeLinesCount(1); 
+            
+            // Принудительно сбрасываем на 1 линию при открытии новой банки
+            currentLines = 1;
+            for(let i=1; i<=3; i++) {
+                document.getElementById(`btn-mode-${i}`).classList.remove('active');
+            }
+            document.getElementById('btn-mode-1').classList.add('active');
+
+            // Сразу выставляем корректную цену на кнопке
+            let basePrice = bankConfigs[currentBankId].price;
+            document.getElementById('spinCostText').innerText = currentLines * basePrice;
+
             renderRouletteLines();
         }
 
