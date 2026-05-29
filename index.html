@@ -152,7 +152,7 @@
             <div class="slots-lines-holder" id="slotsHolder"></div>
 
             <button class="spin-action-btn" id="btnSpinAction" onclick="spinHorizontalSlots()">
-                <span id="spinButtonText">Крутить за 700</span> <img src="honey.png" id="spinCostImg">
+                <span id="spinButtonText">Крутить</span> <img src="honey.png" id="spinCostImg">
             </button>
 
         </div>
@@ -237,7 +237,15 @@
                 backBtn.setAttribute('onclick', "switchScreen('cases-screen')");
             }
 
-            changeLinesCount(1); 
+            // Принудительно ставим 1 линию при входе
+            currentLines = 1;
+            for(let i=1; i<=3; i++) {
+                document.getElementById(`btn-mode-${i}`).classList.remove('active');
+            }
+            document.getElementById('btn-mode-1').classList.add('active');
+
+            updateButtonVisuals();
+            renderRouletteLines();
         }
 
         function changeLinesCount(count) {
@@ -249,19 +257,22 @@
             }
             document.getElementById(`btn-mode-${count}`).classList.add('active');
             
+            updateButtonVisuals();
+            renderRouletteLines();
+        }
+
+        function updateButtonVisuals() {
             const btnText = document.getElementById('spinButtonText');
             const btnImg = document.getElementById('spinCostImg');
 
             if (currentTargetType === 'bank') {
                 let basePrice = bankConfigs[currentTargetId].price;
-                btnText.innerText = "Крутить за " + (count * basePrice);
+                btnText.innerText = "Крутить за " + (currentLines * basePrice);
                 btnImg.style.display = 'inline-block';
             } else {
-                btnText.innerText = "Открыть";
+                btnText.innerText = "Открыть (" + currentLines + ")";
                 btnImg.style.display = 'none';
             }
-
-            renderRouletteLines();
         }
 
         function renderRouletteLines() {
@@ -319,7 +330,7 @@
                 }
                 playerData.honey -= totalCost;
             } else {
-                // Для кейсов списывание настроим позже
+                // Заглушка для кейсов
             }
 
             isSpinning = true;
@@ -383,14 +394,4 @@
 
                 const wrapperWidth = document.querySelector('.roulette-wrapper-horizontal').offsetWidth;
                 const stopPos = -((winIndex * itemWidth) + (itemWidth / 2) - (wrapperWidth / 2));
-                const pixelOffset = Math.floor(Math.random() * 30) - 15; 
-
-                setTimeout(() => {
-                    tape.style.transition = 'transform 4s cubic-bezier(0.1, 0.8, 0.1, 1)';
-                    tape.style.transform = `translateX(${stopPos + pixelOffset}px)`;
-                }, 40);
-            }
-
-            setTimeout(() => {
-                isSpinning = false;
-                document.getElementById('btnSpinAction').disabled 
+                const pixelOffset
