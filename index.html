@@ -87,7 +87,7 @@
         .selector-btn { background: transparent; border: none; color: #94a3b8; padding: 8px 25px; font-size: 16px; font-weight: bold; border-radius: 10px; cursor: pointer; transition: all 0.2s; }
         .selector-btn.active { background: rgba(255, 255, 255, 0.15); color: #ffffff; }
 
-        /* СИНЯЯ КНОПКА КРУТИТЬ */
+        /* КНОПКА КРУТИТЬ */
         .spin-action-btn { width: 95%; max-width: 340px; background: #2563eb; color: #ffffff; border: none; padding: 16px; font-size: 18px; font-weight: bold; border-radius: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3); transition: transform 0.1s ease, background 0.2s; }
         .spin-action-btn:active { transform: scale(0.97); background: #1d4ed8; }
         .spin-action-btn:disabled { background: #1e293b; color: #64748b; cursor: not-allowed; box-shadow: none; }
@@ -164,12 +164,11 @@
         let currentLines = 1; 
         let isSpinning = false;
         
-        let currentTargetType = 'bank'; // 'bank' или 'case'
+        let currentTargetType = 'bank'; 
         let currentTargetId = 1; 
 
         const itemWidth = 110; 
         
-        // Декоративные пулы для банок
         const bankPools = {
             1: [
                 { type: 'honey', text: '300', img: 'honey.png' },
@@ -190,19 +189,17 @@
             ]
         };
 
-        // Заглушка для пулов кейсов (пока просто базовые декорации)
         const casePools = {
             1: [
-                { type: 'honey', text: '100', img: 'honey.png' },
+                { type: 'honey', text: '300', img: 'honey.png' },
                 { type: 'empty', text: 'Ничего', img: '' }
             ],
             2: [
-                { type: 'honey', text: '200', img: 'honey.png' },
+                { type: 'honey', text: '600', img: 'honey.png' },
                 { type: 'empty', text: 'Ничего', img: '' }
             ]
         };
 
-        // Стоимость банок
         const bankConfigs = {
             1: { price: 300 },
             2: { price: 500 },
@@ -234,7 +231,6 @@
             switchScreen('roulette-screen');
             changeLinesCount(1); 
 
-            // Настраиваем стрелку назад на нужный экран
             const backBtn = document.getElementById('roulette-back-btn');
             if (type === 'bank') {
                 backBtn.setAttribute('onclick', "switchScreen('banks-screen')");
@@ -254,7 +250,6 @@
             }
             document.getElementById(`btn-mode-${count}`).classList.add('active');
             
-            // Если крутим банку — выводим цену в мёде. Для кейсов пока поставим 0 или ключ.
             if (currentTargetType === 'bank') {
                 let basePrice = bankConfigs[currentTargetId].price;
                 document.getElementById('spinCostText').innerText = count * basePrice;
@@ -312,7 +307,6 @@
         function spinHorizontalSlots() {
             if (isSpinning) return;
 
-            // Если это банка — проверяем мёд
             if (currentTargetType === 'bank') {
                 const basePrice = bankConfigs[currentTargetId].price;
                 const totalCost = currentLines * basePrice;
@@ -323,7 +317,7 @@
                 }
                 playerData.honey -= totalCost;
             } else {
-                // Логика списания ключей для кейсов будет здесь
+                // Временное бесплатное открытие для кейсов
             }
 
             isSpinning = true;
@@ -364,8 +358,8 @@
                         else { prize = { type: 'key5', text: 'Ключ', val: 1, img: 'key5.png' }; }
                     }
                 } else {
-                    // Временный дефолтный дроп для кейсов, пока не добавили шансы
-                    prize = { type: 'honey', text: '100', val: 100, img: 'honey.png' };
+                    // Временная награда для кейсов
+                    prize = { type: 'honey', text: '500', val: 500, img: 'honey.png' };
                 }
                 
                 calculatedResults.push(prize);
@@ -388,4 +382,14 @@
 
                 const wrapperWidth = document.querySelector('.roulette-wrapper-horizontal').offsetWidth;
                 const stopPos = -((winIndex * itemWidth) + (itemWidth / 2) - (wrapperWidth / 2));
-                con
+                const pixelOffset = Math.floor(Math.random() * 30) - 15; 
+
+                setTimeout(() => {
+                    tape.style.transition = 'transform 4s cubic-bezier(0.1, 0.8, 0.1, 1)';
+                    tape.style.transform = `translateX(${stopPos + pixelOffset}px)`;
+                }, 40);
+            }
+
+            setTimeout(() => {
+                isSpinning = false;
+                docu
