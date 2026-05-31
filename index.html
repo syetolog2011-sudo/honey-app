@@ -86,11 +86,18 @@
         .selector-btn { background: transparent; border: none; color: #94a3b8; padding: 8px 25px; font-size: 16px; font-weight: bold; border-radius: 10px; cursor: pointer; transition: all 0.2s; }
         .selector-btn.active { background: rgba(255, 255, 255, 0.15); color: #ffffff; }
 
-        /* СИНЯЯ КНОПКА КРУТИТЬ */
-        .spin-action-btn { width: 95%; max-width: 340px; background: #2563eb; color: #ffffff; border: none; padding: 16px; font-size: 18px; font-weight: bold; border-radius: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3); transition: transform 0.1s ease, background 0.2s; }
-        .spin-action-btn:active { transform: scale(0.97); background: #1d4ed8; }
+        /* ДВОЙНЫЕ КНОПКИ ДЛЯ ОТКРЫТИЯ */
+        .spin-actions-row { display: flex; gap: 10px; width: 95%; max-width: 340px; }
+        .spin-action-btn { flex: 1; color: #ffffff; border: none; padding: 14px 8px; font-size: 15px; font-weight: bold; border-radius: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: transform 0.1s ease, background 0.2s; box-sizing: border-box; }
+        
+        .btn-honey-type { background: #2563eb; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3); }
+        .btn-honey-type:active { background: #1d4ed8; transform: scale(0.97); }
+        
+        .btn-key-type { background: #10b981; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); }
+        .btn-key-type:active { background: #059669; transform: scale(0.97); }
+        
         .spin-action-btn:disabled { background: #1e293b; color: #64748b; cursor: not-allowed; box-shadow: none; }
-        .spin-action-btn img { width: 22px; height: 22px; }
+        .spin-action-btn img { width: 18px; height: 18px; object-fit: contain; }
 
         .banks-screen-padding { height: 40px; width: 100%; }
     </style>
@@ -153,9 +160,14 @@
 
             <div class="slots-lines-holder" id="slotsHolder"></div>
 
-            <button class="spin-action-btn" id="btnSpinAction" onclick="spinHorizontalSlots()">
-                Крутить за <span id="spinCostText">700</span> <img src="honey.png">
-            </button>
+            <div class="spin-actions-row">
+                <button class="spin-action-btn btn-honey-type" id="btnSpinHoney" onclick="spinHorizontalSlots('honey')">
+                    За <span id="spinCostText">700</span> <img src="honey.png">
+                </button>
+                <button class="spin-action-btn btn-key-type" id="btnSpinKey" onclick="spinHorizontalSlots('key')">
+                    За ключ <span id="spinKeyCountText">(1)</span>
+                </button>
+            </div>
 
         </div>
         <div class="banks-screen-padding"></div>
@@ -190,9 +202,9 @@
         };
 
         const bankConfigs = {
-            1: { price: 300 },
-            2: { price: 500 },
-            3: { price: 700 }
+            1: { price: 300, keyReq: 'key1' },
+            2: { price: 500, keyReq: 'key2' }, // Можно настроить требования ключей
+            3: { price: 700, keyReq: 'key4' }
         };
 
         function updateUI() {
@@ -217,16 +229,15 @@
             currentBankId = bankId;
             switchScreen('roulette-screen');
             
-            // Принудительно сбрасываем на 1 линию при открытии новой банки
             currentLines = 1;
             for(let i=1; i<=3; i++) {
                 document.getElementById(`btn-mode-${i}`).classList.remove('active');
             }
             document.getElementById('btn-mode-1').classList.add('active');
 
-            // Сразу выставляем корректную цену на кнопке
             let basePrice = bankConfigs[currentBankId].price;
             document.getElementById('spinCostText').innerText = currentLines * basePrice;
+            document.getElementById('spinKeyCountText').innerText = "(" + currentLines + ")";
 
             renderRouletteLines();
         }
@@ -242,6 +253,7 @@
             
             let basePrice = bankConfigs[currentBankId].price;
             document.getElementById('spinCostText').innerText = count * basePrice;
+            document.getElementById('spinKeyCountText').innerText = "(" + count + ")";
 
             renderRouletteLines();
         }
@@ -288,21 +300,32 @@
             parentTape.appendChild(block);
         }
 
-        function spinHorizontalSlots() {
+        function spinHorizontalSlots(paymentMethod) {
             if (isSpinning) return;
+            
             const basePrice = bankConfigs[currentBankId].price;
-            const totalCost = currentLines * basePrice;
+            const targetKey = bankConfigs[currentBankId].keyReq;
 
-            if (playerData.honey < totalCost) {
-                alert('Недостаточно мёда!');
-                return;
+            if (paymentMethod === 'honey') {
+                const totalCost = currentLines * basePrice;
+                if (playerData.honey < totalCost) {
+                    alert('Недостаточно мёда!');
+                    return;
+                }
+                playerData.honey -= totalCost;
+            } else if (paymentMethod === 'key') {
+                if (playerData[targetKey] < currentLines) {
+                    alert('Недостаточно ключей!');
+                    return;
+                }
+                playerData[targetKey] -= currentLines;
             }
 
             isSpinning = true;
-            playerData.honey -= totalCost;
             updateUI();
 
-            document.getElementById('btnSpinAction').disabled = true;
+            document.getElementById('btnSpinHoney').disabled = true;
+            document.getElementById('btnSpinKey').disabled = true;
 
             const winIndex = 30; 
             let calculatedResults = [];
@@ -363,34 +386,3 @@
                         const randItem = activePool[Math.floor(Math.random() * activePool.length)];
                         createSlotDomItem(tape, randItem);
                     }
-                }
-
-                const wrapperWidth = document.querySelector('.roulette-wrapper-horizontal').offsetWidth;
-                const stopPos = -((winIndex * itemWidth) + (itemWidth / 2) - (wrapperWidth / 2));
-                const pixelOffset = Math.floor(Math.random() * 30) - 15; 
-
-                setTimeout(() => {
-                    tape.style.transition = 'transform 4s cubic-bezier(0.1, 0.8, 0.1, 1)';
-                    tape.style.transform = `translateX(${stopPos + pixelOffset}px)`;
-                }, 40);
-            }
-
-            setTimeout(() => {
-                isSpinning = false;
-                document.getElementById('btnSpinAction').disabled = false;
-
-                calculatedResults.forEach(res => {
-                    if (res.type === 'honey') {
-                        playerData.honey += res.val;
-                    } else if (playerData[res.type] !== undefined) {
-                        playerData[res.type] += 1;
-                    }
-                });
-
-                updateUI();
-            }, 4100);
-        }
-    </script>
-
-</body>
-</html>
