@@ -217,7 +217,6 @@
         }
         updateUI();
 
-        // Полностью исправленная и безопасная функция переключения экранов
         function switchScreen(screenId) {
             document.getElementById('main-screen').classList.remove('active-screen');
             document.getElementById('banks-screen').classList.remove('active-screen');
@@ -377,5 +376,17 @@
                 const tape = document.getElementById(`tape-${l}`);
                 tape.style.transition = 'none';
                 tape.style.transform = 'translateX(0px)';
-                tape.innerHTML
-        
+                tape.innerHTML = '';
+
+                for (let i = 0; i < 45; i++) {
+                    if (i === winIndex) {
+                        let displayPrize = {...prize};
+                        if(displayPrize.type.startsWith('key')) displayPrize.type = 'key';
+                        createSlotDomItem(tape, displayPrize);
+                    } else {
+                        const randItem = activePool[Math.floor(Math.random() * activePool.length)];
+                        createSlotDomItem(tape, randItem);
+                    }
+                }
+
+             
