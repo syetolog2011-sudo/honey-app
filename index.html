@@ -52,7 +52,6 @@
 
         /* ЭКРАНЫ */
         .screen { display: none; flex-direction: column; align-items: center; width: 100%; position: relative; }
-        .active-screen { display: flex !important; width: 100%; }
 
         /* ГЛАВНОЕ МЕНЮ */
         .buttons-list { display: flex; flex-direction: column; align-items: center; gap: 36px; width: 100%; }
@@ -117,7 +116,7 @@
         <img src="honey.png" alt="🍯" class="honey-icon">
     </div>
 
-    <div id="main-screen" class="screen active-screen">
+    <div id="main-screen" class="screen" style="display: flex;">
         <div class="buttons-list">
             <button class="menu-btn" onclick="switchScreen('cases-screen')"><img src="case.png" alt="Кейсы"></button>
             <button class="menu-btn" onclick="switchScreen('banks-screen')"><img src="banka.png" alt="Банки"></button>
@@ -222,13 +221,14 @@
         }
         updateUI();
 
+        // Железобетонное переключение через прямые стили display
         function switchScreen(screenId) {
-            document.getElementById('main-screen').classList.remove('active-screen');
-            document.getElementById('banks-screen').classList.remove('active-screen');
-            document.getElementById('cases-screen').classList.remove('active-screen');
-            document.getElementById('roulette-screen').classList.remove('active-screen');
+            document.getElementById('main-screen').style.display = 'none';
+            document.getElementById('banks-screen').style.display = 'none';
+            document.getElementById('cases-screen').style.display = 'none';
+            document.getElementById('roulette-screen').style.display = 'none';
             
-            document.getElementById(screenId).classList.add('active-screen');
+            document.getElementById(screenId).style.display = 'flex';
         }
 
         function openHorizontalSlots(bankId) {
@@ -363,4 +363,5 @@
                         else if (rand < 98.5) { let hAmount = Math.floor(Math.random() * (1000 - 700 + 1)) + 700; prize = { type: 'honey', text: `${hAmount}`, val: hAmount, img: 'honey.png' }; }
                         else if (rand < 99.5) { prize = { type: 'key4', text: 'Ключ', val: 1, img: 'key4.png' }; }
                         else { prize = { type: 'key5', text: 'Ключ', val: 1, img: 'key5.png' }; }
-        
+                    }
+                } els
