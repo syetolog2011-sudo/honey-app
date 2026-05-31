@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -173,7 +174,7 @@
     </div>
 
     <script>
-        let playerData = { honey: 12500, key1: 0, key2: 0, key3: 0, key4: 0, key5: 0 };
+        let playerData = { honey: 12500, key1: 2, key2: 2, key3: 2, key4: 2, key5: 2 }; // Добавил тестовые ключи
         let currentLines = 1; 
         let isSpinning = false;
         
@@ -221,7 +222,6 @@
         }
         updateUI();
 
-        // Железобетонное переключение через прямые стили display
         function switchScreen(screenId) {
             document.getElementById('main-screen').style.display = 'none';
             document.getElementById('banks-screen').style.display = 'none';
@@ -236,7 +236,7 @@
             currentBankId = bankId;
             
             document.getElementById('roulette-back-btn').setAttribute('onclick', "switchScreen('banks-screen')");
-            document.getElementById('btnSpinKey').style.display = 'none'; 
+            document.getElementById('btnSpinKey').style.display = 'flex'; // Показываем кнопку с ключами
             
             switchScreen('roulette-screen');
             changeLinesCount(1); 
@@ -348,20 +348,32 @@
 
                 if (currentMode === 'bank') {
                     if (currentBankId === 1) {
-                        if (rand < 40) { prize = { type: 'empty', text: 'Ничего', val: 0, img: '' }; }
-                        else if (rand < 99) { let hAmount = Math.floor(Math.random() * (450 - 200 + 1)) + 200; prize = { type: 'honey', text: `${hAmount}`, val: hAmount, img: 'honey.png' }; }
-                        else { prize = { type: 'key1', text: 'Ключ', val: 1, img: 'key1.png' }; }
+                        if (rand < 40) { 
+                            prize = { type: 'empty', text: 'Ничего', val: 0, img: '' }; 
+                        }
+                        else if (rand < 99) { 
+                            let hAmount = Math.floor(Math.random() * (450 - 200 + 1)) + 200; 
+                            prize = { type: 'honey', text: `${hAmount}`, val: hAmount, img: 'honey.png' }; 
+                        }
+                        else { 
+                            prize = { type: 'key1', text: 'Ключ 1 ур.', val: 1, img: 'key1.png' }; 
+                        }
                     } 
                     else if (currentBankId === 2) {
-                        if (rand < 40) { prize = { type: 'empty', text: 'Ничего', val: 0, img: '' }; }
-                        else if (rand < 97) { let hAmount = Math.floor(Math.random() * (700 - 400 + 1)) + 400; prize = { type: 'honey', text: `${hAmount}`, val: hAmount, img: 'honey.png' }; }
-                        else if (rand < 99) { prize = { type: 'key2', text: 'Ключ', val: 1, img: 'key2.png' }; }
-                        else { prize = { type: 'key3', text: 'Ключ', val: 1, img: 'key3.png' }; }
+                        if (rand < 40) { 
+                            prize = { type: 'empty', text: 'Ничего', val: 0, img: '' }; 
+                        }
+                        else if (rand < 97) { 
+                            let hAmount = Math.floor(Math.random() * (700 - 400 + 1)) + 400; 
+                            prize = { type: 'honey', text: `${hAmount}`, val: hAmount, img: 'honey.png' }; 
+                        }
+                        else if (rand < 99) { 
+                            prize = { type: 'key2', text: 'Ключ 2 ур.', val: 1, img: 'key2.png' }; 
+                        }
+                        else { 
+                            prize = { type: 'key3', text: 'Ключ 3 ур.', val: 1, img: 'key3.png' }; 
+                        }
                     } 
                     else {
-                        if (rand < 34.5) { prize = { type: 'empty', text: 'Ничего', val: 0, img: '' }; }
-                        else if (rand < 98.5) { let hAmount = Math.floor(Math.random() * (1000 - 700 + 1)) + 700; prize = { type: 'honey', text: `${hAmount}`, val: hAmount, img: 'honey.png' }; }
-                        else if (rand < 99.5) { prize = { type: 'key4', text: 'Ключ', val: 1, img: 'key4.png' }; }
-                        else { prize = { type: 'key5', text: 'Ключ', val: 1, img: 'key5.png' }; }
-                    }
-                } els
+                        if (rand < 34.5) { 
+                            prize = { type: 'empty', text: '
