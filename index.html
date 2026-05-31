@@ -52,7 +52,7 @@
 
         /* ЭКРАНЫ */
         .screen { display: none; flex-direction: column; align-items: center; width: 100%; position: relative; }
-        .active-screen { display: flex; }
+        .active-screen { display: flex !important; }
 
         /* ГЛАВНОЕ МЕНЮ */
         .buttons-list { display: flex; flex-direction: column; align-items: center; gap: 36px; width: 100%; }
@@ -61,7 +61,7 @@
         .menu-btn img { width: 100%; height: auto; display: block; filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.4)); }
 
         /* СЕТКА БАНОК И КЕЙСОВ */
-        .banks-list, .cases-list { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; width: 95%; max-width: 380px; margin-top: 20px; }
+        .banks-list, .cases-list { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; width: 95%; max-width: 380px; margin-top: 20px; min-height: 150px; }
         .back-arrow-btn { position: absolute; top: -20px; right: 15px; width: 36px; height: 36px; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; color: #ffffff; cursor: pointer; z-index: 100; }
         .bank-card, .case-card { width: calc(50% - 7px); aspect-ratio: 1 / 1; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 20px; padding: 12px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4); cursor: pointer; transition: transform 0.1s ease; -webkit-tap-highlight-color: transparent; }
         .bank-card:active, .case-card:active { background: rgba(255, 255, 255, 0.15); transform: scale(0.96); }
@@ -222,7 +222,11 @@
             document.getElementById('banks-screen').classList.remove('active-screen');
             document.getElementById('cases-screen').classList.remove('active-screen');
             document.getElementById('roulette-screen').classList.remove('active-screen');
-            document.getElementById(screenId).classList.add('active-screen');
+            
+            const target = document.getElementById(screenId);
+            if (target) {
+                target.classList.add('active-screen');
+            }
         }
 
         function openHorizontalSlots(bankId) {
@@ -306,7 +310,6 @@
             const basePrice = bankConfigs[currentBankId].price;
             const requiredKey = bankConfigs[currentBankId].keyReq;
 
-            // Проверка баланса в зависимости от выбранного типа оплаты
             if (paymentMethod === 'honey') {
                 const totalCost = currentLines * basePrice;
                 if (playerData.honey < totalCost) {
@@ -385,4 +388,4 @@
                         createSlotDomItem(tape, displayPrize);
                     } else {
                         const randItem = activePool[Math.floor(Math.random() * activePool.length)];
-                        createSlotDomItem(tape, randIt
+    
