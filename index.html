@@ -27,18 +27,17 @@
         .honey-icon { width: 32px; height: 32px; }
 
         .screen { display: none; flex-direction: column; align-items: center; width: 100%; position: relative; }
-        .active-screen { display: flex; }
 
         .buttons-list { display: flex; flex-direction: column; align-items: center; gap: 36px; width: 100%; }
         .menu-btn { background: none; border: none; padding: 0; cursor: pointer; width: 92%; max-width: 360px; transition: transform 0.1s ease; -webkit-tap-highlight-color: transparent; }
         .menu-btn:active { transform: scale(0.95); }
-        .menu-btn img { width: 100%; height: auto; display: block; filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.4)); }
+        .menu-btn img { width: 100%; height: auto; display: block; filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.4)); pointer-events: none; }
 
         .banks-list, .cases-list { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; width: 95%; max-width: 380px; margin-top: 20px; }
         .back-arrow-btn { position: absolute; top: -20px; right: 15px; width: 36px; height: 36px; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; color: #ffffff; cursor: pointer; z-index: 100; -webkit-tap-highlight-color: transparent; }
         .bank-card, .case-card { width: calc(50% - 7px); aspect-ratio: 1 / 1; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 20px; padding: 12px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4); cursor: pointer; transition: transform 0.1s ease; -webkit-tap-highlight-color: transparent; }
         .bank-card:active, .case-card:active { background: rgba(255, 255, 255, 0.15); transform: scale(0.96); }
-        .bank-img, .case-img { width: 95px; height: 95px; object-fit: contain; display: block; filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.5)); }
+        .bank-img, .case-img { width: 95px; height: 95px; object-fit: contain; display: block; filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.5)); pointer-events: none; }
 
         .roulette-container-horizontal { width: 100%; max-width: 360px; display: flex; flex-direction: column; align-items: center; padding: 0 10px; box-sizing: border-box; }
         .slots-lines-holder { display: flex; flex-direction: column; gap: 10px; width: 100%; margin-bottom: 25px; }
@@ -77,7 +76,7 @@
         <img src="honey.png" alt="🍯" class="honey-icon">
     </div>
 
-    <div id="main-screen" class="screen active-screen">
+    <div id="main-screen" class="screen" style="display: flex;">
         <div class="buttons-list">
             <button class="menu-btn" onclick="switchScreen('cases-screen')"><img src="case.png" alt="Кейсы"></button>
             <button class="menu-btn" onclick="switchScreen('banks-screen')"><img src="banka.png" alt="Банки"></button>
@@ -144,12 +143,13 @@
         const bankConfigs = { 1: { price: 300, keyReq: 'key1' }, 2: { price: 500, keyReq: 'key2' }, 3: { price: 700, keyReq: 'key4' } };
         const caseConfigs = { 1: { price: 1000, keyReq: 'key1' }, 2: { price: 1250, keyReq: 'key2' }, 3: { price: 1550, keyReq: 'key3' }, 4: { price: 2000, keyReq: 'key4' }, 5: { price: 4500, keyReq: 'key5' } };
 
+        // ЖЕЛЕЗОБЕТОННОЕ ПЕРЕКЛЮЧЕНИЕ ЭКРАНОВ
         function switchScreen(screenId) {
-            document.getElementById('main-screen').classList.remove('active-screen');
-            document.getElementById('banks-screen').classList.remove('active-screen');
-            document.getElementById('cases-screen').classList.remove('active-screen');
-            document.getElementById('roulette-screen').classList.remove('active-screen');
-            document.getElementById(screenId).classList.add('active-screen');
+            document.getElementById('main-screen').style.display = 'none';
+            document.getElementById('banks-screen').style.display = 'none';
+            document.getElementById('cases-screen').style.display = 'none';
+            document.getElementById('roulette-screen').style.display = 'none';
+            document.getElementById(screenId).style.display = 'flex';
         }
 
         function updateUI() {
@@ -204,7 +204,6 @@
 
         function spinHorizontalSlots(paymentMethod) {
             if (isSpinning) return;
-            
             let basePrice = currentMode === 'bank' ? bankConfigs[currentBankId].price : caseConfigs[currentCaseId].price;
             let requiredKey = currentMode === 'bank' ? bankConfigs[currentBankId].keyReq : caseConfigs[currentCaseId].keyReq;
             const totalCost = currentLines * basePrice;
@@ -219,7 +218,6 @@
 
             isSpinning = true; updateUI();
             document.getElementById('btnSpinHoney').disabled = true; document.getElementById('btnSpinKey').disabled = true;
-
             const winIndex = 30; let calculatedResults = [];
             const activePool = currentMode === 'bank' ? bankPools[currentBankId] : casePools[currentCaseId];
 
@@ -268,4 +266,4 @@
                         let d = {...prize}; 
                         if(d.type.startsWith('key')) d.type = 'key'; 
                         createSlotDomItem(tape, d); 
-                
+                    } el
