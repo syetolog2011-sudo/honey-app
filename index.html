@@ -63,6 +63,17 @@
         .spin-action-btn img { width: 20px; height: 20px; object-fit: contain; }
         .banks-screen-padding { height: 40px; width: 100%; }
     </style>
+    
+    <script>
+        function switchScreen(screenId) {
+            document.getElementById('main-screen').classList.remove('active-screen');
+            document.getElementById('banks-screen').classList.remove('active-screen');
+            document.getElementById('cases-screen').classList.remove('active-screen');
+            document.getElementById('roulette-screen').classList.remove('active-screen');
+            
+            document.getElementById(screenId).classList.add('active-screen');
+        }
+    </script>
 </head>
 <body>
     <div class="keys-container">
@@ -144,13 +155,6 @@
         const bankConfigs = { 1: { price: 300, keyReq: 'key1' }, 2: { price: 500, keyReq: 'key2' }, 3: { price: 700, keyReq: 'key4' } };
         const caseConfigs = { 1: { price: 1000, keyReq: 'key1' }, 2: { price: 1250, keyReq: 'key2' }, 3: { price: 1550, keyReq: 'key3' }, 4: { price: 2000, keyReq: 'key4' }, 5: { price: 4500, keyReq: 'key5' } };
 
-        function switchScreen(screenId) {
-            document.getElementById('main-screen').classList.remove('active-screen');
-            document.getElementById('banks-screen').classList.remove('active-screen');
-            document.getElementById('cases-screen').classList.remove('active-screen');
-            document.getElementById('roulette-screen').classList.remove('active-screen');
-            document.getElementById(screenId).classList.add('active-screen');
-        }
         function updateUI() {
             document.getElementById('ui-balance').innerText = playerData.honey.toLocaleString();
             for(let i=1; i<=5; i++) document.getElementById(`ui-key${i}`).innerText = playerData[`key${i}`];
@@ -226,5 +230,21 @@
                 } else {
                     if (currentCaseId === 1) {
                         if (rand < 90) { let h = Math.floor(Math.random() * 501) + 850; prize = { type: 'honey', text: `${h}`, val: h, img: 'honey.png' }; }
-                        else prize = { type: '
+                        else prize = { type: 'honey', text: '50', val: 50, img: 'honey.png' };
+                    } else if (currentCaseId === 2) {
+                        if (rand < 92) { let h = Math.floor(Math.random() * 651) + 900; prize = { type: 'honey', text: `${h}`, val: h, img: 'honey.png' }; }
+                        else prize = { type: 'honey', text: '50', val: 50, img: 'honey.png' };
+                    } else if (currentCaseId === 3) {
+                        if (rand < 95) { let h = Math.floor(Math.random() * 651) + 1350; prize = { type: 'honey', text: `${h}`, val: h, img: 'honey.png' }; }
+                        else prize = { type: 'honey', text: '500', val: 500, img: 'honey.png' };
+                    } else if (currentCaseId === 4) {
+                        let h = Math.floor(Math.random() * 1101) + 1750; prize = { type: 'honey', text: `${h}`, val: h, img: 'honey.png' };
+                    } else {
+                        let h = Math.floor(Math.random() * 1501) + 4250; prize = { type: 'honey', text: `${h}`, val: h, img: 'honey.png' };
+                    }
+                }
+                calculatedResults.push(prize);
+                const tape = document.getElementById(`tape-${l}`); tape.style.transition = 'none'; tape.style.transform = 'translateX(0px)'; tape.innerHTML = '';
+                for (let i = 0; i < 45; i++) {
+                    if (i ===
         
