@@ -101,6 +101,17 @@
 
         .banks-screen-padding { height: 40px; width: 100%; }
     </style>
+    
+    <script>
+        function switchScreen(screenId) {
+            document.getElementById('main-screen').classList.remove('active-screen');
+            document.getElementById('banks-screen').classList.remove('active-screen');
+            document.getElementById('cases-screen').classList.remove('active-screen');
+            document.getElementById('roulette-screen').classList.remove('active-screen');
+            
+            document.getElementById(screenId).classList.add('active-screen');
+        }
+    </script>
 </head>
 <body>
 
@@ -180,16 +191,6 @@
     </div>
 
     <script>
-        // ИСПРАВЛЕННАЯ ФУНКЦИЯ: Теперь она очищает ВСЕ экраны до единого!
-        function switchScreen(screenId) {
-            document.getElementById('main-screen').classList.remove('active-screen');
-            document.getElementById('banks-screen').classList.remove('active-screen');
-            document.getElementById('cases-screen').classList.remove('active-screen');
-            document.getElementById('roulette-screen').classList.remove('active-screen');
-            
-            document.getElementById(screenId).classList.add('active-screen');
-        }
-
         let playerData = { honey: 12500, key1: 0, key2: 0, key3: 0, key4: 0, key5: 0 };
         let currentLines = 1; 
         let isSpinning = false;
@@ -367,4 +368,4 @@
                     } 
                     else {
                         if (rand < 34.5) { prize = { type: 'empty', text: 'Ничего', val: 0, img: '' }; }
-                        else if (rand < 98.5) { let hAmount = Math.floor(Math.random() * (100
+                        else if (rand < 98.5) { let hAmount = Math.floor(Math.random() * (1000 - 700 + 1)) + 700; prize = { type: 'honey'
