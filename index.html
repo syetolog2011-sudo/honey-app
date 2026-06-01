@@ -55,16 +55,16 @@
 
         /* ГЛАВНОЕ МЕНЮ */
         .buttons-list { display: flex; flex-direction: column; align-items: center; gap: 36px; width: 100%; }
-        .menu-btn { background: none; border: none; padding: 0; cursor: pointer; width: 92%; max-width: 360px; transition: transform 0.1s ease; }
+        .menu-btn { background: none; border: none; padding: 0; cursor: pointer; width: 92%; max-width: 360px; transition: transform 0.1s ease; outline: none; }
         .menu-btn:active { transform: scale(0.95); }
-        .menu-btn img { width: 100%; height: auto; display: block; filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.4)); }
+        .menu-btn img { width: 100%; height: auto; display: block; filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.4)); pointer-events: none; }
 
         /* СЕТКА ДЛЯ КАРТОЧЕК */
         .grid-list { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; width: 95%; max-width: 380px; margin-top: 20px; }
         .back-arrow-btn { position: absolute; top: -20px; right: 15px; width: 36px; height: 36px; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; color: #ffffff; cursor: pointer; z-index: 100; }
         .grid-card { width: calc(50% - 7px); aspect-ratio: 1 / 1; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 20px; padding: 12px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4); cursor: pointer; transition: transform 0.1s ease; -webkit-tap-highlight-color: transparent; }
         .grid-card:active { background: rgba(255, 255, 255, 0.15); transform: scale(0.96); }
-        .grid-img { width: 95px; height: 95px; object-fit: contain; display: block; filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.5)); }
+        .grid-img { width: 95px; height: 95px; object-fit: contain; display: block; filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.5)); pointer-events: none; }
 
         /* МУЛЬТИ-СЛОТЫ */
         .roulette-container-horizontal { width: 100%; max-width: 360px; display: flex; flex-direction: column; align-items: center; padding: 0 10px; box-sizing: border-box; }
@@ -116,16 +116,20 @@
         <img src="honey.png" alt="🍯" class="honey-icon">
     </div>
 
-    <!-- ================= ЭКРАН 1: ГЛАВНОЕ МЕНЮ ================= -->
     <div id="main-screen" class="screen" style="display: flex;">
         <div class="buttons-list">
-            <button class="menu-btn" onclick="switchScreen('cases-screen')"><img src="case.png" alt="Кейсы"></button>
-            <button class="menu-btn" onclick="switchScreen('banks-screen')"><img src="banka.png" alt="Банки"></button>
-            <button class="menu-btn"><img src="igra.png" alt="Игры"></button>
+            <button class="menu-btn" onclick="switchScreen('cases-screen')">
+                <img src="case.png" alt="Кейсы">
+            </button>
+            <button class="menu-btn" onclick="switchScreen('banks-screen')">
+                <img src="banka.png" alt="Банки">
+            </button>
+            <button class="menu-btn">
+                <img src="igra.png" alt="Игры">
+            </button>
         </div>
     </div>
 
-    <!-- ================= ЭКРАН 2: ВЫБОР БАНОК ================= -->
     <div id="banks-screen" class="screen">
         <div class="back-arrow-btn" onclick="switchScreen('main-screen')">←</div>
         <div class="grid-list">
@@ -136,7 +140,6 @@
         <div class="banks-screen-padding"></div>
     </div>
 
-    <!-- ================= ЭКРАН 2.5: ВЫБОР КЕЙСОВ ================= -->
     <div id="cases-screen" class="screen">
         <div class="back-arrow-btn" onclick="switchScreen('main-screen')">←</div>
         <div class="grid-list">
@@ -149,7 +152,6 @@
         <div class="banks-screen-padding"></div>
     </div>
 
-    <!-- ================= ЭКРАН 3: РУЛЕТКА ================= -->
     <div id="roulette-screen" class="screen">
         <div class="back-arrow-btn" id="roulette-back-btn" onclick="switchScreen('banks-screen')">←</div>
 
@@ -364,4 +366,6 @@
                     else {
                         if (rand < 34.5) { prize = { type: 'empty', text: 'Ничего', val: 0, img: '' }; }
                         else if (rand < 98.5) { let hAmount = Math.floor(Math.random() * (1000 - 700 + 1)) + 700; prize = { type: 'honey', text: `${hAmount}`, val: hAmount, img: 'honey.png' }; }
-                        else if (rand < 99.5) { prize = { type: 'key4', text: 'Ключ', val: 1, img: 'ke
+                        else if (rand < 99.5) { prize = { type: 'key4', text: 'Ключ', val: 1, img: 'key4.png' }; }
+                        else { prize = { type: 'key5', text: 'Ключ', val: 1, img: 'key5.png' }; }
+                    
