@@ -27,7 +27,7 @@
         .honey-icon { width: 32px; height: 32px; }
 
         .screen { display: none; flex-direction: column; align-items: center; width: 100%; position: relative; }
-        .active-screen { display: flex !important; }
+        .active-screen { display: flex; }
 
         .buttons-list { display: flex; flex-direction: column; align-items: center; gap: 36px; width: 100%; }
         .menu-btn { background: none; border: none; padding: 0; cursor: pointer; width: 92%; max-width: 360px; transition: transform 0.1s ease; -webkit-tap-highlight-color: transparent; }
@@ -38,7 +38,7 @@
         .back-arrow-btn { position: absolute; top: -20px; right: 15px; width: 36px; height: 36px; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; color: #ffffff; cursor: pointer; z-index: 100; -webkit-tap-highlight-color: transparent; }
         .bank-card, .case-card { width: calc(50% - 7px); aspect-ratio: 1 / 1; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 20px; padding: 12px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4); cursor: pointer; transition: transform 0.1s ease; -webkit-tap-highlight-color: transparent; }
         .bank-card:active, .case-card:active { background: rgba(255, 255, 255, 0.15); transform: scale(0.96); }
-        .bank-img, .case-img { width: 95px; height: 95px; object-fit: contain; display: block; filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.5)); pointer-events: none; }
+        .bank-img, .case-img { width: 95px; height: 95px; object-fit: contain; display: block; filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.5)); }
 
         .roulette-container-horizontal { width: 100%; max-width: 360px; display: flex; flex-direction: column; align-items: center; padding: 0 10px; box-sizing: border-box; }
         .slots-lines-holder { display: flex; flex-direction: column; gap: 10px; width: 100%; margin-bottom: 25px; }
@@ -63,10 +63,11 @@
         .spin-action-btn img { width: 20px; height: 20px; object-fit: contain; }
         .banks-screen-padding { height: 40px; width: 100%; }
     </style>
-
     <script>
+        // ВСЕ ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ И ФУНКЦИИ ЗАГРУЖАЮТСЯ СРАЗУ
         let playerData = { honey: 12500, key1: 0, key2: 0, key3: 0, key4: 0, key5: 0 };
-        let currentLines = 1, isSpinning = false, currentMode = 'bank', currentBankId = 3, currentCaseId = 1;
+        let currentLines = 1; let isSpinning = false;
+        let currentMode = 'bank'; let currentBankId = 3; let currentCaseId = 1;
         const itemWidth = 110; 
         
         const bankPools = {
@@ -84,15 +85,6 @@
         const bankConfigs = { 1: { price: 300, keyReq: 'key1' }, 2: { price: 500, keyReq: 'key2' }, 3: { price: 700, keyReq: 'key4' } };
         const caseConfigs = { 1: { price: 1000, keyReq: 'key1' }, 2: { price: 1250, keyReq: 'key2' }, 3: { price: 1550, keyReq: 'key3' }, 4: { price: 2000, keyReq: 'key4' }, 5: { price: 4500, keyReq: 'key5' } };
 
-        function updateUI() {
-            const balanceEl = document.getElementById('ui-balance');
-            if (balanceEl) balanceEl.innerText = playerData.honey.toLocaleString();
-            for(let i=1; i<=5; i++) {
-                const keyEl = document.getElementById(`ui-key${i}`);
-                if (keyEl) keyEl.innerText = playerData[`key${i}`];
-            }
-        }
-
         function switchScreen(screenId) {
             document.getElementById('main-screen').classList.remove('active-screen');
             document.getElementById('banks-screen').classList.remove('active-screen');
@@ -100,21 +92,25 @@
             document.getElementById('roulette-screen').classList.remove('active-screen');
             document.getElementById(screenId).classList.add('active-screen');
         }
-
+        function updateUI() {
+            document.getElementById('ui-balance').innerText = playerData.honey.toLocaleString();
+            for(let i=1;i<=5;i++) {
+                let el = document.getElementById(`ui-key${i}`);
+                if(el) el.innerText = playerData[`key${i}`];
+            }
+        }
         function openHorizontalSlots(bankId) {
             currentMode = 'bank'; currentBankId = bankId;
             document.getElementById('roulette-back-btn').setAttribute('onclick', "switchScreen('banks-screen')");
             document.getElementById('btnSpinKey').style.display = 'none';
             switchScreen('roulette-screen'); changeLinesCount(1);
         }
-
         function openCaseSlots(caseId) {
             currentMode = 'case'; currentCaseId = caseId;
             document.getElementById('roulette-back-btn').setAttribute('onclick', "switchScreen('cases-screen')");
             document.getElementById('btnSpinKey').style.display = 'flex';
             switchScreen('roulette-screen'); changeLinesCount(1);
         }
-
         function changeLinesCount(count) {
             if (isSpinning) return; currentLines = count;
             for(let i=1; i<=3; i++) document.getElementById(`btn-mode-${i}`).classList.remove('active');
@@ -124,7 +120,6 @@
             document.getElementById('spinKeyText').innerText = "(" + count + ")";
             renderRouletteLines();
         }
-
         function renderRouletteLines() {
             const holder = document.getElementById('slotsHolder'); holder.innerHTML = '';
             for (let l = 0; l < currentLines; l++) {
@@ -133,39 +128,27 @@
                 holder.appendChild(wrapper); buildSingleTape(l);
             }
         }
-
         function buildSingleTape(lineIndex) {
             const tape = document.getElementById(`tape-${lineIndex}`); tape.innerHTML = '';
             const activePool = currentMode === 'bank' ? bankPools[currentBankId] : casePools[currentCaseId];
             for (let i = 0; i < 45; i++) createSlotDomItem(tape, activePool[Math.floor(Math.random() * activePool.length)]);
         }
-
         function createSlotDomItem(parentTape, itemData) {
             const block = document.createElement('div'); block.className = `slot-item-horizontal item-${itemData.type}`;
             block.innerHTML = itemData.type === 'empty' ? `<span style="font-size:20px; line-height:1;">❌</span><span>${itemData.text}</span>` : `<img src="${itemData.img}"><span>${itemData.text}</span>`;
             parentTape.appendChild(block);
         }
-
         function spinHorizontalSlots(paymentMethod) {
             if (isSpinning) return;
             let basePrice = currentMode === 'bank' ? bankConfigs[currentBankId].price : caseConfigs[currentCaseId].price;
             let requiredKey = currentMode === 'bank' ? bankConfigs[currentBankId].keyReq : caseConfigs[currentCaseId].keyReq;
             const totalCost = currentLines * basePrice;
-            
-            if (paymentMethod === 'honey') { 
-                if (playerData.honey < totalCost) { alert('Недостаточно мёда!'); return; } 
-                playerData.honey -= totalCost; 
-            } else { 
-                if (playerData[requiredKey] < currentLines) { alert('Недостаточно ключей!'); return; } 
-                playerData[requiredKey] -= currentLines; 
-            }
-            
+            if (paymentMethod === 'honey') { if (playerData.honey < totalCost) { alert('Недостаточно мёда!'); return; } playerData.honey -= totalCost; }
+            else { if (playerData[requiredKey] < currentLines) { alert('Недостаточно ключей!'); return; } playerData[requiredKey] -= currentLines; }
             isSpinning = true; updateUI();
             document.getElementById('btnSpinHoney').disabled = true; document.getElementById('btnSpinKey').disabled = true;
-            
             const winIndex = 30; let calculatedResults = [];
             const activePool = currentMode === 'bank' ? bankPools[currentBankId] : casePools[currentCaseId];
-            
             for (let l = 0; l < currentLines; l++) {
                 let prize = {}; let rand = Math.random() * 100;
                 if (currentMode === 'bank') {
@@ -217,10 +200,10 @@
             }, 4100);
         }
 
-        // Обновляем UI когда страница полностью загрузилась
-        window.addEventListener('DOMContentLoaded', (event) => {
+        // Запуск интерфейса строго после полной готовности страницы
+        window.onload = function() {
             updateUI();
-        });
+        };
     </script>
 </head>
 <body>
@@ -262,4 +245,9 @@
             <div class="case-card" onclick="openCaseSlots(3)"><img src="case3.png" class="case-img"></div>
             <div class="case-card" onclick="openCaseSlots(4)"><img src="case4.png" class="case-img"></div>
             <div class="case-card" onclick="openCaseSlots(5)"><img src="case5.png" class="case-img"></div>
- 
+        </div>
+        <div class="banks-screen-padding"></div>
+    </div>
+
+    <div id="roulette-screen" class="screen">
+        <div class="back-arrow-btn" id="roulette-back-btn
