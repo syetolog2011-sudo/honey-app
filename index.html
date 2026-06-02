@@ -125,7 +125,7 @@
     </div>
 
     <script>
-        let playerData = { honey: 12500, key1: 5, key2: 5, key3: 5, key4: 5, key5: 5 };
+        let playerData = { honey: 12500, key1: 0, key2: 0, key3: 0, key4: 0, key5: 0 };
         let currentLines = 1, isSpinning = false, currentMode = 'bank', currentBankId = 1, currentCaseId = 1;
         const itemWidth = 110; 
         
@@ -134,12 +134,14 @@
             2: [ { type: 'honey', text: '500', img: 'honey.png' }, { type: 'empty', text: 'Ничего', img: '' }, { type: 'key', text: 'Ключ', img: 'key2.png' }, { type: 'key', text: 'Ключ', img: 'key3.png' } ],
             3: [ { type: 'honey', text: '850', img: 'honey.png' }, { type: 'empty', text: 'Ничего', img: '' }, { type: 'key', text: 'Ключ', img: 'key4.png' }, { type: 'key', text: 'Ключ', img: 'key5.png' } ]
         };
+
+        // ИСПРАВЛЕНО: Массивы дополнены, чтобы рендерер не падал при чтении пустых объектов
         const casePools = {
             1: [ { type: 'honey', text: '1100', img: 'honey.png' }, { type: 'honey', text: '50', img: 'honey.png' } ],
             2: [ { type: 'honey', text: '1200', img: 'honey.png' }, { type: 'honey', text: '50', img: 'honey.png' } ],
             3: [ { type: 'honey', text: '1600', img: 'honey.png' }, { type: 'honey', text: '500', img: 'honey.png' } ],
-            4: [ { type: 'honey', text: '2300', img: 'honey.png' } ],
-            5: [ { type: 'honey', text: '5000', img: 'honey.png' } ]
+            4: [ { type: 'honey', text: '2300', img: 'honey.png' }, { type: 'honey', text: '2300', img: 'honey.png' } ],
+            5: [ { type: 'honey', text: '5000', img: 'honey.png' }, { type: 'honey', text: '5000', img: 'honey.png' } ]
         };
         const bankConfigs = { 1: { price: 300, keyReq: 'key1' }, 2: { price: 500, keyReq: 'key2' }, 3: { price: 700, keyReq: 'key4' } };
         const caseConfigs = { 1: { price: 1000, keyReq: 'key1' }, 2: { price: 1250, keyReq: 'key2' }, 3: { price: 1550, keyReq: 'key3' }, 4: { price: 2000, keyReq: 'key4' }, 5: { price: 4500, keyReq: 'key5' } };
@@ -164,7 +166,6 @@
             switchScreen('roulette-screen'); changeLinesCount(1);
         }
 
-        // ИСПРАВЛЕНО: Теперь ID кейса корректно записывается в память
         function openCaseSlots(caseId) {
             currentMode = 'case'; currentCaseId = caseId;
             document.getElementById('roulette-back-btn').setAttribute('onclick', "switchScreen('cases-screen')");
@@ -261,5 +262,4 @@
 
                 const tape = document.getElementById(`tape-${l}`); tape.style.transition = 'none'; tape.style.transform = 'translateX(0px)'; tape.innerHTML = '';
                 for (let i = 0; i < 45; i++) {
-                    if (i === winIndex) { let d = {...prize}; if(d.type.startsWith('key')) d.type = 'key'; createSlotDomItem(tape, d); }
-                    
+                    if (i === wi
