@@ -79,188 +79,187 @@
 
     <div id="main-screen" class="screen active-screen">
         <div class="buttons-list">
-            <button class="menu-btn" onclick="switchScreen('cases-screen')"><img src="case.png" alt="Кейсы"></button>
-            <button class="menu-btn" onclick="switchScreen('banks-screen')"><img src="banka.png" alt="Банки"></button>
+            <button class="menu-btn" id="menu-to-cases"><img src="case.png" alt="Кейсы"></button>
+            <button class="menu-btn" id="menu-to-banks"><img src="banka.png" alt="Банки"></button>
             <button class="menu-btn"><img src="igra.png" alt="Игры"></button>
         </div>
     </div>
 
     <div id="banks-screen" class="screen">
-        <div class="back-arrow-btn" onclick="switchScreen('main-screen')">←</div>
+        <div class="back-arrow-btn" id="back-to-main-from-banks">←</div>
         <div class="banks-list">
-            <div class="bank-card" onclick="openHorizontalSlots(1)"><img src="banka1.png" class="bank-img"></div>
-            <div class="bank-card" onclick="openHorizontalSlots(2)"><img src="banka2.png" class="bank-img"></div>
-            <div class="bank-card" onclick="openHorizontalSlots(3)"><img src="banka3.png" class="bank-img"></div>
+            <div class="bank-card" id="bank-card-1"><img src="banka1.png" class="bank-img"></div>
+            <div class="bank-card" id="bank-card-2"><img src="banka2.png" class="bank-img"></div>
+            <div class="bank-card" id="bank-card-3"><img src="banka3.png" class="bank-img"></div>
         </div>
         <div class="banks-screen-padding"></div>
     </div>
 
     <div id="cases-screen" class="screen">
-        <div class="back-arrow-btn" onclick="switchScreen('main-screen')">←</div>
+        <div class="back-arrow-btn" id="back-to-main-from-cases">←</div>
         <div class="cases-list">
-            <div class="case-card" onclick="openCaseSlots(1)"><img src="case1.png" class="case-img"></div>
-            <div class="case-card" onclick="openCaseSlots(2)"><img src="case2.png" class="case-img"></div>
-            <div class="case-card" onclick="openCaseSlots(3)"><img src="case3.png" class="case-img"></div>
-            <div class="case-card" onclick="openCaseSlots(4)"><img src="case4.png" class="case-img"></div>
-            <div class="case-card" onclick="openCaseSlots(5)"><img src="case5.png" class="case-img"></div>
+            <div class="case-card" id="case-card-1"><img src="case1.png" class="case-img"></div>
+            <div class="case-card" id="case-card-2"><img src="case2.png" class="case-img"></div>
+            <div class="case-card" id="case-card-3"><img src="case3.png" class="case-img"></div>
+            <div class="case-card" id="case-card-4"><img src="case4.png" class="case-img"></div>
+            <div class="case-card" id="case-card-5"><img src="case5.png" class="case-img"></div>
         </div>
         <div class="banks-screen-padding"></div>
     </div>
 
     <div id="roulette-screen" class="screen">
-        <div class="back-arrow-btn" id="roulette-back-btn" onclick="switchScreen('banks-screen')">←</div>
+        <div class="back-arrow-btn" id="roulette-back-btn">←</div>
         <div class="roulette-container-horizontal">
             <div class="count-selector-box">
-                <button class="selector-btn active" id="btn-mode-1" onclick="changeLinesCount(1)">1</button>
-                <button class="selector-btn" id="btn-mode-2" onclick="changeLinesCount(2)">2</button>
-                <button class="selector-btn" id="btn-mode-3" onclick="changeLinesCount(3)">3</button>
+                <button class="selector-btn active" id="btn-mode-1">1</button>
+                <button class="selector-btn" id="btn-mode-2">2</button>
+                <button class="selector-btn" id="btn-mode-3">3</button>
             </div>
             <div class="slots-lines-holder" id="slotsHolder"></div>
             <div class="spin-actions-row">
-                <button class="spin-action-btn btn-honey-type" id="btnSpinHoney" onclick="spinHorizontalSlots('honey')">За <span id="spinCostText">700</span> <img src="honey.png"></button>
-                <button class="spin-action-btn btn-key-type" id="btnSpinKey" onclick="spinHorizontalSlots('key')">За Ключ <span id="spinKeyText">(1)</span></button>
+                <button class="spin-action-btn btn-honey-type" id="btnSpinHoney">За <span id="spinCostText">700</span> <img src="honey.png"></button>
+                <button class="spin-action-btn btn-key-type" id="btnSpinKey">За Ключ <span id="spinKeyText">(1)</span></button>
             </div>
         </div>
         <div class="banks-screen-padding"></div>
     </div>
 
     <script>
-        let playerData = { honey: 12500, key1: 0, key2: 0, key3: 0, key4: 0, key5: 0 };
-        let currentLines = 1, isSpinning = false, currentMode = 'bank', currentBankId = 1, currentCaseId = 1;
-        const itemWidth = 110; 
-        
-        const bankPools = {
-            1: [ { type: 'honey', text: '300', img: 'honey.png' }, { type: 'empty', text: 'Ничего', img: '' }, { type: 'key', text: 'Ключ', img: 'key1.png' } ],
-            2: [ { type: 'honey', text: '500', img: 'honey.png' }, { type: 'empty', text: 'Ничего', img: '' }, { type: 'key', text: 'Ключ', img: 'key2.png' }, { type: 'key', text: 'Ключ', img: 'key3.png' } ],
-            3: [ { type: 'honey', text: '850', img: 'honey.png' }, { type: 'empty', text: 'Ничего', img: '' }, { type: 'key', text: 'Ключ', img: 'key4.png' }, { type: 'key', text: 'Ключ', img: 'key5.png' } ]
-        };
-
-        const casePools = {
-            1: [ { type: 'honey', text: '1100', img: 'honey.png' }, { type: 'honey', text: '50', img: 'honey.png' } ],
-            2: [ { type: 'honey', text: '1200', img: 'honey.png' }, { type: 'honey', text: '50', img: 'honey.png' } ],
-            3: [ { type: 'honey', text: '1600', img: 'honey.png' }, { type: 'honey', text: '500', img: 'honey.png' } ],
-            4: [ { type: 'honey', text: '2300', img: 'honey.png' }, { type: 'honey', text: '100', img: 'honey.png' } ],
-            5: [ { type: 'honey', text: '5000', img: 'honey.png' }, { type: 'honey', text: '200', img: 'honey.png' } ]
-        };
-
-        const bankConfigs = { 1: { price: 300, keyReq: 'key1' }, 2: { price: 500, keyReq: 'key2' }, 3: { price: 700, keyReq: 'key4' } };
-        const caseConfigs = { 1: { price: 1000, keyReq: 'key1' }, 2: { price: 1250, keyReq: 'key2' }, 3: { price: 1550, keyReq: 'key3' }, 4: { price: 2000, keyReq: 'key4' }, 5: { price: 4500, keyReq: 'key5' } };
-
-        function updateUI() {
-            document.getElementById('ui-balance').innerText = playerData.honey.toLocaleString();
-            for(let i=1; i<=5; i++) document.getElementById(`ui-key${i}`).innerText = playerData[`key${i}`];
-        }
-
-        function switchScreen(screenId) {
-            document.getElementById('main-screen').classList.remove('active-screen');
-            document.getElementById('banks-screen').classList.remove('active-screen');
-            document.getElementById('cases-screen').classList.remove('active-screen');
-            document.getElementById('roulette-screen').classList.remove('active-screen');
-            document.getElementById(screenId).classList.add('active-screen');
-        }
-
-        function openHorizontalSlots(bankId) {
-            currentMode = 'bank'; currentBankId = bankId;
-            document.getElementById('roulette-back-btn').setAttribute('onclick', "switchScreen('banks-screen')");
-            document.getElementById('btnSpinKey').style.display = 'none';
-            switchScreen('roulette-screen'); changeLinesCount(1);
-        }
-
-        function openCaseSlots(caseId) {
-            currentMode = 'case'; currentCaseId = caseId;
-            document.getElementById('roulette-back-btn').setAttribute('onclick', "switchScreen('cases-screen')");
-            document.getElementById('btnSpinKey').style.display = 'flex';
-            switchScreen('roulette-screen'); changeLinesCount(1);
-        }
-
-        function changeLinesCount(count) {
-            if (isSpinning) return; currentLines = count;
-            for(let i=1; i<=3; i++) document.getElementById(`btn-mode-${i}`).classList.remove('active');
-            document.getElementById(`btn-mode-${count}`).classList.add('active');
-            let basePrice = currentMode === 'bank' ? bankConfigs[currentBankId].price : caseConfigs[currentCaseId].price;
-            document.getElementById('spinCostText').innerText = count * basePrice;
-            document.getElementById('spinKeyText').innerText = "(" + count + ")";
-            renderRouletteLines();
-        }
-
-        function renderRouletteLines() {
-            const holder = document.getElementById('slotsHolder'); holder.innerHTML = '';
-            for (let l = 0; l < currentLines; l++) {
-                const wrapper = document.createElement('div'); wrapper.className = 'roulette-wrapper-horizontal';
-                wrapper.innerHTML = `<div class="roulette-marker-horizontal"></div><div class="roulette-tape-horizontal" id="tape-${l}"></div>`;
-                holder.appendChild(wrapper); buildSingleTape(l);
-            }
-        }
-
-        function buildSingleTape(lineIndex) {
-            const tape = document.getElementById(`tape-${lineIndex}`); tape.innerHTML = '';
-            const activePool = currentMode === 'bank' ? bankPools[currentBankId] : casePools[currentCaseId];
-            for (let i = 0; i < 45; i++) createSlotDomItem(tape, activePool[Math.floor(Math.random() * activePool.length)]);
-        }
-
-        function createSlotDomItem(parentTape, itemData) {
-            const block = document.createElement('div'); block.className = `slot-item-horizontal item-${itemData.type}`;
-            block.innerHTML = itemData.type === 'empty' ? `<span style="font-size:20px; line-height:1;">❌</span><span>${itemData.text}</span>` : `<img src="${itemData.img}"><span>${itemData.text}</span>`;
-            parentTape.appendChild(block);
-        }
-
-        function spinHorizontalSlots(paymentMethod) {
-            if (isSpinning) return;
-            let basePrice = currentMode === 'bank' ? bankConfigs[currentBankId].price : caseConfigs[currentCaseId].price;
-            let requiredKey = currentMode === 'bank' ? bankConfigs[currentBankId].keyReq : caseConfigs[currentCaseId].keyReq;
-            const totalCost = currentLines * basePrice;
-
-            if (paymentMethod === 'honey') {
-                if (playerData.honey < totalCost) { alert('Недостаточно мёда!'); return; }
-                playerData.honey -= totalCost;
-            } else {
-                if (playerData[requiredKey] < currentLines) { alert('Недостаточно ключей!'); return; }
-                playerData[requiredKey] -= currentLines;
-            }
-
-            isSpinning = true; updateUI();
-            document.getElementById('btnSpinHoney').disabled = true; document.getElementById('btnSpinKey').disabled = true;
+        window.onload = function() {
+            let playerData = { honey: 12500, key1: 0, key2: 0, key3: 0, key4: 0, key5: 0 };
+            let currentLines = 1, isSpinning = false, currentMode = 'bank', currentBankId = 1, currentCaseId = 1;
+            const itemWidth = 110; 
             
-            const winIndex = 30; let calculatedResults = [];
-            const activePool = currentMode === 'bank' ? bankPools[currentBankId] : casePools[currentCaseId];
+            const bankPools = {
+                1: [ { type: 'honey', text: '300', img: 'honey.png' }, { type: 'empty', text: 'Ничего', img: '' }, { type: 'key', text: 'Ключ', img: 'key1.png' } ],
+                2: [ { type: 'honey', text: '500', img: 'honey.png' }, { type: 'empty', text: 'Ничего', img: '' }, { type: 'key', text: 'Ключ', img: 'key2.png' }, { type: 'key', text: 'Ключ', img: 'key3.png' } ],
+                3: [ { type: 'honey', text: '850', img: 'honey.png' }, { type: 'empty', text: 'Ничего', img: '' }, { type: 'key', text: 'Ключ', img: 'key4.png' }, { type: 'key', text: 'Ключ', img: 'key5.png' } ]
+            };
 
-            for (let l = 0; l < currentLines; l++) {
-                let prize = {}; let rand = Math.random() * 100;
-                if (currentMode === 'bank') {
-                    if (currentBankId === 1) {
-                        if (rand < 40) prize = { type: 'empty', text: 'Ничего', val: 0, img: '' };
-                        else if (rand < 99) { let h = Math.floor(Math.random() * 251) + 200; prize = { type: 'honey', text: `${h}`, val: h, img: 'honey.png' }; }
-                        else prize = { type: 'key1', text: 'Ключ', val: 1, img: 'key1.png' };
-                    } else if (currentBankId === 2) {
-                        if (rand < 40) prize = { type: 'empty', text: 'Ничего', val: 0, img: '' };
-                        else if (rand < 97) { let h = Math.floor(Math.random() * 301) + 400; prize = { type: 'honey', text: `${h}`, val: h, img: 'honey.png' }; }
-                        else if (rand < 99) prize = { type: 'key2', text: 'Ключ', val: 1, img: 'key2.png' };
-                        else prize = { type: 'key3', text: 'Ключ', val: 1, img: 'key3.png' };
-                    } else {
-                        if (rand < 34.5) prize = { type: 'empty', text: 'Ничего', val: 0, img: '' };
-                        else if (rand < 98.5) { let h = Math.floor(Math.random() * 301) + 700; prize = { type: 'honey', text: `${h}`, val: h, img: 'honey.png' }; }
-                        else if (rand < 99.5) prize = { type: 'key4', text: 'Ключ', val: 1, img: 'key4.png' };
-                        else prize = { type: 'key5', text: 'Ключ', val: 1, img: 'key5.png' };
-                    }
-                } else {
-                    if (currentCaseId === 1) {
-                        if (rand < 90) { let h = Math.floor(Math.random() * 501) + 850; prize = { type: 'honey', text: `${h}`, val: h, img: 'honey.png' }; }
-                        else prize = { type: 'honey', text: '50', val: 50, img: 'honey.png' };
-                    } else if (currentCaseId === 2) {
-                        if (rand < 92) { let h = Math.floor(Math.random() * 651) + 900; prize = { type: 'honey', text: `${h}`, val: h, img: 'honey.png' }; }
-                        else prize = { type: 'honey', text: '50', val: 50, img: 'honey.png' };
-                    } else if (currentCaseId === 3) {
-                        if (rand < 95) { let h = Math.floor(Math.random() * 651) + 1350; prize = { type: 'honey', text: `${h}`, val: h, img: 'honey.png' }; }
-                        else prize = { type: 'honey', text: '500', val: 500, img: 'honey.png' };
-                    } else if (currentCaseId === 4) {
-                        let h = Math.floor(Math.random() * 1101) + 1750; prize = { type: 'honey', text: `${h}`, val: h, img: 'honey.png' };
-                    } else {
-                        let h = Math.floor(Math.random() * 1501) + 4250; prize = { type: 'honey', text: `${h}`, val: h, img: 'honey.png' };
-                    }
+            const casePools = {
+                1: [ { type: 'honey', text: '1100', img: 'honey.png' }, { type: 'honey', text: '50', img: 'honey.png' } ],
+                2: [ { type: 'honey', text: '1200', img: 'honey.png' }, { type: 'honey', text: '50', img: 'honey.png' } ],
+                3: [ { type: 'honey', text: '1600', img: 'honey.png' }, { type: 'honey', text: '500', img: 'honey.png' } ],
+                4: [ { type: 'honey', text: '2300', img: 'honey.png' }, { type: 'honey', text: '100', img: 'honey.png' } ],
+                5: [ { type: 'honey', text: '5000', img: 'honey.png' }, { type: 'honey', text: '200', img: 'honey.png' } ]
+            };
+
+            const bankConfigs = { 1: { price: 300, keyReq: 'key1' }, 2: { price: 500, keyReq: 'key2' }, 3: { price: 700, keyReq: 'key4' } };
+            const caseConfigs = { 1: { price: 1000, keyReq: 'key1' }, 2: { price: 1250, keyReq: 'key2' }, 3: { price: 1550, keyReq: 'key3' }, 4: { price: 2000, keyReq: 'key4' }, 5: { price: 4500, keyReq: 'key5' } };
+
+            function updateUI() {
+                document.getElementById('ui-balance').innerText = playerData.honey.toLocaleString();
+                for(let i=1; i<=5; i++) document.getElementById(`ui-key${i}`).innerText = playerData[`key${i}`];
+            }
+
+            function switchScreen(screenId) {
+                document.getElementById('main-screen').classList.remove('active-screen');
+                document.getElementById('banks-screen').classList.remove('active-screen');
+                document.getElementById('cases-screen').classList.remove('active-screen');
+                document.getElementById('roulette-screen').classList.remove('active-screen');
+                document.getElementById(screenId).classList.add('active-screen');
+            }
+
+            function openHorizontalSlots(bankId) {
+                currentMode = 'bank'; currentBankId = bankId;
+                document.getElementById('btnSpinKey').style.display = 'none';
+                switchScreen('roulette-screen'); changeLinesCount(1);
+            }
+
+            function openCaseSlots(caseId) {
+                currentMode = 'case'; currentCaseId = caseId;
+                document.getElementById('btnSpinKey').style.display = 'flex';
+                switchScreen('roulette-screen'); changeLinesCount(1);
+            }
+
+            function changeLinesCount(count) {
+                if (isSpinning) return; currentLines = count;
+                for(let i=1; i<=3; i++) document.getElementById(`btn-mode-${i}`).classList.remove('active');
+                document.getElementById(`btn-mode-${count}`).classList.add('active');
+                let basePrice = currentMode === 'bank' ? bankConfigs[currentBankId].price : caseConfigs[currentCaseId].price;
+                document.getElementById('spinCostText').innerText = count * basePrice;
+                document.getElementById('spinKeyText').innerText = "(" + count + ")";
+                renderRouletteLines();
+            }
+
+            function renderRouletteLines() {
+                const holder = document.getElementById('slotsHolder'); holder.innerHTML = '';
+                for (let l = 0; l < currentLines; l++) {
+                    const wrapper = document.createElement('div'); wrapper.className = 'roulette-wrapper-horizontal';
+                    wrapper.innerHTML = `<div class="roulette-marker-horizontal"></div><div class="roulette-tape-horizontal" id="tape-${l}"></div>`;
+                    holder.appendChild(wrapper); buildSingleTape(l);
                 }
-                calculatedResults.push(prize);
+            }
 
-                const tape = document.getElementById(`tape-${l}`); tape.style.transition = 'none'; tape.style.transform = 'translateX(0px)'; tape.innerHTML = '';
-                for (let i = 0; i < 45; i++) {
-                    if (i === winIndex) { let d = {...prize}; if(d.type.startsWith('key')) d.type = 'key'; createSlotDomItem(tape, d); }
-           
+            function buildSingleTape(lineIndex) {
+                const tape = document.getElementById(`tape-${lineIndex}`); tape.innerHTML = '';
+                const activePool = currentMode === 'bank' ? bankPools[currentBankId] : casePools[currentCaseId];
+                for (let i = 0; i < 45; i++) createSlotDomItem(tape, activePool[Math.floor(Math.random() * activePool.length)]);
+            }
+
+            function createSlotDomItem(parentTape, itemData) {
+                const block = document.createElement('div'); block.className = `slot-item-horizontal item-${itemData.type}`;
+                block.innerHTML = itemData.type === 'empty' ? `<span style="font-size:20px; line-height:1;">❌</span><span>${itemData.text}</span>` : `<img src="${itemData.img}"><span>${itemData.text}</span>`;
+                parentTape.appendChild(block);
+            }
+
+            function spinHorizontalSlots(paymentMethod) {
+                if (isSpinning) return;
+                let basePrice = currentMode === 'bank' ? bankConfigs[currentBankId].price : caseConfigs[currentCaseId].price;
+                let requiredKey = currentMode === 'bank' ? bankConfigs[currentBankId].keyReq : caseConfigs[currentCaseId].keyReq;
+                const totalCost = currentLines * basePrice;
+
+                if (paymentMethod === 'honey') {
+                    if (playerData.honey < totalCost) { alert('Недостаточно мёда!'); return; }
+                    playerData.honey -= totalCost;
+                } else {
+                    if (playerData[requiredKey] < currentLines) { alert('Недостаточно ключей!'); return; }
+                    playerData[requiredKey] -= currentLines;
+                }
+
+                isSpinning = true; updateUI();
+                document.getElementById('btnSpinHoney').disabled = true; document.getElementById('btnSpinKey').disabled = true;
+                
+                const winIndex = 30; let calculatedResults = [];
+                const activePool = currentMode === 'bank' ? bankPools[currentBankId] : casePools[currentCaseId];
+
+                for (let l = 0; l < currentLines; l++) {
+                    let prize = {}; let rand = Math.random() * 100;
+                    if (currentMode === 'bank') {
+                        if (currentBankId === 1) {
+                            if (rand < 40) prize = { type: 'empty', text: 'Ничего', val: 0, img: '' };
+                            else if (rand < 99) { let h = Math.floor(Math.random() * 251) + 200; prize = { type: 'honey', text: `${h}`, val: h, img: 'honey.png' }; }
+                            else prize = { type: 'key1', text: 'Ключ', val: 1, img: 'key1.png' };
+                        } else if (currentBankId === 2) {
+                            if (rand < 40) prize = { type: 'empty', text: 'Ничего', val: 0, img: '' };
+                            else if (rand < 97) { let h = Math.floor(Math.random() * 301) + 400; prize = { type: 'honey', text: `${h}`, val: h, img: 'honey.png' }; }
+                            else if (rand < 99) prize = { type: 'key2', text: 'Ключ', val: 1, img: 'key2.png' };
+                            else prize = { type: 'key3', text: 'Ключ', val: 1, img: 'key3.png' };
+                        } else {
+                            if (rand < 34.5) prize = { type: 'empty', text: 'Ничего', val: 0, img: '' };
+                            else if (rand < 98.5) { let h = Math.floor(Math.random() * 301) + 700; prize = { type: 'honey', text: `${h}`, val: h, img: 'honey.png' }; }
+                            else if (rand < 99.5) prize = { type: 'key4', text: 'Ключ', val: 1, img: 'key4.png' };
+                            else prize = { type: 'key5', text: 'Ключ', val: 1, img: 'key5.png' };
+                        }
+                    } else {
+                        if (currentCaseId === 1) {
+                            if (rand < 90) { let h = Math.floor(Math.random() * 501) + 850; prize = { type: 'honey', text: `${h}`, val: h, img: 'honey.png' }; }
+                            else prize = { type: 'honey', text: '50', val: 50, img: 'honey.png' };
+                        } else if (currentCaseId === 2) {
+                            if (rand < 92) { let h = Math.floor(Math.random() * 651) + 900; prize = { type: 'honey', text: `${h}`, val: h, img: 'honey.png' }; }
+                            else prize = { type: 'honey', text: '50', val: 50, img: 'honey.png' };
+                        } else if (currentCaseId === 3) {
+                            if (rand < 95) { let h = Math.floor(Math.random() * 651) + 1350; prize = { type: 'honey', text: `${h}`, val: h, img: 'honey.png' }; }
+                            else prize = { type: 'honey', text: '500', val: 500, img: 'honey.png' };
+                        } else if (currentCaseId === 4) {
+                            let h = Math.floor(Math.random() * 1101) + 1750; prize = { type: 'honey', text: `${h}`, val: h, img: 'honey.png' };
+                        } else {
+                            let h = Math.floor(Math.random() * 1501) + 4250; prize = { type: 'honey', text: `${h}`, val: h, img: 'honey.png' };
+                        }
+                    }
+                    calculatedResults.push(prize);
+
+                    const tape = document.getElementById(`tape-${l}`); tape.style.transition = 'none'; tape.style.transform = 'translateX(0px)'; tape.innerHTML = '';
+                    for (let i = 0; i < 45; i++) {
+                        if (i === winIndex) { let d = {...prize}; if(d.type.startsWith('key')) d.type = 'key'; createSlotDomItem(tape, d); }
+                        else createSlotDomItem(tape, activePool[Math.floor(Math
