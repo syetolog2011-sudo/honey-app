@@ -1,1 +1,268 @@
 
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Mini App</title>
+    <style>
+        body {
+            margin: 0; padding: 0;
+            background: radial-gradient(circle, #334155 0%, #0f172a 100%);
+            background-attachment: fixed; color: #ffffff;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            display: flex; flex-direction: column; align-items: center;
+            user-select: none; -webkit-user-select: none; min-height: 100vh;
+            position: relative; overflow-x: hidden;
+        }
+        .keys-container { display: flex; justify-content: center; gap: 6px; margin-top: 25px; margin-bottom: 25px; width: 98%; }
+        .key-slot {
+            position: relative; width: 90px; height: 90px; background: rgba(255, 255, 255, 0.1);
+            border-radius: 16px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            border: 1px solid rgba(255, 255, 255, 0.2); box-sizing: border-box;
+        }
+        .key-slot img { width: 50px; height: 50px; object-fit: contain; display: block; margin-bottom: 12px; }
+        .key-count { position: absolute; bottom: 6px; left: 8px; font-size: 13px; font-weight: bold; background: rgba(0, 0, 0, 0.6); padding: 2px 6px; border-radius: 5px; }
+        .balance-container { display: flex; align-items: center; gap: 15px; margin-bottom: 35px; }
+        .balance-number { font-size: 28px; font-weight: 900; }
+        .honey-icon { width: 32px; height: 32px; }
+
+        .screen { display: none; flex-direction: column; align-items: center; width: 100%; position: relative; }
+        .active-screen { display: flex !important; }
+
+        .buttons-list { display: flex; flex-direction: column; align-items: center; gap: 36px; width: 100%; }
+        .menu-btn { background: none; border: none; padding: 0; cursor: pointer; width: 92%; max-width: 360px; transition: transform 0.1s ease; -webkit-tap-highlight-color: transparent; }
+        .menu-btn:active { transform: scale(0.95); }
+        .menu-btn img { width: 100%; height: auto; display: block; filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.4)); }
+
+        .banks-list, .cases-list { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; width: 95%; max-width: 380px; margin-top: 20px; }
+        .back-arrow-btn { position: absolute; top: -20px; right: 15px; width: 36px; height: 36px; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; color: #ffffff; cursor: pointer; z-index: 100; -webkit-tap-highlight-color: transparent; }
+        .bank-card, .case-card { width: calc(50% - 7px); aspect-ratio: 1 / 1; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 20px; padding: 12px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4); cursor: pointer; transition: transform 0.1s ease; -webkit-tap-highlight-color: transparent; }
+        .bank-card:active, .case-card:active { background: rgba(255, 255, 255, 0.15); transform: scale(0.96); }
+        .bank-img, .case-img { width: 95px; height: 95px; object-fit: contain; display: block; filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.5)); }
+
+        .roulette-container-horizontal { width: 100%; max-width: 360px; display: flex; flex-direction: column; align-items: center; padding: 0 10px; box-sizing: border-box; }
+        .slots-lines-holder { display: flex; flex-direction: column; gap: 10px; width: 100%; margin-bottom: 25px; }
+        .roulette-wrapper-horizontal { position: relative; width: 100%; height: 75px; background: #0f172a; border-radius: 16px; border: 2px solid rgba(255, 255, 255, 0.1); overflow: hidden; }
+        .roulette-marker-horizontal { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 4px; height: 100%; background: #ef4444; z-index: 10; box-shadow: 0 0 10px #ef4444; pointer-events: none; }
+        .roulette-tape-horizontal { display: flex; align-items: center; position: absolute; left: 0; top: 0; height: 100%; transition: transform 0s cubic-bezier(0.1, 0.8, 0.1, 1); will-change: transform; }
+        .slot-item-horizontal { width: 110px; height: 100%; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 13px; font-weight: bold; border-right: 1px solid rgba(255, 255, 255, 0.05); background: #1e293b; gap: 2px; box-sizing: border-box; }
+        .slot-item-horizontal img { width: 24px; height: 24px; object-fit: contain; }
+        .item-honey { color: #facc15; } .item-empty { color: #ef4444; } .item-key { color: #38bdf8; background: radial-gradient(circle, rgba(56,189,248,0.08) 0%, #1e293b 100%); }
+
+        .count-selector-box { display: flex; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 14px; padding: 4px; gap: 5px; margin-bottom: 20px; }
+        .selector-btn { background: transparent; border: none; color: #94a3b8; padding: 8px 25px; font-size: 16px; font-weight: bold; border-radius: 10px; cursor: pointer; transition: all 0.2s; -webkit-tap-highlight-color: transparent; }
+        .selector-btn.active { background: rgba(255, 255, 255, 0.15); color: #ffffff; }
+
+        .spin-actions-row { display: flex; gap: 10px; width: 95%; max-width: 340px; }
+        .spin-action-btn { flex: 1; color: #ffffff; border: none; padding: 16px 8px; font-size: 16px; font-weight: bold; border-radius: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: transform 0.1s ease, background 0.2s; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        .btn-honey-type { background: #2563eb; box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3); }
+        .btn-honey-type:active { background: #1d4ed8; transform: scale(0.97); }
+        .btn-key-type { background: #10b981; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3); }
+        .btn-key-type:active { background: #059669; transform: scale(0.97); }
+        .spin-action-btn:disabled { background: #1e293b; color: #64748b; cursor: not-allowed; box-shadow: none; }
+        .spin-action-btn img { width: 20px; height: 20px; object-fit: contain; }
+        .banks-screen-padding { height: 40px; width: 100%; }
+    </style>
+</head>
+<body>
+    <div class="keys-container">
+        <div class="key-slot"><img src="key1.png"><div class="key-count" id="ui-key1">0</div></div>
+        <div class="key-slot"><img src="key2.png"><div class="key-count" id="ui-key2">0</div></div>
+        <div class="key-slot"><img src="key3.png"><div class="key-count" id="ui-key3">0</div></div>
+        <div class="key-slot"><img src="key4.png"><div class="key-count" id="ui-key4">0</div></div>
+        <div class="key-slot"><img src="key5.png"><div class="key-count" id="ui-key5">0</div></div>
+    </div>
+    <div class="balance-container">
+        <div class="balance-number" id="ui-balance">12 500</div>
+        <img src="honey.png" alt="🍯" class="honey-icon">
+    </div>
+
+    <div id="main-screen" class="screen active-screen">
+        <div class="buttons-list">
+            <button class="menu-btn" onclick="switchScreen('cases-screen')"><img src="case.png" alt="Кейсы"></button>
+            <button class="menu-btn" onclick="switchScreen('banks-screen')"><img src="banka.png" alt="Банки"></button>
+            <button class="menu-btn"><img src="igra.png" alt="Игры"></button>
+        </div>
+    </div>
+
+    <div id="banks-screen" class="screen">
+        <div class="back-arrow-btn" onclick="switchScreen('main-screen')">←</div>
+        <div class="banks-list">
+            <div class="bank-card" onclick="openHorizontalSlots(1)"><img src="banka1.png" class="bank-img"></div>
+            <div class="bank-card" onclick="openHorizontalSlots(2)"><img src="banka2.png" class="bank-img"></div>
+            <div class="bank-card" onclick="openHorizontalSlots(3)"><img src="banka3.png" class="bank-img"></div>
+        </div>
+        <div class="banks-screen-padding"></div>
+    </div>
+
+    <div id="cases-screen" class="screen">
+        <div class="back-arrow-btn" onclick="switchScreen('main-screen')">←</div>
+        <div class="cases-list">
+            <div class="case-card" onclick="openCaseSlots(1)"><img src="case1.png" class="case-img"></div>
+            <div class="case-card" onclick="openCaseSlots(2)"><img src="case2.png" class="case-img"></div>
+            <div class="case-card" onclick="openCaseSlots(3)"><img src="case3.png" class="case-img"></div>
+            <div class="case-card" onclick="openCaseSlots(4)"><img src="case4.png" class="case-img"></div>
+            <div class="case-card" onclick="openCaseSlots(5)"><img src="case5.png" class="case-img"></div>
+        </div>
+        <div class="banks-screen-padding"></div>
+    </div>
+
+    <div id="roulette-screen" class="screen">
+        <div class="back-arrow-btn" id="roulette-back-btn" onclick="switchScreen('banks-screen')">←</div>
+        <div class="roulette-container-horizontal">
+            <div class="count-selector-box">
+                <button class="selector-btn active" id="btn-mode-1" onclick="changeLinesCount(1)">1</button>
+                <button class="selector-btn" id="btn-mode-2" onclick="changeLinesCount(2)">2</button>
+                <button class="selector-btn" id="btn-mode-3" onclick="changeLinesCount(3)">3</button>
+            </div>
+            <div class="slots-lines-holder" id="slotsHolder"></div>
+            <div class="spin-actions-row">
+                <button class="spin-action-btn btn-honey-type" id="btnSpinHoney" onclick="spinHorizontalSlots('honey')">За <span id="spinCostText">700</span> <img src="honey.png"></button>
+                <button class="spin-action-btn btn-key-type" id="btnSpinKey" onclick="spinHorizontalSlots('key')">За Ключ <span id="spinKeyText">(1)</span></button>
+            </div>
+        </div>
+        <div class="banks-screen-padding"></div>
+    </div>
+
+    <script>
+        let playerData = { honey: 12500, key1: 0, key2: 0, key3: 0, key4: 0, key5: 0 };
+        let currentLines = 1, isSpinning = false, currentMode = 'bank', currentBankId = 1, currentCaseId = 1;
+        const itemWidth = 110; 
+        
+        const bankPools = {
+            1: [ { type: 'honey', text: '300', img: 'honey.png' }, { type: 'empty', text: 'Ничего', img: '' }, { type: 'key', text: 'Ключ', img: 'key1.png' } ],
+            2: [ { type: 'honey', text: '500', img: 'honey.png' }, { type: 'empty', text: 'Ничего', img: '' }, { type: 'key', text: 'Ключ', img: 'key2.png' }, { type: 'key', text: 'Ключ', img: 'key3.png' } ],
+            3: [ { type: 'honey', text: '850', img: 'honey.png' }, { type: 'empty', text: 'Ничего', img: '' }, { type: 'key', text: 'Ключ', img: 'key4.png' }, { type: 'key', text: 'Ключ', img: 'key5.png' } ]
+        };
+
+        const casePools = {
+            1: [ { type: 'honey', text: '1100', img: 'honey.png' }, { type: 'honey', text: '50', img: 'honey.png' } ],
+            2: [ { type: 'honey', text: '1200', img: 'honey.png' }, { type: 'honey', text: '50', img: 'honey.png' } ],
+            3: [ { type: 'honey', text: '1600', img: 'honey.png' }, { type: 'honey', text: '500', img: 'honey.png' } ],
+            4: [ { type: 'honey', text: '2300', img: 'honey.png' }, { type: 'honey', text: '100', img: 'honey.png' } ],
+            5: [ { type: 'honey', text: '5000', img: 'honey.png' }, { type: 'honey', text: '200', img: 'honey.png' } ]
+        };
+
+        const bankConfigs = { 1: { price: 300, keyReq: 'key1' }, 2: { price: 500, keyReq: 'key2' }, 3: { price: 700, keyReq: 'key4' } };
+        const caseConfigs = { 1: { price: 1000, keyReq: 'key1' }, 2: { price: 1250, keyReq: 'key2' }, 3: { price: 1550, keyReq: 'key3' }, 4: { price: 2000, keyReq: 'key4' }, 5: { price: 4500, keyReq: 'key5' } };
+
+        function updateUI() {
+            document.getElementById('ui-balance').innerText = playerData.honey.toLocaleString();
+            for(let i=1; i<=5; i++) document.getElementById(`ui-key${i}`).innerText = playerData[`key${i}`];
+        }
+
+        function switchScreen(screenId) {
+            document.getElementById('main-screen').classList.remove('active-screen');
+            document.getElementById('banks-screen').classList.remove('active-screen');
+            document.getElementById('cases-screen').classList.remove('active-screen');
+            document.getElementById('roulette-screen').classList.remove('active-screen');
+            document.getElementById(screenId).classList.add('active-screen');
+        }
+
+        function openHorizontalSlots(bankId) {
+            currentMode = 'bank'; currentBankId = bankId;
+            const backBtn = document.getElementById('roulette-back-btn');
+            if (backBtn) backBtn.setAttribute('onclick', "switchScreen('banks-screen')");
+            document.getElementById('btnSpinKey').style.display = 'none';
+            switchScreen('roulette-screen'); changeLinesCount(1);
+        }
+
+        function openCaseSlots(caseId) {
+            currentMode = 'case'; currentCaseId = caseId;
+            const backBtn = document.getElementById('roulette-back-btn');
+            if (backBtn) backBtn.setAttribute('onclick', "switchScreen('cases-screen')");
+            document.getElementById('btnSpinKey').style.display = 'flex';
+            switchScreen('roulette-screen'); changeLinesCount(1);
+        }
+
+        function changeLinesCount(count) {
+            if (isSpinning) return; currentLines = count;
+            for(let i=1; i<=3; i++) document.getElementById(`btn-mode-${i}`).classList.remove('active');
+            document.getElementById(`btn-mode-${count}`).classList.add('active');
+            let basePrice = currentMode === 'bank' ? bankConfigs[currentBankId].price : caseConfigs[currentCaseId].price;
+            document.getElementById('spinCostText').innerText = count * basePrice;
+            document.getElementById('spinKeyText').innerText = "(" + count + ")";
+            renderRouletteLines();
+        }
+
+        function renderRouletteLines() {
+            const holder = document.getElementById('slotsHolder'); holder.innerHTML = '';
+            for (let l = 0; l < currentLines; l++) {
+                const wrapper = document.createElement('div'); wrapper.className = 'roulette-wrapper-horizontal';
+                wrapper.innerHTML = `<div class="roulette-marker-horizontal"></div><div class="roulette-tape-horizontal" id="tape-${l}"></div>`;
+                holder.appendChild(wrapper); buildSingleTape(l);
+            }
+        }
+
+        function buildSingleTape(lineIndex) {
+            const tape = document.getElementById(`tape-${lineIndex}`); tape.innerHTML = '';
+            const activePool = currentMode === 'bank' ? bankPools[currentBankId] : casePools[currentCaseId];
+            for (let i = 0; i < 45; i++) createSlotDomItem(tape, activePool[Math.floor(Math.random() * activePool.length)]);
+        }
+
+        function createSlotDomItem(parentTape, itemData) {
+            const block = document.createElement('div'); block.className = `slot-item-horizontal item-${itemData.type}`;
+            block.innerHTML = itemData.type === 'empty' ? `<span style="font-size:20px; line-height:1;">❌</span><span>${itemData.text}</span>` : `<img src="${itemData.img}"><span>${itemData.text}</span>`;
+            parentTape.appendChild(block);
+        }
+
+        function spinHorizontalSlots(paymentMethod) {
+            if (isSpinning) return;
+            let basePrice = currentMode === 'bank' ? bankConfigs[currentBankId].price : caseConfigs[currentCaseId].price;
+            let requiredKey = currentMode === 'bank' ? bankConfigs[currentBankId].keyReq : caseConfigs[currentCaseId].keyReq;
+            const totalCost = currentLines * basePrice;
+
+            if (paymentMethod === 'honey') {
+                if (playerData.honey < totalCost) { alert('Недостаточно мёда!'); return; }
+                playerData.honey -= totalCost;
+            } else {
+                if (playerData[requiredKey] < currentLines) { alert('Недостаточно ключей!'); return; }
+                playerData[requiredKey] -= currentLines;
+            }
+
+            isSpinning = true; updateUI();
+            document.getElementById('btnSpinHoney').disabled = true; document.getElementById('btnSpinKey').disabled = true;
+            
+            const winIndex = 30; let calculatedResults = [];
+            const activePool = currentMode === 'bank' ? bankPools[currentBankId] : casePools[currentCaseId];
+
+            for (let l = 0; l < currentLines; l++) {
+                let prize = {}; let rand = Math.random() * 100;
+                if (currentMode === 'bank') {
+                    if (currentBankId === 1) {
+                        if (rand < 40) prize = { type: 'empty', text: 'Ничего', val: 0, img: '' };
+                        else if (rand < 99) { let h = Math.floor(Math.random() * 251) + 200; prize = { type: 'honey', text: `${h}`, val: h, img: 'honey.png' }; }
+                        else prize = { type: 'key1', text: 'Ключ', val: 1, img: 'key1.png' };
+                    } else if (currentBankId === 2) {
+                        if (rand < 40) prize = { type: 'empty', text: 'Ничего', val: 0, img: '' };
+                        else if (rand < 97) { let h = Math.floor(Math.random() * 301) + 400; prize = { type: 'honey', text: `${h}`, val: h, img: 'honey.png' }; }
+                        else if (rand < 99) prize = { type: 'key2', text: 'Ключ', val: 1, img: 'key2.png' };
+                        else prize = { type: 'key3', text: 'Ключ', val: 1, img: 'key3.png' };
+                    } else {
+                        if (rand < 34.5) prize = { type: 'empty', text: 'Ничего', val: 0, img: '' };
+                        else if (rand < 98.5) { let h = Math.floor(Math.random() * 301) + 700; prize = { type: 'honey', text: `${h}`, val: h, img: 'honey.png' }; }
+                        else if (rand < 99.5) prize = { type: 'key4', text: 'Ключ', val: 1, img: 'key4.png' };
+                        else prize = { type: 'key5', text: 'Ключ', val: 1, img: 'key5.png' };
+                    }
+                } else {
+                    if (currentCaseId === 1) {
+                        if (rand < 90) { let h = Math.floor(Math.random() * 501) + 850; prize = { type: 'honey', text: `${h}`, val: h, img: 'honey.png' }; }
+                        else prize = { type: 'honey', text: '50', val: 50, img: 'honey.png' };
+                    } else if (currentCaseId === 2) {
+                        if (rand < 92) { let h = Math.floor(Math.random() * 651) + 900; prize = { type: 'honey', text: `${h}`, val: h, img: 'honey.png' }; }
+                        else prize = { type: 'honey', text: '50', val: 50, img: 'honey.png' };
+                    } else if (currentCaseId === 3) {
+                        if (rand < 95) { let h = Math.floor(Math.random() * 651) + 1350; prize = { type: 'honey', text: `${h}`, val: h, img: 'honey.png' }; }
+                        else prize = { type: 'honey', text: '500', val: 500, img: 'honey.png' };
+                    } else if (currentCaseId === 4) {
+                        let h = Math.floor(Math.random() * 1101) + 1750; prize = { type: 'honey', text: `${h}`, val: h, img: 'honey.png' };
+                    } else {
+                        let h = Math.floor(Math.random() * 1501) + 4250; prize = { type: 'honey', text: `${h}`, val: h, img: 'honey.png' };
+                    }
+                }
+                calculatedResults.push(prize);
+
+                const tape = document.getElementById(`tape-${l}`); tape.style.transition = 'none'; tape.style.transform = 'translateX(0px)'; tape.innerHTML = '';
+                for (let i = 0; i < 45; i++) {
+                    if (i === winIndex) { let d 
