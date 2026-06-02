@@ -65,7 +65,6 @@
     </style>
     
     <script>
-        // АБСОЛЮТНО ВСЕ ПЕРЕМЕННЫЕ И ФУНКЦИИ ВЫНЕСЕНЫ В НАЧАЛО В HEAD
         let playerData = { honey: 12500, key1: 0, key2: 0, key3: 0, key4: 0, key5: 0 };
         let currentLines = 1, isSpinning = false, currentMode = 'bank', currentBankId = 1, currentCaseId = 1;
         const itemWidth = 110; 
@@ -102,14 +101,16 @@
 
         function openHorizontalSlots(bankId) {
             currentMode = 'bank'; currentBankId = bankId;
-            document.getElementById('roulette-back-btn').setAttribute('onclick', "switchScreen('banks-screen')");
+            const backBtn = document.getElementById('roulette-back-btn');
+            if (backBtn) backBtn.setAttribute('onclick', "switchScreen('banks-screen')");
             document.getElementById('btnSpinKey').style.display = 'none';
             switchScreen('roulette-screen'); changeLinesCount(1);
         }
 
         function openCaseSlots(caseId) {
             currentMode = 'case'; currentCaseId = caseId;
-            document.getElementById('roulette-back-btn').setAttribute('onclick', "switchScreen('cases-screen')");
+            const backBtn = document.getElementById('roulette-back-btn');
+            if (backBtn) backBtn.setAttribute('onclick', "switchScreen('cases-screen')");
             document.getElementById('btnSpinKey').style.display = 'flex';
             switchScreen('roulette-screen'); changeLinesCount(1);
         }
@@ -255,13 +256,3 @@
         <div class="cases-list">
             <div class="case-card" onclick="openCaseSlots(1)"><img src="case1.png" class="case-img"></div>
             <div class="case-card" onclick="openCaseSlots(2)"><img src="case2.png" class="case-img"></div>
-            <div class="case-card" onclick="openCaseSlots(3)"><img src="case3.png" class="case-img"></div>
-            <div class="case-card" onclick="openCaseSlots(4)"><img src="case4.png" class="case-img"></div>
-            <div class="case-card" onclick="openCaseSlots(5)"><img src="case5.png" class="case-img"></div>
-        </div>
-        <div class="banks-screen-padding"></div>
-    </div>
-
-    <div id="roulette-screen" class="screen">
-        <div class="back-arrow-btn" id="
-            
