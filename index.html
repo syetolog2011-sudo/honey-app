@@ -142,6 +142,7 @@
         let playerData = { honey: 12500, key1: 0, key2: 0, key3: 0, key4: 0, key5: 0 };
         let currentLines = 1, isSpinning = false, currentMode = 'bank', currentBankId = 1, currentCaseId = 1;
         const itemWidth = 110; 
+        let currentSpinTimeout = null; // Для управления быстрой отменой таймаута
         
         const bankPools = {
             1: [ { type: 'honey', text: '300', img: 'honey.png' }, { type: 'empty', text: 'Ничего', img: '' }, { type: 'key', text: 'Ключ', img: 'key1.png' } ],
@@ -263,7 +264,9 @@
         }
 
         function spinHorizontalSlots(paymentMethod) {
+            // ИСПРАВЛЕНО: Сбрасываем старый незавершенный тайм-аут начисления, если игрок кликает повторно во время быстрой задержки
             if (isSpinning) return;
+
             let basePrice = currentMode === 'bank' ? bankConfigs[currentBankId].price : caseConfigs[currentCaseId].price;
             let requiredKey = currentMode === 'bank' ? bankConfigs[currentBankId].keyReq : caseConfigs[currentCaseId].keyReq;
             const totalCost = currentLines * basePrice;
@@ -334,7 +337,6 @@
                 const stopPos = -((winIndex * itemWidth) + (itemWidth / 2) - (ww / 2)) + (Math.floor(Math.random() * 30) - 15);
                 
                 if (isFastSpin) {
-                    // ИСПРАВЛЕНО: Тайминг увеличен до 0.8с с плавным замедлением ease-out на финише
                     tape.style.transition = 'transform 0.8s cubic-bezier(0.25, 1, 0.5, 1)';
                     setTimeout(() => { tape.style.transform = `translateX(${stopPos}px)`; }, 20);
                 } else {
@@ -345,14 +347,30 @@
                 }
             }
 
-            // ИСПРАВЛЕНО: Время ожидания подстроено под новую скорость (0.8с прокрут + 2с просмотр = 2800мс)
-            setTimeout(() => {
-                isSpinning = false; 
-                if (btnHoney) btnHoney.disabled = false; 
-                if (btnKey) btnKey.disabled = false;
-                calculatedResults.forEach(res => { if (res.type === 'honey') playerData.honey += res.val; else if (playerData[res.type] !== undefined) playerData[res.type] += 1; });
-                updateUI();
-            }, isFastSpin ? 2800 : 4100); 
+            // ИСПРАВЛЕНО: Кнопка разблокируется СРАЗУ же по окончании анимации торможения (0.8 сек), можно открывать следующий!
+            if (isFastSpin) {
+                // Разблокируем ввод через 850мс (сразу после остановки)
+                setTimeout(() => {
+                    isSpinning = false;
+                    if (btnHoney) btnHoney.disabled = false; 
+                    if (btnKey) btnKey.disabled = false;
+                }, 850);
+
+                // А окончательное начисление баланса произойдет через 2.8с (2 секунды просмотра), если игрок не запустил новый спин
+                currentSpinTimeout = setTimeout(() => {
+                    calculatedResults.forEach(res => { if (res.type === 'honey') playerData.honey += res.val; else if (playerData[res.type] !== undefined) playerData[res.type] += 1; });
+                    calculatedResults = [];
+                    updateUI();
+                }, 2800);
+            } else {
+                setTimeout(() => {
+                    isSpinning = false; 
+                    if (btnHoney) btnHoney.disabled = false; 
+                    if (btnKey) btnKey.disabled = false;
+                    calculatedResults.forEach(res => { if (res.type === 'honey') playerData.honey += res.val; else if (playerData[res.type] !== undefined) playerData[res.type] += 1; });
+                    updateUI();
+                }, 4100);
+            }
         }
 
         document.addEventListener('DOMContentLoaded', () => {
