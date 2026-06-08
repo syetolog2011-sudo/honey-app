@@ -127,7 +127,7 @@
             <label class="fast-spin-container">
                 <input type="checkbox" id="checkboxFastSpin">
                 <span class="custom-circle-checkbox"></span>
-                Быстрая прокрутка
+                Быстая прокрутка
             </label>
 
             <div class="spin-actions-row">
@@ -142,7 +142,6 @@
         let playerData = { honey: 12500, key1: 0, key2: 0, key3: 0, key4: 0, key5: 0 };
         let currentLines = 1, isSpinning = false, currentMode = 'bank', currentBankId = 1, currentCaseId = 1;
         const itemWidth = 110; 
-        let currentSpinTimeout = null; // Для управления быстрой отменой таймаута
         
         const bankPools = {
             1: [ { type: 'honey', text: '300', img: 'honey.png' }, { type: 'empty', text: 'Ничего', img: '' }, { type: 'key', text: 'Ключ', img: 'key1.png' } ],
@@ -264,7 +263,6 @@
         }
 
         function spinHorizontalSlots(paymentMethod) {
-            // ИСПРАВЛЕНО: Сбрасываем старый незавершенный тайм-аут начисления, если игрок кликает повторно во время быстрой задержки
             if (isSpinning) return;
 
             let basePrice = currentMode === 'bank' ? bankConfigs[currentBankId].price : caseConfigs[currentCaseId].price;
@@ -347,21 +345,17 @@
                 }
             }
 
-            // ИСПРАВЛЕНО: Кнопка разблокируется СРАЗУ же по окончании анимации торможения (0.8 сек), можно открывать следующий!
+            // ИСПРАВЛЕНО: Начисление наград теперь привязано ровно к моменту завершения анимации
             if (isFastSpin) {
-                // Разблокируем ввод через 850мс (сразу после остановки)
                 setTimeout(() => {
-                    isSpinning = false;
+                    isSpinning = false; 
                     if (btnHoney) btnHoney.disabled = false; 
                     if (btnKey) btnKey.disabled = false;
-                }, 850);
-
-                // А окончательное начисление баланса произойдет через 2.8с (2 секунды просмотра), если игрок не запустил новый спин
-                currentSpinTimeout = setTimeout(() => {
+                    
+                    // Начисление происходит СРАЗУ на 850мс
                     calculatedResults.forEach(res => { if (res.type === 'honey') playerData.honey += res.val; else if (playerData[res.type] !== undefined) playerData[res.type] += 1; });
-                    calculatedResults = [];
                     updateUI();
-                }, 2800);
+                }, 850); 
             } else {
                 setTimeout(() => {
                     isSpinning = false; 
