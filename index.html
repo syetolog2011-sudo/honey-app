@@ -75,14 +75,6 @@
             3: [ { type: 'honey', text: '850', img: 'honey.png' }, { type: 'empty', text: 'Ничего', img: '' }, { type: 'key', text: 'Ключ', img: 'key4.png' }, { type: 'key', text: 'Ключ', img: 'key5.png' } ]
         };
 
-        const casePools = {
-            1: [ { type: 'honey', text: '850-1350', img: 'honey.png' }, { type: 'honey', text: '50', img: 'honey.png' } ],
-            2: [ { type: 'honey', text: '900-1550', img: 'honey.png' }, { type: 'honey', text: '50', img: 'honey.png' } ],
-            3: [ { type: 'honey', text: '1350-2000', img: 'honey.png' }, { type: 'honey', text: '500', img: 'honey.png' } ],
-            4: [ { type: 'honey', text: '1750-2850', img: 'honey.png' } ],
-            5: [ { type: 'honey', text: '4250-5750', img: 'honey.png' } ]
-        };
-
         const bankConfigs = { 1: { price: 300, keyReq: 'key1' }, 2: { price: 500, keyReq: 'key2' }, 3: { price: 700, keyReq: 'key4' } };
         const caseConfigs = { 1: { price: 1000, keyReq: 'key1' }, 2: { price: 1250, keyReq: 'key2' }, 3: { price: 1550, keyReq: 'key3' }, 4: { price: 2000, keyReq: 'key4' }, 5: { price: 4500, keyReq: 'key5' } };
 
@@ -110,7 +102,6 @@
             const backBtn = document.getElementById('roulette-back-btn');
             if (backBtn) backBtn.setAttribute('onclick', "switchScreen('banks-screen')");
             
-            // Банки можно крутить за мёд
             const btnHoney = document.getElementById('btnSpinHoney');
             if (btnHoney) btnHoney.style.display = 'flex';
             
@@ -125,12 +116,15 @@
             const backBtn = document.getElementById('roulette-back-btn');
             if (backBtn) backBtn.setAttribute('onclick', "switchScreen('cases-screen')");
             
-            // ИСПРАВЛЕНО: Кнопка «За мёд» скрывается, работает только кнопка «За Ключ»
             const btnHoney = document.getElementById('btnSpinHoney');
             if (btnHoney) btnHoney.style.display = 'none';
             
             const keyBtn = document.getElementById('btnSpinKey');
-            if (keyBtn) keyBtn.style.display = 'flex';
+            if (keyBtn) {
+                keyBtn.style.display = 'flex';
+                // Подставляем иконку текущего нужного ключа на кнопку прокрутки кейса
+                keyBtn.innerHTML = `За Ключ <img src="key${caseConfigs[caseId].keyReq.replace('key','')}.png"> <span id="spinKeyText">(${currentLines})</span>`;
+            }
             
             switchScreen('roulette-screen'); changeLinesCount(1);
         }
@@ -166,12 +160,39 @@
             }
         }
 
+        // Генерация случайных чисел на лету для визуального наполнения ленты рулетки
+        function getRandomVisualItem() {
+            if (currentMode === 'bank') {
+                const activePool = bankPools[currentBankId];
+                return activePool[Math.floor(Math.random() * activePool.length)];
+            } else {
+                if (currentCaseId === 1) {
+                    return Math.random() * 100 < 90 
+                        ? { type: 'honey', text: Math.floor(Math.random() * (1350 - 850 + 1)) + 850, img: 'honey.png' }
+                        : { type: 'honey', text: '50', img: 'honey.png' };
+                } else if (currentCaseId === 2) {
+                    return Math.random() * 100 < 92 
+                        ? { type: 'honey', text: Math.floor(Math.random() * (1550 - 900 + 1)) + 900, img: 'honey.png' }
+                        : { type: 'honey', text: '50', img: 'honey.png' };
+                } else if (currentCaseId === 3) {
+                    return Math.random() * 100 < 95 
+                        ? { type: 'honey', text: Math.floor(Math.random() * (2000 - 1350 + 1)) + 1350, img: 'honey.png' }
+                        : { type: 'honey', text: '500', img: 'honey.png' };
+                } else if (currentCaseId === 4) {
+                    return { type: 'honey', text: Math.floor(Math.random() * (2850 - 1750 + 1)) + 1750, img: 'honey.png' };
+                } else {
+                    return { type: 'honey', text: Math.floor(Math.random() * (5750 - 4250 + 1)) + 4250, img: 'honey.png' };
+                }
+            }
+        }
+
         function buildSingleTape(lineIndex) {
             const tape = document.getElementById(`tape-${lineIndex}`); 
             if (!tape) return;
             tape.innerHTML = '';
-            const activePool = currentMode === 'bank' ? bankPools[currentBankId] : casePools[currentCaseId];
-            for (let i = 0; i < 45; i++) createSlotDomItem(tape, activePool[Math.floor(Math.random() * activePool.length)]);
+            for (let i = 0; i < 45; i++) {
+                createSlotDomItem(tape, getRandomVisualItem());
+            }
         }
 
         function createSlotDomItem(parentTape, itemData) {
@@ -200,7 +221,6 @@
             const btnKey = document.getElementById('btnSpinKey'); if (btnKey) btnKey.disabled = true;
             
             const winIndex = 30; let calculatedResults = [];
-            const activePool = currentMode === 'bank' ? bankPools[currentBankId] : casePools[currentCaseId];
 
             for (let l = 0; l < currentLines; l++) {
                 let prize = {}; let rand = Math.random() * 100;
@@ -261,10 +281,10 @@
                         if(d.type.startsWith('key')) d.type = 'key'; 
                         createSlotDomItem(tape, d); 
                     } else { 
-                        createSlotDomItem(tape, activePool[Math.floor(Math.random() * activePool.length)]); 
+                        createSlotDomItem(tape, getRandomVisualItem()); 
                     }
                 }
-                const ww = document.querySelector('.roulette-wrapper-horizontal').offsetWidth;
+                const ww = document.querySelector('.rou roulette-wrapper-horizontal').offsetWidth || 340;
                 const stopPos = -((winIndex * itemWidth) + (itemWidth / 2) - (ww / 2)) + (Math.floor(Math.random() * 30) - 15);
                 setTimeout(() => { tape.style.transition = 'transform 4s cubic-bezier(0.1, 0.8, 0.1, 1)'; tape.style.transform = `translateX(${stopPos}px)`; }, 40);
             }
