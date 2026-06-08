@@ -65,8 +65,7 @@
     </style>
     
     <script>
-        // ГЛОБАЛЬНЫЕ ДАННЫЕ И ИЗОЛИРОВАННЫЕ ФУНКЦИИ
-        let playerData = { honey: 12500, key1: 0, key2: 0, key3: 0, key4: 0, key5: 0 };
+        let playerData = { honey: 12500, key1: 2, key2: 2, key3: 2, key4: 2, key5: 2 };
         let currentLines = 1, isSpinning = false, currentMode = 'bank', currentBankId = 1, currentCaseId = 1;
         const itemWidth = 110; 
         
@@ -77,11 +76,11 @@
         };
 
         const casePools = {
-            1: [ { type: 'honey', text: '1100', img: 'honey.png' }, { type: 'honey', text: '50', img: 'honey.png' } ],
-            2: [ { type: 'honey', text: '1200', img: 'honey.png' }, { type: 'honey', text: '50', img: 'honey.png' } ],
-            3: [ { type: 'honey', text: '1600', img: 'honey.png' }, { type: 'honey', text: '500', img: 'honey.png' } ],
-            4: [ { type: 'honey', text: '2300', img: 'honey.png' }, { type: 'honey', text: '100', img: 'honey.png' } ],
-            5: [ { type: 'honey', text: '5000', img: 'honey.png' }, { type: 'honey', text: '200', img: 'honey.png' } ]
+            1: [ { type: 'honey', text: '850-1350', img: 'honey.png' }, { type: 'honey', text: '50', img: 'honey.png' } ],
+            2: [ { type: 'honey', text: '900-1550', img: 'honey.png' }, { type: 'honey', text: '50', img: 'honey.png' } ],
+            3: [ { type: 'honey', text: '1350-2000', img: 'honey.png' }, { type: 'honey', text: '500', img: 'honey.png' } ],
+            4: [ { type: 'honey', text: '1750-2850', img: 'honey.png' } ],
+            5: [ { type: 'honey', text: '4250-5750', img: 'honey.png' } ]
         };
 
         const bankConfigs = { 1: { price: 300, keyReq: 'key1' }, 2: { price: 500, keyReq: 'key2' }, 3: { price: 700, keyReq: 'key4' } };
@@ -111,6 +110,10 @@
             const backBtn = document.getElementById('roulette-back-btn');
             if (backBtn) backBtn.setAttribute('onclick', "switchScreen('banks-screen')");
             
+            // Банки можно крутить за мёд
+            const btnHoney = document.getElementById('btnSpinHoney');
+            if (btnHoney) btnHoney.style.display = 'flex';
+            
             const keyBtn = document.getElementById('btnSpinKey');
             if (keyBtn) keyBtn.style.display = 'none';
             
@@ -121,6 +124,10 @@
             currentMode = 'case'; currentCaseId = caseId;
             const backBtn = document.getElementById('roulette-back-btn');
             if (backBtn) backBtn.setAttribute('onclick', "switchScreen('cases-screen')");
+            
+            // ИСПРАВЛЕНО: Кнопка «За мёд» скрывается, работает только кнопка «За Ключ»
+            const btnHoney = document.getElementById('btnSpinHoney');
+            if (btnHoney) btnHoney.style.display = 'none';
             
             const keyBtn = document.getElementById('btnSpinKey');
             if (keyBtn) keyBtn.style.display = 'flex';
@@ -215,18 +222,32 @@
                     }
                 } else {
                     if (currentCaseId === 1) {
-                        if (rand < 90) { let h = Math.floor(Math.random() * 501) + 850; prize = { type: 'honey', text: `${h}`, val: h, img: 'honey.png' }; }
-                        else prize = { type: 'honey', text: '50', val: 50, img: 'honey.png' };
+                        if (rand < 90) { 
+                            let h = Math.floor(Math.random() * (1350 - 850 + 1)) + 850; 
+                            prize = { type: 'honey', text: `${h}`, val: h, img: 'honey.png' }; 
+                        } else { 
+                            prize = { type: 'honey', text: '50', val: 50, img: 'honey.png' }; 
+                        }
                     } else if (currentCaseId === 2) {
-                        if (rand < 92) { let h = Math.floor(Math.random() * 651) + 900; prize = { type: 'honey', text: `${h}`, val: h, img: 'honey.png' }; }
-                        else prize = { type: 'honey', text: '50', val: 50, img: 'honey.png' };
+                        if (rand < 92) { 
+                            let h = Math.floor(Math.random() * (1550 - 900 + 1)) + 900; 
+                            prize = { type: 'honey', text: `${h}`, val: h, img: 'honey.png' }; 
+                        } else { 
+                            prize = { type: 'honey', text: '50', val: 50, img: 'honey.png' }; 
+                        }
                     } else if (currentCaseId === 3) {
-                        if (rand < 95) { let h = Math.floor(Math.random() * 651) + 1350; prize = { type: 'honey', text: `${h}`, val: h, img: 'honey.png' }; }
-                        else prize = { type: 'honey', text: '500', val: 500, img: 'honey.png' };
+                        if (rand < 95) { 
+                            let h = Math.floor(Math.random() * (2000 - 1350 + 1)) + 1350; 
+                            prize = { type: 'honey', text: `${h}`, val: h, img: 'honey.png' }; 
+                        } else { 
+                            prize = { type: 'honey', text: '500', val: 500, img: 'honey.png' }; 
+                        }
                     } else if (currentCaseId === 4) {
-                        let h = Math.floor(Math.random() * 1101) + 1750; prize = { type: 'honey', text: `${h}`, val: h, img: 'honey.png' };
+                        let h = Math.floor(Math.random() * (2850 - 1750 + 1)) + 1750; 
+                        prize = { type: 'honey', text: `${h}`, val: h, img: 'honey.png' };
                     } else {
-                        let h = Math.floor(Math.random() * 1501) + 4250; prize = { type: 'honey', text: `${h}`, val: h, img: 'honey.png' };
+                        let h = Math.floor(Math.random() * (5750 - 4250 + 1)) + 4250; 
+                        prize = { type: 'honey', text: `${h}`, val: h, img: 'honey.png' };
                     }
                 }
                 calculatedResults.push(prize);
@@ -235,8 +256,13 @@
                 tape.style.transition = 'none'; tape.style.transform = 'translateX(0px)'; tape.innerHTML = '';
                 
                 for (let i = 0; i < 45; i++) {
-                    if (i === winIndex) { let d = {...prize}; if(d.type.startsWith('key')) d.type = 'key'; createSlotDomItem(tape, d); }
-                    else createSlotDomItem(tape, activePool[Math.floor(Math.random() * activePool.length)]);
+                    if (i === winIndex) { 
+                        let d = {...prize}; 
+                        if(d.type.startsWith('key')) d.type = 'key'; 
+                        createSlotDomItem(tape, d); 
+                    } else { 
+                        createSlotDomItem(tape, activePool[Math.floor(Math.random() * activePool.length)]); 
+                    }
                 }
                 const ww = document.querySelector('.roulette-wrapper-horizontal').offsetWidth;
                 const stopPos = -((winIndex * itemWidth) + (itemWidth / 2) - (ww / 2)) + (Math.floor(Math.random() * 30) - 15);
@@ -252,7 +278,6 @@
             }, 4100);
         }
 
-        // БЕЗОПАСНЫЙ СТАРТ ПОСЛЕ ТОГО, КАК ОТРИСОВАЛСЯ ВЕСЬ HTML
         document.addEventListener('DOMContentLoaded', () => {
             updateUI();
         });
