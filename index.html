@@ -53,9 +53,11 @@
         .selector-btn { background: transparent; border: none; color: #94a3b8; padding: 8px 25px; font-size: 16px; font-weight: bold; border-radius: 10px; cursor: pointer; transition: all 0.2s; -webkit-tap-highlight-color: transparent; }
         .selector-btn.active { background: rgba(255, 255, 255, 0.15); color: #ffffff; }
 
-        /* БЛОК БЫСТРОЙ ПРОКРУТКИ */
-        .fast-spin-container { display: flex; align-items: center; gap: 8px; margin-bottom: 15px; cursor: pointer; font-size: 15px; font-weight: bold; color: #94a3b8; }
-        .fast-spin-container input { width: 18px; height: 18px; cursor: pointer; accent-color: #2563eb; }
+        /* ПЛАВНЫЙ И КРАСИВЫЙ БЛОК ГАЛОЧКИ */
+        .fast-spin-container { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; cursor: pointer; font-size: 15px; font-weight: bold; color: #94a3b8; transition: color 0.2s ease; -webkit-tap-highlight-color: transparent; }
+        .fast-spin-container:active { color: #ffffff; }
+        .fast-spin-container input { width: 18px; height: 18px; cursor: pointer; accent-color: #2563eb; transition: transform 0.1s ease; }
+        .fast-spin-container input:active { transform: scale(0.85); }
 
         .spin-actions-row { display: flex; gap: 10px; width: 95%; max-width: 340px; }
         .spin-action-btn { flex: 1; color: #ffffff; border: none; padding: 16px 8px; font-size: 16px; font-weight: bold; border-radius: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: transform 0.1s ease, background 0.2s; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -119,7 +121,6 @@
                 <button class="selector-btn" id="btn-mode-2" onclick="changeLinesCount(2)">2</button>
                 <button class="selector-btn" id="btn-mode-3" onclick="changeLinesCount(3)">3</button>
             </div>
-            
             <div class="slots-lines-holder" id="slotsHolder"></div>
 
             <label class="fast-spin-container">
@@ -329,10 +330,10 @@
                 const ww = document.querySelector('.roulette-wrapper-horizontal').offsetWidth || 340;
                 const stopPos = -((winIndex * itemWidth) + (itemWidth / 2) - (ww / 2)) + (Math.floor(Math.random() * 30) - 15);
                 
-                // Проверка: быстрая или медленная прокрутка
                 if (isFastSpin) {
-                    tape.style.transition = 'transform 0.04s linear';
-                    tape.style.transform = `translateX(${stopPos}px)`;
+                    // ИСПРАВЛЕНО: Теперь при быстром режиме плавно долетает за 0.15с вместо телепортации
+                    tape.style.transition = 'transform 0.15s ease-out';
+                    setTimeout(() => { tape.style.transform = `translateX(${stopPos}px)`; }, 20);
                 } else {
                     setTimeout(() => {
                         tape.style.transition = 'transform 4s cubic-bezier(0.1, 0.8, 0.1, 1)';
@@ -341,13 +342,14 @@
                 }
             }
 
+            // ИСПРАВЛЕНО: При быстром режиме держит результат 1 секунду, чтобы игрок успел его увидеть
             setTimeout(() => {
                 isSpinning = false; 
                 if (btnHoney) btnHoney.disabled = false; 
                 if (btnKey) btnKey.disabled = false;
                 calculatedResults.forEach(res => { if (res.type === 'honey') playerData.honey += res.val; else if (playerData[res.type] !== undefined) playerData[res.type] += 1; });
                 updateUI();
-            }, isFastSpin ? 100 : 4100); // Тайм-аут завершения зависит от галочки
+            }, isFastSpin ? 1150 : 4100); 
         }
 
         document.addEventListener('DOMContentLoaded', () => {
