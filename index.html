@@ -53,10 +53,16 @@
         .selector-btn { background: transparent; border: none; color: #94a3b8; padding: 8px 25px; font-size: 16px; font-weight: bold; border-radius: 10px; cursor: pointer; transition: all 0.2s; -webkit-tap-highlight-color: transparent; }
         .selector-btn.active { background: rgba(255, 255, 255, 0.15); color: #ffffff; }
 
-        .fast-spin-container { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; cursor: pointer; font-size: 15px; font-weight: bold; color: #94a3b8; transition: color 0.2s ease; -webkit-tap-highlight-color: transparent; }
+        /* НАСТРОЙКИ ПЕРЕКЛЮЧАТЕЛЕЙ */
+        .toggles-group-box { display: flex; flex-direction: column; gap: 10px; align-items: flex-start; margin-bottom: 18px; width: 90%; }
+        .fast-spin-container { display: flex; align-items: center; gap: 12px; cursor: pointer; font-size: 15px; font-weight: bold; color: #94a3b8; transition: color 0.2s ease; -webkit-tap-highlight-color: transparent; }
         .fast-spin-container input { display: none; }
-        .custom-circle-checkbox { position: relative; width: 22px; height: 22px; background: rgba(255, 255, 255, 0.1); border: 2px solid rgba(255, 255, 255, 0.3); border-radius: 50%; transition: all 0.2s ease; display: inline-block; box-sizing: border-box; }
-        .fast-spin-container input:checked + .custom-circle-checkbox { background: #2563eb; border-color: #2563eb; box-shadow: 0 0 10px rgba(37, 99, 235, 0.5); }
+        .custom-circle-checkbox { position: relative; width: 22px; height: 22px; background: rgba(255, 255, 255, 0.1); border: 2px solid rgba(255, 255, 255, 0.3); border-radius: 50%; transition: all 0.2s ease; display: inline-block; box-sizing: border-box; flex-shrink: 0; }
+        
+        /* Цвета активных кружков */
+        #checkboxFastSpin:checked + .custom-circle-checkbox { background: #2563eb; border-color: #2563eb; box-shadow: 0 0 10px rgba(37, 99, 235, 0.5); }
+        #checkboxDemoMode:checked + .custom-circle-checkbox { background: #f97316; border-color: #f97316; box-shadow: 0 0 10px rgba(249, 115, 22, 0.5); }
+        
         .custom-circle-checkbox::after { content: ""; position: absolute; top: 50%; left: 50%; width: 8px; height: 8px; background: #ffffff; border-radius: 50%; transform: translate(-50%, -50%) scale(0); transition: transform 0.2s ease; }
         .fast-spin-container input:checked + .custom-circle-checkbox::after { transform: translate(-50%, -50%) scale(1); }
 
@@ -124,11 +130,18 @@
             </div>
             <div class="slots-lines-holder" id="slotsHolder"></div>
 
-            <label class="fast-spin-container">
-                <input type="checkbox" id="checkboxFastSpin">
-                <span class="custom-circle-checkbox"></span>
-                Быстая прокрутка
-            </label>
+            <div class="toggles-group-box">
+                <label class="fast-spin-container">
+                    <input type="checkbox" id="checkboxFastSpin">
+                    <span class="custom-circle-checkbox"></span>
+                    Быстрая прокрутка
+                </label>
+                <label class="fast-spin-container">
+                    <input type="checkbox" id="checkboxDemoMode">
+                    <span class="custom-circle-checkbox"></span>
+                    Демо-версия (повышенные шансы)
+                </label>
+            </div>
 
             <div class="spin-actions-row">
                 <button class="spin-action-btn btn-honey-type" id="btnSpinHoney" onclick="spinHorizontalSlots('honey')">За <span id="spinCostText">700</span> <img src="honey.png"></button>
@@ -226,26 +239,33 @@
         }
 
         function getRandomVisualItem() {
+            const isDemo = document.getElementById('checkboxDemoMode').checked;
             if (currentMode === 'bank') {
                 const activePool = bankPools[currentBankId];
                 return activePool[Math.floor(Math.random() * activePool.length)];
             } else {
+                // Подкрутка визуальной ленты в Демо
+                let rate = isDemo ? 98 : 90;
                 if (currentCaseId === 1) {
-                    return Math.random() * 100 < 90 
+                    return Math.random() * 100 < rate 
                         ? { type: 'honey', text: Math.floor(Math.random() * (1350 - 850 + 1)) + 850, img: 'honey.png' }
                         : { type: 'honey', text: '50', img: 'honey.png' };
                 } else if (currentCaseId === 2) {
-                    return Math.random() * 100 < 92 
+                    let r2 = isDemo ? 98 : 92;
+                    return Math.random() * 100 < r2 
                         ? { type: 'honey', text: Math.floor(Math.random() * (1550 - 900 + 1)) + 900, img: 'honey.png' }
                         : { type: 'honey', text: '50', img: 'honey.png' };
                 } else if (currentCaseId === 3) {
-                    return Math.random() * 100 < 95 
+                    let r3 = isDemo ? 99 : 95;
+                    return Math.random() * 100 < r3 
                         ? { type: 'honey', text: Math.floor(Math.random() * (2000 - 1350 + 1)) + 1350, img: 'honey.png' }
                         : { type: 'honey', text: '500', img: 'honey.png' };
                 } else if (currentCaseId === 4) {
-                    return { type: 'honey', text: Math.floor(Math.random() * (2850 - 1750 + 1)) + 1750, img: 'honey.png' };
+                    let low = isDemo ? 2500 : 1750;
+                    return { type: 'honey', text: Math.floor(Math.random() * (2850 - low + 1)) + low, img: 'honey.png' };
                 } else {
-                    return { type: 'honey', text: Math.floor(Math.random() * (5750 - 4250 + 1)) + 4250, img: 'honey.png' };
+                    let low = isDemo ? 5300 : 4250;
+                    return { type: 'honey', text: Math.floor(Math.random() * (5750 - low + 1)) + low, img: 'honey.png' };
                 }
             }
         }
@@ -268,13 +288,18 @@
             let basePrice = currentMode === 'bank' ? bankConfigs[currentBankId].price : caseConfigs[currentCaseId].price;
             let requiredKey = currentMode === 'bank' ? bankConfigs[currentBankId].keyReq : caseConfigs[currentCaseId].keyReq;
             const totalCost = currentLines * basePrice;
+            
+            const isDemo = document.getElementById('checkboxDemoMode').checked;
 
-            if (paymentMethod === 'honey') {
-                if (playerData.honey < totalCost) { alert('Недостаточно мёда!'); return; }
-                playerData.honey -= totalCost;
-            } else {
-                if (playerData[requiredKey] < currentLines) { alert('Недостаточно ключей!'); return; }
-                playerData[requiredKey] -= currentLines;
+            // Списание происходит ТОЛЬКО если это не ДЕМО режим
+            if (!isDemo) {
+                if (paymentMethod === 'honey') {
+                    if (playerData.honey < totalCost) { alert('Недостаточно мёда!'); return; }
+                    playerData.honey -= totalCost;
+                } else {
+                    if (playerData[requiredKey] < currentLines) { alert('Недостаточно ключей!'); return; }
+                    playerData[requiredKey] -= currentLines;
+                }
             }
 
             isSpinning = true; updateUI();
@@ -304,19 +329,40 @@
                         else prize = { type: 'key5', text: 'Ключ', val: 1, img: 'key5.png' };
                     }
                 } else {
+                    // НАСТРОЙКА ПОВЫШЕННЫХ ШАНСОВ ДЛЯ ДЕМО-РЕЖИМА
+                    let rate1 = isDemo ? 98 : 90;
+                    let rate2 = isDemo ? 98 : 92;
+                    let rate3 = isDemo ? 99 : 95;
+
                     if (currentCaseId === 1) {
-                        if (rand < 90) { let h = Math.floor(Math.random() * (1350 - 850 + 1)) + 850; prize = { type: 'honey', text: `${h}`, val: h, img: 'honey.png' }; }
-                        else prize = { type: 'honey', text: '50', val: 50, img: 'honey.png' };
+                        if (rand < rate1) { 
+                            let h = Math.floor(Math.random() * (1350 - 850 + 1)) + 850; 
+                            prize = { type: 'honey', text: isDemo ? `${h} (ДЕМО)` : `${h}`, val: h, img: 'honey.png' }; 
+                        } else { 
+                            prize = { type: 'honey', text: isDemo ? '50 (ДЕМО)' : '50', val: 50, img: 'honey.png' }; 
+                        }
                     } else if (currentCaseId === 2) {
-                        if (rand < 92) { let h = Math.floor(Math.random() * (1550 - 900 + 1)) + 900; prize = { type: 'honey', text: `${h}`, val: h, img: 'honey.png' }; }
-                        else prize = { type: 'honey', text: '50', val: 50, img: 'honey.png' };
+                        if (rand < rate2) { 
+                            let h = Math.floor(Math.random() * (1550 - 900 + 1)) + 900; 
+                            prize = { type: 'honey', text: isDemo ? `${h} (ДЕМО)` : `${h}`, val: h, img: 'honey.png' }; 
+                        } else { 
+                            prize = { type: 'honey', text: isDemo ? '50 (ДЕМО)' : '50', val: 50, img: 'honey.png' }; 
+                        }
                     } else if (currentCaseId === 3) {
-                        if (rand < 95) { let h = Math.floor(Math.random() * (2000 - 1350 + 1)) + 1350; prize = { type: 'honey', text: `${h}`, val: h, img: 'honey.png' }; }
-                        else prize = { type: 'honey', text: '500', val: 500, img: 'honey.png' };
+                        if (rand < rate3) { 
+                            let h = Math.floor(Math.random() * (2000 - 1350 + 1)) + 1350; 
+                            prize = { type: 'honey', text: isDemo ? `${h} (ДЕМО)` : `${h}`, val: h, img: 'honey.png' }; 
+                        } else { 
+                            prize = { type: 'honey', text: isDemo ? '500 (ДЕМО)' : '500', val: 500, img: 'honey.png' }; 
+                        }
                     } else if (currentCaseId === 4) {
-                        let h = Math.floor(Math.random() * (2850 - 1750 + 1)) + 1750; prize = { type: 'honey', text: `${h}`, val: h, img: 'honey.png' };
+                        let low = isDemo ? 2500 : 1750;
+                        let h = Math.floor(Math.random() * (2850 - low + 1)) + low; 
+                        prize = { type: 'honey', text: isDemo ? `${h} (ДЕМО)` : `${h}`, val: h, img: 'honey.png' };
                     } else {
-                        let h = Math.floor(Math.random() * (5750 - 4250 + 1)) + 4250; prize = { type: 'honey', text: `${h}`, val: h, img: 'honey.png' };
+                        let low = isDemo ? 5300 : 4250;
+                        let h = Math.floor(Math.random() * (5750 - low + 1)) + low; 
+                        prize = { type: 'honey', text: isDemo ? `${h} (ДЕМО)` : `${h}`, val: h, img: 'honey.png' };
                     }
                 }
                 calculatedResults.push(prize);
@@ -345,15 +391,16 @@
                 }
             }
 
-            // ИСПРАВЛЕНО: Начисление наград теперь привязано ровно к моменту завершения анимации
             if (isFastSpin) {
                 setTimeout(() => {
                     isSpinning = false; 
                     if (btnHoney) btnHoney.disabled = false; 
                     if (btnKey) btnKey.disabled = false;
                     
-                    // Начисление происходит СРАЗУ на 850мс
-                    calculatedResults.forEach(res => { if (res.type === 'honey') playerData.honey += res.val; else if (playerData[res.type] !== undefined) playerData[res.type] += 1; });
+                    // Начисление происходит ТОЛЬКО если выключен режим ДЕМО
+                    if (!isDemo) {
+                        calculatedResults.forEach(res => { if (res.type === 'honey') playerData.honey += res.val; else if (playerData[res.type] !== undefined) playerData[res.type] += 1; });
+                    }
                     updateUI();
                 }, 850); 
             } else {
@@ -361,7 +408,10 @@
                     isSpinning = false; 
                     if (btnHoney) btnHoney.disabled = false; 
                     if (btnKey) btnKey.disabled = false;
-                    calculatedResults.forEach(res => { if (res.type === 'honey') playerData.honey += res.val; else if (playerData[res.type] !== undefined) playerData[res.type] += 1; });
+                    
+                    if (!isDemo) {
+                        calculatedResults.forEach(res => { if (res.type === 'honey') playerData.honey += res.val; else if (playerData[res.type] !== undefined) playerData[res.type] += 1; });
+                    }
                     updateUI();
                 }, 4100);
             }
