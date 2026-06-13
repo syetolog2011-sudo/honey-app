@@ -34,11 +34,13 @@
         .menu-btn:active { transform: scale(0.95); }
         .menu-btn img { width: 100%; height: auto; display: block; filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.4)); }
 
-        .banks-list, .cases-list { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; width: 95%; max-width: 380px; margin-top: 20px; }
+        /* СПИСКИ КАРТОЧЕК ДЛЯ БАНОК, КЕЙСОВ И ИГР */
+        .banks-list, .cases-list, .games-list { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; width: 95%; max-width: 380px; margin-top: 20px; }
         .back-arrow-btn { position: absolute; top: -20px; right: 15px; width: 36px; height: 36px; background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; color: #ffffff; cursor: pointer; z-index: 100; -webkit-tap-highlight-color: transparent; }
-        .bank-card, .case-card { width: calc(50% - 7px); aspect-ratio: 1 / 1; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 20px; padding: 12px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4); cursor: pointer; transition: transform 0.1s ease; -webkit-tap-highlight-color: transparent; }
-        .bank-card:active, .case-card:active { background: rgba(255, 255, 255, 0.15); transform: scale(0.96); }
-        .bank-img, .case-img { width: 95px; height: 95px; object-fit: contain; display: block; filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.5)); }
+        
+        .bank-card, .case-card, .game-card { width: calc(50% - 7px); aspect-ratio: 1 / 1; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 20px; padding: 12px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4); cursor: pointer; transition: transform 0.1s ease; -webkit-tap-highlight-color: transparent; }
+        .bank-card:active, .case-card:active, .game-card:active { background: rgba(255, 255, 255, 0.15); transform: scale(0.96); }
+        .bank-img, .case-img, .game-img { width: 95px; height: 95px; object-fit: contain; display: block; filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.5)); }
 
         .roulette-container-horizontal { width: 100%; max-width: 360px; display: flex; flex-direction: column; align-items: center; padding: 0 10px; box-sizing: border-box; }
         .slots-lines-holder { display: flex; flex-direction: column; gap: 10px; width: 100%; margin-bottom: 25px; }
@@ -92,7 +94,7 @@
         <div class="buttons-list">
             <button class="menu-btn" onclick="switchScreen('cases-screen')"><img src="case.png" alt="Кейсы"></button>
             <button class="menu-btn" onclick="switchScreen('banks-screen')"><img src="banka.png" alt="Банки"></button>
-            <button class="menu-btn"><img src="igra.png" alt="Игры"></button>
+            <button class="menu-btn" onclick="switchScreen('games-screen')"><img src="igra.png" alt="Игры"></button>
         </div>
     </div>
 
@@ -114,6 +116,16 @@
             <div class="case-card" onclick="openCaseSlots(3)"><img src="case3.png" class="case-img"></div>
             <div class="case-card" onclick="openCaseSlots(4)"><img src="case4.png" class="case-img"></div>
             <div class="case-card" onclick="openCaseSlots(5)"><img src="case5.png" class="case-img"></div>
+        </div>
+        <div class="banks-screen-padding"></div>
+    </div>
+
+    <div id="games-screen" class="screen">
+        <div class="back-arrow-btn" onclick="switchScreen('main-screen')">←</div>
+        <div class="games-list">
+            <div class="game-card" onclick="openGame(1)"><img src="igra1.png" class="game-img"></div>
+            <div class="game-card" onclick="openGame(2)"><img src="igra2.png" class="game-img"></div>
+            <div class="game-card" onclick="openGame(3)"><img src="igra3.png" class="game-img"></div>
         </div>
         <div class="banks-screen-padding"></div>
     </div>
@@ -176,10 +188,16 @@
             document.getElementById('main-screen').classList.remove('active-screen');
             document.getElementById('banks-screen').classList.remove('active-screen');
             document.getElementById('cases-screen').classList.remove('active-screen');
+            document.getElementById('games-screen').classList.remove('active-screen');
             document.getElementById('roulette-screen').classList.remove('active-screen');
             
             const target = document.getElementById(screenId);
             if (target) target.classList.add('active-screen');
+        }
+
+        // ЛОГИКА ДЛЯ КЛИКА ПО ИГРАМ (Пока заглушка под новые ТЗ)
+        function openGame(gameId) {
+            alert("Игра " + gameId + " в разработке!");
         }
 
         function openHorizontalSlots(bankId) {
@@ -267,154 +285,4 @@
             }
         }
 
-        function buildSingleTape(lineIndex) {
-            const tape = document.getElementById(`tape-${lineIndex}`); if (!tape) return;
-            tape.innerHTML = '';
-            for (let i = 0; i < 45; i++) createSlotDomItem(tape, getRandomVisualItem());
-        }
-
-        function createSlotDomItem(parentTape, itemData) {
-            const block = document.createElement('div'); block.className = `slot-item-horizontal item-${itemData.type}`;
-            block.innerHTML = itemData.type === 'empty' ? `<span style="font-size:20px; line-height:1;">❌</span><span>${itemData.text}</span>` : `<img src="${itemData.img}"><span>${itemData.text}</span>`;
-            parentTape.appendChild(block);
-        }
-
-        function spinHorizontalSlots(paymentMethod) {
-            if (isSpinning) return;
-
-            let basePrice = currentMode === 'bank' ? bankConfigs[currentBankId].price : caseConfigs[currentCaseId].price;
-            let requiredKey = currentMode === 'bank' ? bankConfigs[currentBankId].keyReq : caseConfigs[currentCaseId].keyReq;
-            const totalCost = currentLines * basePrice;
-            
-            const isDemo = document.getElementById('checkboxDemoMode').checked;
-
-            if (!isDemo) {
-                if (paymentMethod === 'honey') {
-                    if (playerData.honey < totalCost) { alert('Недостаточно мёда!'); return; }
-                    playerData.honey -= totalCost;
-                } else {
-                    if (playerData[requiredKey] < currentLines) { alert('Недостаточно ключей!'); return; }
-                    playerData[requiredKey] -= currentLines;
-                }
-            }
-
-            isSpinning = true; updateUI();
-            
-            const btnHoney = document.getElementById('btnSpinHoney'); if (btnHoney) btnHoney.disabled = true;
-            const btnKey = document.getElementById('btnSpinKey'); if (btnKey) btnKey.disabled = true;
-            
-            const isFastSpin = document.getElementById('checkboxFastSpin').checked;
-            const winIndex = 30; let calculatedResults = [];
-
-            for (let l = 0; l < currentLines; l++) {
-                let prize = {}; let rand = Math.random() * 100;
-                if (currentMode === 'bank') {
-                    if (currentBankId === 1) {
-                        if (rand < 40) prize = { type: 'empty', text: 'Ничего', val: 0, img: '' };
-                        else if (rand < 99) { let h = Math.floor(Math.random() * 251) + 200; prize = { type: 'honey', text: `${h}`, val: h, img: 'honey.png' }; }
-                        else prize = { type: 'key1', text: 'Ключ', val: 1, img: 'key1.png' };
-                    } else if (currentBankId === 2) {
-                        if (rand < 40) prize = { type: 'empty', text: 'Ничего', val: 0, img: '' };
-                        else if (rand < 97) { let h = Math.floor(Math.random() * 301) + 400; prize = { type: 'honey', text: `${h}`, val: h, img: 'honey.png' }; }
-                        else if (rand < 99) prize = { type: 'key2', text: 'Ключ', val: 1, img: 'key2.png' };
-                        else prize = { type: 'key3', text: 'Ключ', val: 1, img: 'key3.png' };
-                    } else {
-                        if (rand < 34.5) prize = { type: 'empty', text: 'Ничего', val: 0, img: '' };
-                        else if (rand < 98.5) { let h = Math.floor(Math.random() * 301) + 700; prize = { type: 'honey', text: `${h}`, val: h, img: 'honey.png' }; }
-                        else if (rand < 99.5) prize = { type: 'key4', text: 'Ключ', val: 1, img: 'key4.png' };
-                        else prize = { type: 'key5', text: 'Ключ', val: 1, img: 'key5.png' };
-                    }
-                } else {
-                    let rate1 = isDemo ? 98 : 90;
-                    let rate2 = isDemo ? 98 : 92;
-                    let rate3 = isDemo ? 99 : 95;
-
-                    if (currentCaseId === 1) {
-                        if (rand < rate1) { 
-                            let h = Math.floor(Math.random() * (1350 - 850 + 1)) + 850; 
-                            prize = { type: 'honey', text: `${h}`, val: h, img: 'honey.png' }; 
-                        } else { 
-                            prize = { type: 'honey', text: '50', val: 50, img: 'honey.png' }; 
-                        }
-                    } else if (currentCaseId === 2) {
-                        if (rand < rate2) { 
-                            let h = Math.floor(Math.random() * (1550 - 900 + 1)) + 900; 
-                            prize = { type: 'honey', text: `${h}`, val: h, img: 'honey.png' }; 
-                        } else { 
-                            prize = { type: 'honey', text: '50', val: 50, img: 'honey.png' }; 
-                        }
-                    } else if (currentCaseId === 3) {
-                        if (rand < rate3) { 
-                            let h = Math.floor(Math.random() * (2000 - 1350 + 1)) + 1350; 
-                            prize = { type: 'honey', text: `${h}`, val: h, img: 'honey.png' }; 
-                        } else { 
-                            prize = { type: 'honey', text: '500', val: 500, img: 'honey.png' }; 
-                        }
-                    } else if (currentCaseId === 4) {
-                        let low = isDemo ? 2500 : 1750;
-                        let h = Math.floor(Math.random() * (2850 - low + 1)) + low; 
-                        prize = { type: 'honey', text: `${h}`, val: h, img: 'honey.png' };
-                    } else {
-                        let low = isDemo ? 5300 : 4250;
-                        let h = Math.floor(Math.random() * (5750 - low + 1)) + low; 
-                        prize = { type: 'honey', text: `${h}`, val: h, img: 'honey.png' };
-                    }
-                }
-                calculatedResults.push(prize);
-
-                const tape = document.getElementById(`tape-${l}`); if (!tape) continue;
-                tape.style.transition = 'none'; tape.style.transform = 'translateX(0px)'; tape.innerHTML = '';
-                
-                for (let i = 0; i < 45; i++) {
-                    if (i === winIndex) { 
-                        let d = {...prize}; if(d.type.startsWith('key')) d.type = 'key'; createSlotDomItem(tape, d); 
-                    } else { 
-                        createSlotDomItem(tape, getRandomVisualItem()); 
-                    }
-                }
-                const ww = document.querySelector('.roulette-wrapper-horizontal').offsetWidth || 340;
-                const stopPos = -((winIndex * itemWidth) + (itemWidth / 2) - (ww / 2)) + (Math.floor(Math.random() * 30) - 15);
-                
-                if (isFastSpin) {
-                    tape.style.transition = 'transform 0.8s cubic-bezier(0.25, 1, 0.5, 1)';
-                    setTimeout(() => { tape.style.transform = `translateX(${stopPos}px)`; }, 20);
-                } else {
-                    setTimeout(() => {
-                        tape.style.transition = 'transform 4s cubic-bezier(0.1, 0.8, 0.1, 1)';
-                        tape.style.transform = `translateX(${stopPos}px)`;
-                    }, 40);
-                }
-            }
-
-            if (isFastSpin) {
-                setTimeout(() => {
-                    isSpinning = false; 
-                    if (btnHoney) btnHoney.disabled = false; 
-                    if (btnKey) btnKey.disabled = false;
-                    
-                    // ИСПРАВЛЕНО: Никаких посторонних текстовых суффиксов, начисление работает штатно
-                    if (!isDemo) {
-                        calculatedResults.forEach(res => { if (res.type === 'honey') playerData.honey += res.val; else if (playerData[res.type] !== undefined) playerData[res.type] += 1; });
-                    }
-                    updateUI();
-                }, 850); 
-            } else {
-                setTimeout(() => {
-                    isSpinning = false; 
-                    if (btnHoney) btnHoney.disabled = false; 
-                    if (btnKey) btnKey.disabled = false;
-                    
-                    if (!isDemo) {
-                        calculatedResults.forEach(res => { if (res.type === 'honey') playerData.honey += res.val; else if (playerData[res.type] !== undefined) playerData[res.type] += 1; });
-                    }
-                    updateUI();
-                }, 4100);
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            updateUI();
-        });
-    </script>
-</body>
-</html>
+        function buildSingleTape(l
