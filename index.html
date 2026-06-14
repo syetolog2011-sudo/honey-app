@@ -78,7 +78,12 @@
         /* ИНТЕРФЕЙС ИГРЫ УЛЬИ */
         .mines-setup-container { width: 94%; max-width: 360px; background: #1e293b; padding: 24px 20px; border-radius: 28px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); box-sizing: border-box; display: flex; flex-direction: column; align-items: center; gap: 20px; position: relative; }
         .game-header-title { font-size: 24px; font-weight: 900; letter-spacing: 0.5px; margin: 0; color: #ffffff; }
-        .bet-main-label { font-size: 46px; font-weight: 900; color: #ffffff; display: flex; align-items: center; gap: 8px; margin: 5px 0; }
+        
+        /* ИСПРАВЛЕНО: Инпут ручного ввода ставки стилизован под видео */
+        .bet-input-wrapper { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 5px 0; width: 100%; }
+        .bet-number-input { background: transparent; border: none; font-size: 46px; font-weight: 900; color: #ffffff; text-align: right; width: 60%; outline: none; font-family: inherit; padding: 0; }
+        .bet-currency-label { font-size: 26px; color: #64748b; font-weight: 800; text-align: left; width: 40%; user-select: none; }
+        
         .bet-sub-info { font-size: 13px; color: #64748b; margin-top: -15px; font-weight: bold; }
         
         .bet-buttons-row { display: flex; gap: 10px; width: 100%; justify-content: center; }
@@ -176,9 +181,11 @@
                 <button class="size-btn active" id="size-btn-7" onclick="selectMinesGrid(7)">7x7</button>
             </div>
 
-            <div class="bet-main-label">
-                <span id="minesBetText">100</span> <span style="font-size: 26px; color:#64748b; font-weight:800;">honey</span>
+            <div class="bet-input-wrapper">
+                <input type="number" class="bet-input-wrapper bet-number-input" id="minesBetInputField" value="100" min="50" oninput="validateMinesInputOnFly()">
+                <span class="bet-currency-label">honey</span>
             </div>
+            
             <div class="bet-sub-info">От 50 до 10 000 мёда</div>
 
             <div class="bet-buttons-row">
@@ -282,14 +289,14 @@
             if (target) target.classList.add('active-screen');
         }
 
+        // МИНЫ: НАСТРОЙКИ СТАВОК И СЕТКИ
         function openMinesSetup() {
             switchScreen('mines-setup-screen');
             selectMinesGrid(7);
             minesBet = 100;
-            document.getElementById('minesBetText').innerText = minesBet;
+            document.getElementById('minesBetInputField').value = minesBet;
         }
 
-        // ИСПРАВЛЕНО: Максимумы слайдеров ульев строго под ТЗ (3х3 - 8, 5х5 - 24, 7х7 - 48)
         function selectMinesGrid(size) {
             minesGridSize = size;
             document.getElementById('size-btn-3').classList.remove('active');
@@ -310,16 +317,23 @@
             updateYlieSliderLabel();
         }
 
+        // Плавный контроль ввода на лету
+        function validateMinesInputOnFly() {
+            let val = parseInt(document.getElementById('minesBetInputField').value);
+            if (isNaN(val)) minesBet = 50;
+            else minesBet = val;
+        }
+
         function changeMinesBet(amount) {
             minesBet += amount;
             if (minesBet > 10000) minesBet = 10000;
-            document.getElementById('minesBetText').innerText = minesBet;
+            document.getElementById('minesBetInputField').value = minesBet;
         }
 
         function setMinesMaxBet() {
             minesBet = playerData.honey > 10000 ? 10000 : playerData.honey;
             if (minesBet < 50) minesBet = 50;
-            document.getElementById('minesBetText').innerText = minesBet;
+            document.getElementById('minesBetInputField').value = minesBet;
         }
 
         function updateYlieSliderLabel() {
@@ -327,17 +341,26 @@
             document.getElementById('ylieCountLabel').innerText = ylieCount;
         }
 
+        // МИНЫ: ИГРОВОЙ ПРОЦЕСС
         function startMinesGame() {
+            // Финальная проверка перед стартом катки
+            let finalInputVal = parseInt(document.getElementById('minesBetInputField').value);
+            if (isNaN(finalInputVal) || finalInputVal < 50) minesBet = 50;
+            else minesBet = finalInputVal;
+
             const isDemo = document.getElementById('checkboxDemoMode').checked;
-            if (!isDemo && playerData.honey < minesBet) {
-                alert("Недостаточно мёда для ставки!");
-                return;
-            }
 
             if (!isDemo) {
+                if (minesBet > 10000) minesBet = 10000; // Ограничение обычного режима
+                if (playerData.honey < minesBet) {
+                    alert("Недостаточно мёда для ставки!");
+                    return;
+                }
                 playerData.honey -= minesBet;
                 updateUI();
             }
+
+            document.getElementById('minesBetInputField').value = minesBet;
 
             minesGameState.active = true;
             minesGameState.totalCells = minesGridSize * minesGridSize;
@@ -416,7 +439,6 @@
                 let m = ylieCount;
                 let k = minesGameState.safeCellsOpened;
                 
-                // ИСПРАВЛЕНО: Новая, агрессивная формула подкрутки X (множителя) от количества ульев
                 let baseFactor = 1.0 + (m / (n - m)) * 0.98;
                 let mult = Math.pow(baseFactor, k);
                 
@@ -610,8 +632,8 @@
                     }
                 } else {
                     let rate1 = isDemo ? 98 : 90;
-                    let rate2 = isDemo ? 98 : 92;
-                    let rate3 = isDemo ? 99 : 95;
+                    let r2 = isDemo ? 98 : 92;
+                    let r3 = isDemo ? 99 : 95;
 
                     if (currentCaseId === 1) {
                         if (rand < rate1) { 
@@ -621,14 +643,14 @@
                             prize = { type: 'honey', text: '50', val: 50, img: 'honey.png' }; 
                         }
                     } else if (currentCaseId === 2) {
-                        if (rand < rate2) { 
+                        if (rand < r2) { 
                             let h = Math.floor(Math.random() * (1550 - 900 + 1)) + 900; 
                             prize = { type: 'honey', text: `${h}`, val: h, img: 'honey.png' }; 
                         } else { 
                             prize = { type: 'honey', text: '50', val: 50, img: 'honey.png' }; 
                         }
                     } else if (currentCaseId === 3) {
-                        if (rand < rate3) { 
+                        if (rand < r3) { 
                             let h = Math.floor(Math.random() * (2000 - 1350 + 1)) + 1350; 
                             prize = { type: 'honey', text: `${h}`, val: h, img: 'honey.png' }; 
                         } else { 
