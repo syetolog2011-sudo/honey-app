@@ -83,9 +83,6 @@
         .bet-number-input { background: transparent; border: none; font-size: 46px; font-weight: 900; color: #ffffff; text-align: right; width: 60%; outline: none; font-family: inherit; padding: 0; }
         .bet-currency-label { font-size: 26px; color: #64748b; font-weight: 800; text-align: left; width: 40%; user-select: none; }
         
-        /* ИСПРАВЛЕНО: Текст подписи адаптирован под неограниченную верхнюю планку ставки */
-        .bet-sub-info { font-size: 13px; color: #64748b; margin-top: -15px; font-weight: bold; }
-        
         .bet-buttons-row { display: flex; gap: 10px; width: 100%; justify-content: center; }
         .bet-circle-btn { background: #2e3b52; border: none; border-radius: 16px; color: #94a3b8; padding: 12px 18px; font-weight: 800; font-size: 14px; cursor: pointer; transition: all 0.1s; min-width: 65px; }
         .bet-circle-btn:active { transform: scale(0.93); background: #3b4b66; color: #ffffff; }
@@ -105,6 +102,8 @@
         
         .mine-tile { background: #202b3e; border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 20px; font-weight: 900; color: #3b4b66; cursor: pointer; transition: all 0.1s ease; aspect-ratio: 1/1; box-sizing: border-box; }
         .mine-tile.opened-safe { background: rgba(255,255,255,0.05); color: #facc15; font-size: 13px; font-weight: 800; cursor: default; }
+        
+        /* ИСПРАВЛЕНО: Тряска и анимация взрыва убраны насовсем */
         .mine-tile.opened-bomb { background: #ef4444; cursor: default; border: none; box-shadow: 0 0 15px #ef4444; }
         .mine-tile.opened-bomb img { width: 75%; height: 75%; object-fit: contain; }
         .mine-tile img { width: 55%; height: 55%; object-fit: contain; }
@@ -183,8 +182,6 @@
                 <span class="bet-currency-label">honey</span>
             </div>
             
-            <div class="bet-sub-info">Минимальная ставка от 50 мёда</div>
-
             <div class="bet-buttons-row">
                 <button class="bet-circle-btn" onclick="changeMinesBet(100)">+ 100</button>
                 <button class="bet-circle-btn" onclick="changeMinesBet(500)">+ 500</button>
@@ -286,7 +283,6 @@
             if (target) target.classList.add('active-screen');
         }
 
-        // МИНЫ: НАСТРОЙКИ СТАВОК И СЕТКИ
         function openMinesSetup() {
             switchScreen('mines-setup-screen');
             selectMinesGrid(7);
@@ -325,7 +321,6 @@
             document.getElementById('minesBetInputField').value = minesBet;
         }
 
-        // ИСПРАВЛЕНО: МАКС теперь забирает абсолютно весь доступный баланс мёда, без ограничений
         function setMinesMaxBet() {
             minesBet = playerData.honey;
             if (minesBet < 50) minesBet = 50;
@@ -337,7 +332,6 @@
             document.getElementById('ylieCountLabel').innerText = ylieCount;
         }
 
-        // МИНЫ: ИГРОВОЙ ПРОЦЕСС
         function startMinesGame() {
             let finalInputVal = parseInt(document.getElementById('minesBetInputField').value);
             if (isNaN(finalInputVal) || finalInputVal < 50) minesBet = 50;
@@ -346,7 +340,6 @@
             const isDemo = document.getElementById('checkboxDemoMode').checked;
 
             if (!isDemo) {
-                // ИСПРАВЛЕНО: Проверка только на баланс, верхнего лимита больше нет
                 if (playerData.honey < minesBet) {
                     alert("Недостаточно мёда для ставки!");
                     return;
