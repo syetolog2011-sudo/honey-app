@@ -285,4 +285,153 @@
             }
         }
 
-        function buildSingleTape(l
+        function buildSingleTape(lineIndex) {
+            const tape = document.getElementById(`tape-${lineIndex}`); if (!tape) return;
+            tape.innerHTML = '';
+            for (let i = 0; i < 45; i++) createSlotDomItem(tape, getRandomVisualItem());
+        }
+
+        function createSlotDomItem(parentTape, itemData) {
+            const block = document.createElement('div'); block.className = `slot-item-horizontal item-${itemData.type}`;
+            block.innerHTML = itemData.type === 'empty' ? `<span style="font-size:20px; line-height:1;">❌</span><span>${itemData.text}</span>` : `<img src="${itemData.img}"><span>${itemData.text}</span>`;
+            parentTape.appendChild(block);
+        }
+
+        function spinHorizontalSlots(paymentMethod) {
+            if (isSpinning) return;
+
+            let basePrice = currentMode === 'bank' ? bankConfigs[currentBankId].price : caseConfigs[currentCaseId].price;
+            let requiredKey = currentMode === 'bank' ? bankConfigs[currentBankId].keyReq : caseConfigs[currentCaseId].keyReq;
+            const totalCost = currentLines * basePrice;
+            
+            const isDemo = document.getElementById('checkboxDemoMode').checked;
+
+            if (!isDemo) {
+                if (paymentMethod === 'honey') {
+                    if (playerData.honey < totalCost) { alert('Недостаточно мёда!'); return; }
+                    playerData.honey -= totalCost;
+                } else {
+                    if (playerData[requiredKey] < currentLines) { alert('Недостаточно ключей!'); return; }
+                    playerData[requiredKey] -= currentLines;
+                }
+            }
+
+            isSpinning = true; updateUI();
+            
+            const btnHoney = document.getElementById('btnSpinHoney'); if (btnHoney) btnHoney.disabled = true;
+            const btnKey = document.getElementById('btnSpinKey'); if (btnKey) btnKey.disabled = true;
+            
+            const isFastSpin = document.getElementById('checkboxFastSpin').checked;
+            const winIndex = 30; let calculatedResults = [];
+
+            for (let l = 0; l < currentLines; l++) {
+                let prize = {}; let rand = Math.random() * 100;
+                if (currentMode === 'bank') {
+                    if (currentBankId === 1) {
+                        if (rand < 40) prize = { type: 'empty', text: 'Ничего', val: 0, img: '' };
+                        else if (rand < 99) { let h = Math.floor(Math.random() * 251) + 200; prize = { type: 'honey', text: `${h}`, val: h, img: 'honey.png' }; }
+                        else prize = { type: 'key1', text: 'Ключ', val: 1, img: 'key1.png' };
+                    } else if (currentBankId === 2) {
+                        if (rand < 40) prize = { type: 'empty', text: 'Ничего', val: 0, img: '' };
+                        else if (rand < 97) { let h = Math.floor(Math.random() * 301) + 400; prize = { type: 'honey', text: `${h}`, val: h, img: 'honey.png' }; }
+                        else if (rand < 99) prize = { type: 'key2', text: 'Ключ', val: 1, img: 'key2.png' };
+                        else prize = { type: 'key3', text: 'Ключ', val: 1, img: 'key3.png' };
+                    } else {
+                        if (rand < 34.5) prize = { type: 'empty', text: 'Ничего', val: 0, img: '' };
+                        else if (rand < 98.5) { let h = Math.floor(Math.random() * 301) + 700; prize = { type: 'honey', text: `${h}`, val: h, img: 'honey.png' }; }
+                        else if (rand < 99.5) prize = { type: 'key4', text: 'Ключ', val: 1, img: 'key4.png' };
+                        else prize = { type: 'key5', text: 'Ключ', val: 1, img: 'key5.png' };
+                    }
+                } else {
+                    let rate1 = isDemo ? 98 : 90;
+                    let rate2 = isDemo ? 98 : 92;
+                    let rate3 = isDemo ? 99 : 95;
+
+                    if (currentCaseId === 1) {
+                        if (rand < rate1) { 
+                            let h = Math.floor(Math.random() * (1350 - 850 + 1)) + 850; 
+                            prize = { type: 'honey', text: `${h}`, val: h, img: 'honey.png' }; 
+                        } else { 
+                            prize = { type: 'honey', text: '50', val: 50, img: 'honey.png' }; 
+                        }
+                    } else if (currentCaseId === 2) {
+                        if (rand < rate2) { 
+                            let h = Math.floor(Math.random() * (1550 - 900 + 1)) + 900; 
+                            prize = { type: 'honey', text: `${h}`, val: h, img: 'honey.png' }; 
+                        } else { 
+                            prize = { type: 'honey', text: '50', val: 50, img: 'honey.png' }; 
+                        }
+                    } else if (currentCaseId === 3) {
+                        if (rand < rate3) { 
+                            let h = Math.floor(Math.random() * (2000 - 1350 + 1)) + 1350; 
+                            prize = { type: 'honey', text: `${h}`, val: h, img: 'honey.png' }; 
+                        } else { 
+                            prize = { type: 'honey', text: '500', val: 500, img: 'honey.png' }; 
+                        }
+                    } else if (currentCaseId === 4) {
+                        let low = isDemo ? 2500 : 1750;
+                        let h = Math.floor(Math.random() * (2850 - low + 1)) + low; 
+                        prize = { type: 'honey', text: `${h}`, val: h, img: 'honey.png' };
+                    } else {
+                        let low = isDemo ? 5300 : 4250;
+                        let h = Math.floor(Math.random() * (5750 - low + 1)) + low; 
+                        prize = { type: 'honey', text: `${h}`, val: h, img: 'honey.png' };
+                    }
+                }
+                calculatedResults.push(prize);
+
+                const tape = document.getElementById(`tape-${l}`); if (!tape) continue;
+                tape.style.transition = 'none'; tape.style.transform = 'translateX(0px)'; tape.innerHTML = '';
+                
+                for (let i = 0; i < 45; i++) {
+                    if (i === winIndex) { 
+                        let d = {...prize}; if(d.type.startsWith('key')) d.type = 'key'; createSlotDomItem(tape, d); 
+                    } else { 
+                        createSlotDomItem(tape, getRandomVisualItem()); 
+                    }
+                }
+                const ww = document.querySelector('.roulette-wrapper-horizontal').offsetWidth || 340;
+                const stopPos = -((winIndex * itemWidth) + (itemWidth / 2) - (ww / 2)) + (Math.floor(Math.random() * 30) - 15);
+                
+                if (isFastSpin) {
+                    tape.style.transition = 'transform 0.8s cubic-bezier(0.25, 1, 0.5, 1)';
+                    setTimeout(() => { tape.style.transform = `translateX(${stopPos}px)`; }, 20);
+                } else {
+                    setTimeout(() => {
+                        tape.style.transition = 'transform 4s cubic-bezier(0.1, 0.8, 0.1, 1)';
+                        tape.style.transform = `translateX(${stopPos}px)`;
+                    }, 40);
+                }
+            }
+
+            if (isFastSpin) {
+                setTimeout(() => {
+                    isSpinning = false; 
+                    if (btnHoney) btnHoney.disabled = false; 
+                    if (btnKey) btnKey.disabled = false;
+                    
+                    if (!isDemo) {
+                        calculatedResults.forEach(res => { if (res.type === 'honey') playerData.honey += res.val; else if (playerData[res.type] !== undefined) playerData[res.type] += 1; });
+                    }
+                    updateUI();
+                }, 850); 
+            } else {
+                setTimeout(() => {
+                    isSpinning = false; 
+                    if (btnHoney) btnHoney.disabled = false; 
+                    if (btnKey) btnKey.disabled = false;
+                    
+                    if (!isDemo) {
+                        calculatedResults.forEach(res => { if (res.type === 'honey') playerData.honey += res.val; else if (playerData[res.type] !== undefined) playerData[res.type] += 1; });
+                    }
+                    updateUI();
+                }, 4100);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateUI();
+        });
+    </script>
+</body>
+</html>
