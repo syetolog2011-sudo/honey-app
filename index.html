@@ -7,7 +7,7 @@
     <style>
         body {
             margin: 0; padding: 0;
-            background: radial-gradient(circle #334155 0%, #0f172a 100%);
+            background: radial-gradient(circle, #334155 0%, #0f172a 100%);
             background-attachment: fixed; color: #ffffff;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             display: flex; flex-direction: column; align-items: center;
@@ -75,13 +75,12 @@
         .spin-action-btn img { width: 20px; height: 20px; object-fit: contain; }
         .banks-screen-padding { height: 40px; width: 100%; }
 
-        /* ИНТЕРФЕЙС ИГРЫ УЛЬИ ПО ВИДЕО */
+        /* ИНТЕРФЕЙС ИГРЫ УЛЬИ */
         .mines-setup-container { width: 94%; max-width: 360px; background: #1e293b; padding: 24px 20px; border-radius: 28px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); box-sizing: border-box; display: flex; flex-direction: column; align-items: center; gap: 20px; position: relative; }
         .game-header-title { font-size: 24px; font-weight: 900; letter-spacing: 0.5px; margin: 0; color: #ffffff; }
         .bet-main-label { font-size: 46px; font-weight: 900; color: #ffffff; display: flex; align-items: center; gap: 8px; margin: 5px 0; }
         .bet-sub-info { font-size: 13px; color: #64748b; margin-top: -15px; font-weight: bold; }
         
-        /* Круглые пресеты ставок */
         .bet-buttons-row { display: flex; gap: 10px; width: 100%; justify-content: center; }
         .bet-circle-btn { background: #2e3b52; border: none; border-radius: 16px; color: #94a3b8; padding: 12px 18px; font-weight: 800; font-size: 14px; cursor: pointer; transition: all 0.1s; min-width: 65px; }
         .bet-circle-btn:active { transform: scale(0.93); background: #3b4b66; color: #ffffff; }
@@ -108,7 +107,6 @@
         .mine-tile.opened-bomb img { width: 75%; height: 75%; object-fit: contain; }
         .mine-tile img { width: 55%; height: 55%; object-fit: contain; }
 
-        /* НАСТРОЙКИ СЕТКИ ИЗ ВИДЕО */
         .grid-sizes-row { display: flex; background: #2e3b52; border-radius: 14px; padding: 3px; gap: 2px; width: 100%; box-sizing: border-box; justify-content: space-between; }
         .size-btn { background: transparent; border: none; border-radius: 11px; color: #94a3b8; padding: 10px 0; font-weight: bold; font-size: 13px; cursor: pointer; transition: all 0.2s; flex: 1; text-align: center; }
         .size-btn.active { background: #1e293b; color: #ffffff; font-weight: 900; }
@@ -206,9 +204,7 @@
 
     <div id="mines-play-screen" class="screen">
         <div class="mines-board-container">
-            
             <div class="mines-grid-display" id="minesGrid"></div>
-
             <button class="start-game-main-btn" id="btnMinesCashout" onclick="minesCashout()">ЗАБРАТЬ 100 🍯</button>
         </div>
         <div class="banks-screen-padding"></div>
@@ -286,7 +282,6 @@
             if (target) target.classList.add('active-screen');
         }
 
-        // МИНЫ: УПРАВЛЕНИЕ НАСТРОЙКАМИ СТАВКИ И ПОЛЯ
         function openMinesSetup() {
             switchScreen('mines-setup-screen');
             selectMinesGrid(7);
@@ -294,6 +289,7 @@
             document.getElementById('minesBetText').innerText = minesBet;
         }
 
+        // ИСПРАВЛЕНО: Максимумы слайдеров ульев строго под ТЗ (3х3 - 8, 5х5 - 24, 7х7 - 48)
         function selectMinesGrid(size) {
             minesGridSize = size;
             document.getElementById('size-btn-3').classList.remove('active');
@@ -304,10 +300,12 @@
             if(targetBtn) targetBtn.classList.add('active');
 
             const slider = document.getElementById('ylieSlider');
-            const totalCells = size * size;
-            slider.max = totalCells - 3; 
-            if (parseInt(slider.value) >= totalCells) {
-                slider.value = Math.floor(totalCells / 4);
+            if (size === 3) slider.max = 8;
+            else if (size === 5) slider.max = 24;
+            else slider.max = 48;
+
+            if (parseInt(slider.value) > slider.max) {
+                slider.value = Math.floor(slider.max / 2);
             }
             updateYlieSliderLabel();
         }
@@ -329,7 +327,6 @@
             document.getElementById('ylieCountLabel').innerText = ylieCount;
         }
 
-        // МИНЫ: ИГРОВОЙ ПРОЦЕСС
         function startMinesGame() {
             const isDemo = document.getElementById('checkboxDemoMode').checked;
             if (!isDemo && playerData.honey < minesBet) {
@@ -419,8 +416,12 @@
                 let m = ylieCount;
                 let k = minesGameState.safeCellsOpened;
                 
-                let mult = 1.0 + (m / (n - k)) * 1.15 * k;
+                // ИСПРАВЛЕНО: Новая, агрессивная формула подкрутки X (множителя) от количества ульев
+                let baseFactor = 1.0 + (m / (n - m)) * 0.98;
+                let mult = Math.pow(baseFactor, k);
+                
                 let cellWinProfit = Math.floor((minesBet * mult) - minesGameState.winBank);
+                if (cellWinProfit < 1) cellWinProfit = 1;
                 
                 minesGameState.currentMultiplier = mult;
                 minesGameState.winBank = Math.floor(minesBet * mult);
@@ -464,7 +465,7 @@
             }
         }
 
-        // ОСТАЛЬНАЯ ЛОГИКА РУЛЕТОК
+        // РУЛЕТКА
         function openHorizontalSlots(bankId) {
             if (isSpinning) return;
             currentMode = 'bank'; currentBankId = bankId;
