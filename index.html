@@ -41,7 +41,6 @@
         .bank-card:active, .case-card:active, .game-card:active { background: rgba(255, 255, 255, 0.15); transform: scale(0.96); }
         .bank-img, .case-img, .game-img { width: 95px; height: 95px; object-fit: contain; display: block; filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.5)); }
 
-        /* РУЛЕТКА */
         .roulette-container-horizontal { width: 100%; max-width: 360px; display: flex; flex-direction: column; align-items: center; padding: 0 10px; box-sizing: border-box; }
         .slots-lines-holder { display: flex; flex-direction: column; gap: 10px; width: 100%; margin-bottom: 25px; }
         .roulette-wrapper-horizontal { position: relative; width: 100%; height: 75px; background: #0f172a; border-radius: 16px; border: 2px solid rgba(255, 255, 255, 0.1); overflow: hidden; }
@@ -75,7 +74,7 @@
         .spin-action-btn img { width: 20px; height: 20px; object-fit: contain; }
         .banks-screen-padding { height: 40px; width: 100%; }
 
-        /* СТИЛИ ДЛЯ ИГРЫ С УЛЬЯМИ (МИНЫ) */
+        /* СТИЛИ ДЛЯ ИГРЫ УЛЬИ */
         .mines-setup-container { width: 92%; max-width: 360px; background: rgba(30, 41, 59, 0.7); padding: 20px; border-radius: 24px; border: 1px solid rgba(255, 255, 255, 0.1); box-sizing: border-box; display: flex; flex-direction: column; align-items: center; gap: 16px; }
         .game-title { font-size: 22px; font-weight: 800; text-align: center; margin: 0; color: #facc15; }
         .grid-sizes-row { display: flex; gap: 8px; width: 100%; justify-content: center; }
@@ -92,7 +91,6 @@
         .start-game-main-btn:active { transform: scale(0.97); background: #059669; }
         .start-game-main-btn:disabled { background: #334155; color: #64748b; box-shadow: none; cursor: not-allowed; }
 
-        /* ИГРОВОЕ ПОЛЕ МИН */
         .mines-board-container { width: 95%; max-width: 360px; display: flex; flex-direction: column; align-items: center; gap: 15px; }
         .game-stats-bar { width: 100%; background: rgba(15, 23, 42, 0.6); padding: 12px 20px; border-radius: 16px; box-sizing: border-box; display: flex; justify-content: space-between; font-size: 15px; font-weight: bold; border: 1px solid rgba(255, 255, 255, 0.05); }
         .stat-orange { color: #f97316; } .stat-green { color: #10b981; }
@@ -238,12 +236,10 @@
     </div>
 
     <script>
-        // ДАННЫЕ ПРИЛОЖЕНИЯ
         let playerData = { honey: 12500, key1: 0, key2: 0, key3: 0, key4: 0, key5: 0 };
         let currentLines = 1, isSpinning = false, currentMode = 'bank', currentBankId = 1, currentCaseId = 1;
         const itemWidth = 110; 
         
-        // НАСТРОЙКИ РЕЖИМА "УЛЬИ" (МИНЫ)
         let minesGridSize = 7;
         let minesBet = 100;
         let ylieCount = 11;
@@ -267,7 +263,19 @@
             }
         }
 
-        // УПРАВЛЕНИЕ НАСТРОЙКАМИ ИГРЫ "УЛЬИ"
+        function switchScreen(screenId) {
+            document.getElementById('main-screen').classList.remove('active-screen');
+            document.getElementById('banks-screen').classList.remove('active-screen');
+            document.getElementById('cases-screen').classList.remove('active-screen');
+            document.getElementById('games-screen').classList.remove('active-screen');
+            document.getElementById('mines-setup-screen').classList.remove('active-screen');
+            document.getElementById('mines-play-screen').classList.remove('active-screen');
+            document.getElementById('roulette-screen').classList.remove('active-screen');
+            
+            const target = document.getElementById(screenId);
+            if (target) target.classList.add('active-screen');
+        }
+
         function openMinesSetup() {
             switchScreen('mines-setup-screen');
             selectMinesGrid(7);
@@ -301,7 +309,6 @@
             document.getElementById('ylieCountLabel').innerText = ylieCount;
         }
 
-        // СТАРТ И ЛОГИКА ИГРЫ "УЛЬИ"
         function startMinesGame() {
             const isDemo = document.getElementById('checkboxDemoMode').checked;
             if (!isDemo && playerData.honey < minesBet) {
@@ -314,16 +321,14 @@
                 updateUI();
             }
 
-            // Настройка состояния игры
             minesGameState.active = true;
             minesGameState.totalCells = minesGridSize * minesGridSize;
             minesGameState.safeCellsOpened = 0;
             minesGameState.maxSafeCells = minesGameState.totalCells - ylieCount;
             minesGameState.winBank = minesBet;
             minesGameState.currentMultiplier = 1.0;
-            minesGameState.board = Array(minesGameState.totalCells).fill(false); // false = пусто, true = улей
+            minesGameState.board = Array(minesGameState.totalCells).fill(false);
 
-            // Расстановка ульев случайным образом
             let placed = 0;
             while(placed < ylieCount) {
                 let idx = Math.floor(Math.random() * minesGameState.totalCells);
@@ -333,7 +338,6 @@
                 }
             }
 
-            // Отрисовка сетки
             const gridContainer = document.getElementById('minesGrid');
             gridContainer.innerHTML = '';
             gridContainer.style.gridTemplateColumns = `repeat(${minesGridSize}, 1fr)`;
@@ -347,7 +351,6 @@
                 gridContainer.appendChild(tile);
             }
 
-            // Обновление интерфейса матча
             document.getElementById('minesCurrentX').innerText = 'x1.00';
             document.getElementById('minesCurrentBankDisplay').innerText = minesGameState.winBank;
             document.getElementById('btnMinesCashout').innerText = `ЗАБРАТЬ ${minesGameState.winBank} 🍯`;
@@ -364,9 +367,7 @@
             const isDemo = document.getElementById('checkboxDemoMode').checked;
             let isYlie = minesGameState.board[idx];
 
-            // ФИЧА ДЛЯ ДЕМО-РЕЖИМА: Снижаем риск наступить на улей в 2 раза
             if (isDemo && isYlie && Math.random() < 0.5) {
-                // Ищем свободное безопасное место и переносим улей туда на лету
                 for(let i = 0; i < minesGameState.totalCells; i++) {
                     if (!minesGameState.board[i] && i !== idx) {
                         const targetTile = document.querySelector(`.mine-tile[data-index='${i}']`);
@@ -381,30 +382,25 @@
             }
 
             if (isYlie) {
-                // НАСТУПИЛ НА УЛЕЙ - ПРОИГРЫШ
                 minesGameState.active = false;
                 document.getElementById('btnMinesCashout').disabled = true;
                 tile.classList.add('opened-bomb');
                 tile.innerHTML = '<img src="ylie.png">';
 
-                // Показываем взрыв бомбы (улья) и вскрываем поле
                 setTimeout(() => {
-                    revealMinesField(false);
-                    alert(isDemo ? "Упс! Улей разорен (ДЕМО РЕЖИМ)" : "Упс! Вас искусали пчёлы, ставка сгорела!");
+                    revealMinesField();
+                    alert(isDemo ? "Упс! Улей разорен (ДЕМО)" : "Упс! Вас искусали пчёлы, ставка сгорела!");
                     switchScreen('mines-setup-screen');
                 }, 500);
             } else {
-                // БЕЗОПАСНАЯ КЛЕТКА
                 minesGameState.safeCellsOpened++;
                 tile.classList.add('opened-safe');
                 tile.innerHTML = '🪙';
 
-                // Математический расчёт честного коэффициента
                 let n = minesGameState.totalCells;
                 let m = ylieCount;
                 let k = minesGameState.safeCellsOpened;
                 
-                // Простая и азартная формула мультипликатора
                 let mult = 1.0 + (m / (n - k)) * 1.15 * k;
                 minesGameState.currentMultiplier = mult;
                 minesGameState.winBank = Math.floor(minesBet * mult);
@@ -413,7 +409,6 @@
                 document.getElementById('minesCurrentBankDisplay').innerText = minesGameState.winBank;
                 document.getElementById('btnMinesCashout').innerText = `ЗАБРАТЬ ${minesGameState.winBank} 🍯`;
 
-                // Если открыты абсолютно все чистые клетки
                 if (minesGameState.safeCellsOpened === minesGameState.maxSafeCells) {
                     minesCashout();
                 }
@@ -430,12 +425,12 @@
                 updateUI();
             }
 
-            revealMinesField(true);
+            revealMinesField();
             alert(isDemo ? `Забрано ${minesGameState.winBank} 🍯 (ДЕМО)` : `Победа! Вы забрали ${minesGameState.winBank} мёда!`);
             switchScreen('mines-setup-screen');
         }
 
-        function revealMinesField(isWin) {
+        function revealMinesField() {
             for(let i = 0; i < minesGameState.totalCells; i++) {
                 const tile = document.querySelector(`.mine-tile[data-index='${i}']`);
                 if (!tile) continue;
@@ -449,7 +444,6 @@
             }
         }
 
-        // КОД ДЛЯ КЕЙСОВ И БАНОК (РУЛЕТКА)
         function openHorizontalSlots(bankId) {
             if (isSpinning) return;
             currentMode = 'bank'; currentBankId = bankId;
