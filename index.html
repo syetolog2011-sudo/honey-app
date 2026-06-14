@@ -79,11 +79,11 @@
         .mines-setup-container { width: 94%; max-width: 360px; background: #1e293b; padding: 24px 20px; border-radius: 28px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); box-sizing: border-box; display: flex; flex-direction: column; align-items: center; gap: 20px; position: relative; }
         .game-header-title { font-size: 24px; font-weight: 900; letter-spacing: 0.5px; margin: 0; color: #ffffff; }
         
-        /* ИСПРАВЛЕНО: Инпут ручного ввода ставки стилизован под видео */
         .bet-input-wrapper { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 5px 0; width: 100%; }
         .bet-number-input { background: transparent; border: none; font-size: 46px; font-weight: 900; color: #ffffff; text-align: right; width: 60%; outline: none; font-family: inherit; padding: 0; }
         .bet-currency-label { font-size: 26px; color: #64748b; font-weight: 800; text-align: left; width: 40%; user-select: none; }
         
+        /* ИСПРАВЛЕНО: Текст подписи адаптирован под неограниченную верхнюю планку ставки */
         .bet-sub-info { font-size: 13px; color: #64748b; margin-top: -15px; font-weight: bold; }
         
         .bet-buttons-row { display: flex; gap: 10px; width: 100%; justify-content: center; }
@@ -98,9 +98,6 @@
         .ylie-slider { width: 100%; -webkit-appearance: none; height: 6px; border-radius: 3px; background: #2e3b52; outline: none; }
         .ylie-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 22px; border-radius: 6px; background: #2563eb; cursor: pointer; transition: transform 0.1s; }
         .ylie-slider::-webkit-slider-thumb:active { transform: scale(1.2); }
-
-        .start-game-main-btn { width: 100%; background: #2563eb; color: white; border: none; padding: 16px; font-size: 16px; font-weight: bold; border-radius: 20px; cursor: pointer; box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3); transition: all 0.1s; letter-spacing: 0.5px; }
-        .start-game-main-btn:active { transform: scale(0.97); background: #1d4ed8; }
 
         /* ИГРОВОЙ ЭКРАН */
         .mines-board-container { width: 95%; max-width: 360px; display: flex; flex-direction: column; align-items: center; gap: 15px; }
@@ -186,7 +183,7 @@
                 <span class="bet-currency-label">honey</span>
             </div>
             
-            <div class="bet-sub-info">От 50 до 10 000 мёда</div>
+            <div class="bet-sub-info">Минимальная ставка от 50 мёда</div>
 
             <div class="bet-buttons-row">
                 <button class="bet-circle-btn" onclick="changeMinesBet(100)">+ 100</button>
@@ -317,7 +314,6 @@
             updateYlieSliderLabel();
         }
 
-        // Плавный контроль ввода на лету
         function validateMinesInputOnFly() {
             let val = parseInt(document.getElementById('minesBetInputField').value);
             if (isNaN(val)) minesBet = 50;
@@ -326,12 +322,12 @@
 
         function changeMinesBet(amount) {
             minesBet += amount;
-            if (minesBet > 10000) minesBet = 10000;
             document.getElementById('minesBetInputField').value = minesBet;
         }
 
+        // ИСПРАВЛЕНО: МАКС теперь забирает абсолютно весь доступный баланс мёда, без ограничений
         function setMinesMaxBet() {
-            minesBet = playerData.honey > 10000 ? 10000 : playerData.honey;
+            minesBet = playerData.honey;
             if (minesBet < 50) minesBet = 50;
             document.getElementById('minesBetInputField').value = minesBet;
         }
@@ -343,7 +339,6 @@
 
         // МИНЫ: ИГРОВОЙ ПРОЦЕСС
         function startMinesGame() {
-            // Финальная проверка перед стартом катки
             let finalInputVal = parseInt(document.getElementById('minesBetInputField').value);
             if (isNaN(finalInputVal) || finalInputVal < 50) minesBet = 50;
             else minesBet = finalInputVal;
@@ -351,7 +346,7 @@
             const isDemo = document.getElementById('checkboxDemoMode').checked;
 
             if (!isDemo) {
-                if (minesBet > 10000) minesBet = 10000; // Ограничение обычного режима
+                // ИСПРАВЛЕНО: Проверка только на баланс, верхнего лимита больше нет
                 if (playerData.honey < minesBet) {
                     alert("Недостаточно мёда для ставки!");
                     return;
