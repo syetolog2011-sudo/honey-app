@@ -46,7 +46,7 @@
         .slots-lines-holder { display: flex; flex-direction: column; gap: 10px; width: 100%; margin-bottom: 25px; }
         .roulette-wrapper-horizontal { position: relative; width: 100%; height: 75px; background: #0f172a; border-radius: 16px; border: 2px solid rgba(255, 255, 255, 0.1); overflow: hidden; }
         .roulette-marker-horizontal { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 4px; height: 100%; background: #ef4444; z-index: 10; box-shadow: 0 0 10px #ef4444; pointer-events: none; }
-        .roulette-tape-horizontal { display: flex; align-items: center; position: absolute; left: 0; top: 0; height: 100%; transition: transform 0s cubic-bezier(0.1, 0.8, 0.1, 1); will-change: transform; }
+        .roulette-tape-horizontal { display: flex; align-items: center; position: absolute; left: 0; top: 0; height: 100%; will-change: transform; }
         .slot-item-horizontal { width: 110px; height: 100%; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 13px; font-weight: bold; border-right: 1px solid rgba(255, 255, 255, 0.05); background: #1e293b; gap: 2px; box-sizing: border-box; }
         .slot-item-horizontal img { width: 24px; height: 24px; object-fit: contain; }
         .item-honey { color: #facc15; } .item-empty { color: #ef4444; } .item-key { color: #38bdf8; background: radial-gradient(circle, rgba(56,189,248,0.08) 0%, #1e293b 100%); }
@@ -110,7 +110,7 @@
         .size-btn { background: transparent; border: none; border-radius: 11px; color: #94a3b8; padding: 10px 0; font-weight: bold; font-size: 13px; cursor: pointer; transition: all 0.2s; flex: 1; text-align: center; }
         .size-btn.active { background: #1e293b; color: #ffffff; font-weight: 900; }
 
-        /* Новая большая красивая кнопка Старт */
+        /* Большая красивая кнопка Старт */
         .start-game-main-btn {
             display: block;
             width: 90%;
@@ -272,7 +272,7 @@
     </div>
 
     <script>
-        let playerData = { honey: 12500, key1: 0, key2: 0, key3: 0, key4: 0, key5: 0 };
+        let playerData = { honey: 12500, key1: 5, key2: 4, key3: 3, key4: 2, key5: 1 };
         let currentLines = 1, isSpinning = false, currentMode = 'bank', currentBankId = 1, currentCaseId = 1;
         const itemWidth = 110; 
         
@@ -282,13 +282,27 @@
         let minesGameState = { active: false, board: [], totalCells: 49, safeCellsOpened: 0, maxSafeCells: 38, winBank: 0, currentMultiplier: 1.0 };
 
         const bankPools = {
-            1: [ { type: 'honey', text: '300', img: 'honey.png' }, { type: 'empty', text: 'Ничего', img: '' }, { type: 'key', text: 'Ключ', img: 'key1.png' } ],
-            2: [ { type: 'honey', text: '500', img: 'honey.png' }, { type: 'empty', text: 'Ничего', img: '' }, { type: 'key', text: 'Ключ', img: 'key2.png' }, { type: 'key', text: 'Ключ', img: 'key3.png' } ],
-            3: [ { type: 'honey', text: '850', img: 'honey.png' }, { type: 'empty', text: 'Ничего', img: '' }, { type: 'key', text: 'Ключ', img: 'key4.png' }, { type: 'key', text: 'Ключ', img: 'key5.png' } ]
+            1: [ { type: 'honey', text: '300 🍯', img: 'honey.png' }, { type: 'empty', text: 'Ничего', img: '' }, { type: 'key', text: 'Ключ 1', img: 'key1.png', keyType: 'key1' } ],
+            2: [ { type: 'honey', text: '500 🍯', img: 'honey.png' }, { type: 'empty', text: 'Ничего', img: '' }, { type: 'key', text: 'Ключ 2', img: 'key2.png', keyType: 'key2' }, { type: 'key', text: 'Ключ 3', img: 'key3.png', keyType: 'key3' } ],
+            3: [ { type: 'honey', text: '850 🍯', img: 'honey.png' }, { type: 'empty', text: 'Ничего', img: '' }, { type: 'key', text: 'Ключ 4', img: 'key4.png', keyType: 'key4' }, { type: 'key', text: 'Ключ 5', img: 'key5.png', keyType: 'key5' } ]
+        };
+
+        // Для кейсов используем тот же пул призов, привязывая его к ID кейса (1-5)
+        const casePools = {
+            1: bankPools[1],
+            2: bankPools[2],
+            3: bankPools[2],
+            4: bankPools[3],
+            5: bankPools[3]
         };
 
         const bankConfigs = { 1: { price: 300, keyReq: 'key1' }, 2: { price: 500, keyReq: 'key2' }, 3: { price: 700, keyReq: 'key4' } };
         const caseConfigs = { 1: { price: 1000, keyReq: 'key1' }, 2: { price: 1250, keyReq: 'key2' }, 3: { price: 1550, keyReq: 'key3' }, 4: { price: 2000, keyReq: 'key4' }, 5: { price: 4500, keyReq: 'key5' } };
+
+        // Инициализация при старте страницы
+        window.onload = function() {
+            updateUI();
+        };
 
         function updateUI() {
             const elBalance = document.getElementById('ui-balance');
@@ -300,6 +314,7 @@
         }
 
         function switchScreen(screenId) {
+            if (isSpinning) return; // Запрещаем переключать экраны во время крутки
             document.getElementById('main-screen').classList.remove('active-screen');
             document.getElementById('banks-screen').classList.remove('active-screen');
             document.getElementById('cases-screen').classList.remove('active-screen');
@@ -314,7 +329,7 @@
 
         function openMinesSetup() {
             switchScreen('mines-setup-screen');
-            selectMinesGrid(7); // По умолчанию открываем 7х7
+            selectMinesGrid(7);
             minesBet = 100;
             document.getElementById('minesBetInputField').value = minesBet;
         }
@@ -329,16 +344,14 @@
 
             const slider = document.getElementById('ylieSlider');
             
-            // Настройка лимитов согласно ТЗ
             if (size === 5) {
-                slider.min = 3;  // минимум 3 для 5х5
+                slider.min = 3;  
                 slider.max = 24;
             } else {
-                slider.min = 5;  // минимум 5 для 7х7
+                slider.min = 5;  
                 slider.max = 48;
             }
 
-            // Корректируем текущее положение слайдера, если оно выбивается за новые рамки
             let currentVal = parseInt(slider.value);
             if (currentVal < slider.min) slider.value = slider.min;
             if (currentVal > slider.max) slider.value = Math.floor(slider.max / 2);
@@ -373,7 +386,6 @@
             if (isNaN(finalInputVal) || finalInputVal < 50) minesBet = 50;
             else minesBet = finalInputVal;
 
-            // Жесткая проверка минимального количества бомб при старте
             if (minesGridSize === 5 && ylieCount < 3) {
                 alert("Для поля 5х5 нужно минимум 3 бомбы!");
                 return;
@@ -521,7 +533,7 @@
             }
         }
 
-        // РУЛЕТКА
+        // --- ЛОГИКА РУЛЕТКИ ---
         function openHorizontalSlots(bankId) {
             if (isSpinning) return;
             currentMode = 'bank'; currentBankId = bankId;
@@ -545,7 +557,8 @@
             const keyBtn = document.getElementById('btnSpinKey');
             if (keyBtn) {
                 keyBtn.style.display = 'flex';
-                keyBtn.innerHTML = `За Ключ <img src="key${caseConfigs[caseId].keyReq.replace('key','')}.png"> <span id="spinKeyText">(${currentLines})</span>`;
+                let reqKeyNum = caseConfigs[caseId].keyReq.replace('key','');
+                keyBtn.innerHTML = `За Ключ <img src="key${reqKeyNum}.png"> <span id="spinKeyText">(${currentLines})</span>`;
             }
             
             switchScreen('roulette-screen'); changeLinesCount(1);
@@ -569,8 +582,134 @@
         function renderRouletteLines() {
             const holder = document.getElementById('slotsHolder'); 
             if (!holder) return;
-            // Здесь будет логика отрисовки линий для рулетки
-            holder.innerHTML = '<div style="text-align:center; padding:10px; color:#64748b;">Рулетка готова к работе</div>';
+            holder.innerHTML = '';
+
+            // Генерируем нужное количество линий (от 1 до 3)
+            for(let i = 0; i < currentLines; i++) {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'roulette-wrapper-horizontal';
+                wrapper.id = `roulette-wrap-${i}`;
+
+                const marker = document.createElement('div');
+                marker.className = 'roulette-marker-horizontal';
+
+                const tape = document.createElement('div');
+                tape.className = 'roulette-tape-horizontal';
+                tape.id = `roulette-tape-${i}`;
+
+                // Первоначальное заполнение ленты заглушками
+                let pool = currentMode === 'bank' ? bankPools[currentBankId] : casePools[currentCaseId];
+                for(let j = 0; j < 30; j++) {
+                    let randItem = pool[Math.floor(Math.random() * pool.length)];
+                    tape.appendChild(createSlotItemDOM(randItem));
+                }
+
+                wrapper.appendChild(marker);
+                wrapper.appendChild(tape);
+                holder.appendChild(wrapper);
+            }
+        }
+
+        function createSlotItemDOM(item) {
+            const div = document.createElement('div');
+            div.className = 'slot-item-horizontal';
+            
+            if(item.type === 'honey') div.classList.add('item-honey');
+            else if(item.type === 'key') div.classList.add('item-key');
+            else div.classList.add('item-empty');
+
+            if(item.img) {
+                const img = document.createElement('img');
+                img.src = item.img;
+                div.appendChild(img);
+            }
+            
+            const span = document.createElement('span');
+            span.innerText = item.text;
+            div.appendChild(span);
+
+            return div;
+        }
+
+        function spinHorizontalSlots(type) {
+            if (isSpinning) return;
+
+            const isDemo = document.getElementById('checkboxDemoMode').checked;
+            const isFast = document.getElementById('checkboxFastSpin').checked;
+
+            // Списание стоимости/ключей
+            if (!isDemo) {
+                if (type === 'honey') {
+                    let price = currentLines * bankConfigs[currentBankId].price;
+                    if (playerData.honey < price) { alert("Недостаточно мёда!"); return; }
+                    playerData.honey -= price;
+                } else {
+                    let reqKey = caseConfigs[currentCaseId].keyReq;
+                    if (playerData[reqKey] < currentLines) { alert("Недостаточно ключей!"); return; }
+                    playerData[reqKey] -= currentLines;
+                }
+                updateUI();
+            }
+
+            isSpinning = true;
+            let pool = currentMode === 'bank' ? bankPools[currentBankId] : casePools[currentCaseId];
+            let duration = isFast ? 0.8 : 3.5;
+            let targetIndex = 25; // Индекс выигрышного элемента в ленте
+            
+            let finalPrizes = [];
+
+            // Запускаем анимацию для каждой выбранной линии
+            for (let i = 0; i < currentLines; i++) {
+                const tape = document.getElementById(`roulette-tape-${i}`);
+                if (!tape) continue;
+
+                tape.innerHTML = '';
+                tape.style.transition = 'none';
+                tape.style.transform = 'translateX(0px)';
+
+                // Генерируем новую ленту
+                let generatedItems = [];
+                for (let j = 0; j < 35; j++) {
+                    let randItem = pool[Math.floor(Math.random() * pool.length)];
+                    generatedItems.push(randItem);
+                    tape.appendChild(createSlotItemDOM(randItem));
+                }
+
+                // Запоминаем выигрышный приз
+                finalPrizes.push(generatedItems[targetIndex]);
+
+                // Рассчитываем сдвиг (центрируем 25-й элемент по маркеру)
+                setTimeout(() => {
+                    const wrap = document.getElementById(`roulette-wrap-${i}`);
+                    let wrapWidth = wrap.offsetWidth;
+                    let targetLeft = -(targetIndex * itemWidth) + (wrapWidth / 2) - (itemWidth / 2);
+
+                    tape.style.transition = `transform ${duration}s cubic-bezier(0.1, 0.8, 0.1, 1)`;
+                    tape.style.transform = `translateX(${targetLeft}px)`;
+                }, 50);
+            }
+
+            // Выдача наград после завершения анимации прокрутки
+            setTimeout(() => {
+                isSpinning = false;
+                
+                if (!isDemo) {
+                    finalPrizes.forEach(prize => {
+                        if (prize.type === 'honey') {
+                            let prizeCount = parseInt(prize.text);
+                            if (!isNaN(prizeCount)) playerData.honey += prizeCount;
+                        } else if (prize.type === 'key') {
+                            playerData[prize.keyType] += 1;
+                        }
+                    });
+                    updateUI();
+                }
+
+                // Красивое сообщение с результатами дропа
+                let prizeSummary = finalPrizes.map(p => p.text).join(', ');
+                alert(`Выпало: ${prizeSummary} ${isDemo ? '(Демо-режим)' : ''}`);
+                
+            }, (duration * 1000) + 100);
         }
     </script>
 </body>
