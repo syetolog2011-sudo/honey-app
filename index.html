@@ -41,6 +41,19 @@
         .bank-card:active, .case-card:active, .game-card:active { background: rgba(255, 255, 255, 0.15); transform: scale(0.96); }
         .bank-img, .case-img, .game-img { width: 95px; height: 95px; object-fit: contain; display: block; filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.5)); }
 
+        /* Иконка игры на всю ширину и на весь лоток */
+        .games-list .game-card {
+            width: 100%;
+            height: 160px;
+            aspect-ratio: auto;
+            padding: 10px;
+        }
+        .games-list .game-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
         /* РУЛЕТКА */
         .roulette-container-horizontal { width: 100%; max-width: 360px; display: flex; flex-direction: column; align-items: center; padding: 0 10px; box-sizing: border-box; }
         .slots-lines-holder { display: flex; flex-direction: column; gap: 10px; width: 100%; margin-bottom: 25px; }
@@ -212,8 +225,6 @@
         <div class="back-arrow-btn" onclick="switchScreen('main-screen')">←</div>
         <div class="games-list">
             <div class="game-card" onclick="openMinesSetup()"><img src="igra1.png" class="game-img"></div>
-            <div class="game-card" onclick="alert('Игра 2 в разработке!')"><img src="igra2.png" class="game-img"></div>
-            <div class="game-card" onclick="alert('Игра 3 в разработке!')"><img src="igra3.png" class="game-img"></div>
         </div>
         <div class="banks-screen-padding"></div>
     </div>
@@ -487,7 +498,6 @@
                 document.getElementById('btnMinesCashout').disabled = true;
                 tile.classList.add('opened-bomb');
                 
-                // Вставляем видео-анимацию взрыва для нажатой ячейки
                 tile.innerHTML = '<video src="yliea.mp4" autoplay muted playsinline></video>';
 
                 setTimeout(() => {
@@ -544,7 +554,6 @@
             switchScreen('mines-setup-screen');
         }
 
-        // Показ всех оставшихся мин при завершении раунда
         function revealMinesField() {
             for(let i = 0; i < minesGameState.totalCells; i++) {
                 const tile = document.querySelector(`.mine-tile[data-index='${i}']`);
@@ -553,7 +562,6 @@
                 if (minesGameState.board[i]) {
                     if (!tile.classList.contains('opened-bomb')) {
                         tile.style.background = 'rgba(239, 68, 68, 0.15)';
-                        // Отображаем bomba.png вместо старой картинки
                         tile.innerHTML = '<img src="bomba.png" style="opacity: 0.8;">';
                     }
                 }
