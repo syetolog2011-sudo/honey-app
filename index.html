@@ -97,7 +97,7 @@
         .ylie-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 22px; border-radius: 6px; background: #2563eb; cursor: pointer; transition: transform 0.1s; }
         .ylie-slider::-webkit-slider-thumb:active { transform: scale(1.2); }
 
-        /* ИГРОВОЙ ЭКРАН - ИСПРАВЛЕНИЯ ТРЯСКИ */
+        /* ИГРОВОЙ ЭКРАН */
         .mines-board-container { width: 95%; max-width: 360px; display: flex; flex-direction: column; align-items: center; gap: 15px; }
         .mines-grid-display { display: grid; gap: 6px; background: #151f32; padding: 12px; border-radius: 24px; box-sizing: border-box; width: 100%; aspect-ratio: 1 / 1; box-shadow: inset 0 4px 10px rgba(0,0,0,0.4); }
         
@@ -123,7 +123,6 @@
             min-height: 0;
         }
         
-        /* Особый размер текста для сетки 7х7, чтобы большие числа не ломали верстку */
         .mines-grid-7 .mine-tile {
             font-size: 11px;
             border-radius: 9px;
@@ -134,9 +133,23 @@
         }
 
         .mine-tile.opened-safe { background: rgba(255,255,255,0.05); color: #facc15; font-size: 12px; font-weight: 800; cursor: default; }
-        .mine-tile.opened-bomb { background: #ef4444; cursor: default; border: none; box-shadow: 0 0 15px #ef4444; }
-        .mine-tile.opened-bomb img { width: 75%; height: 75%; object-fit: contain; }
-        .mine-tile img { width: 55%; height: 55%; object-fit: contain; }
+        
+        /* ВЗРЫВ С ВИДЕО */
+        .mine-tile.opened-bomb { 
+            background: #ef4444; 
+            cursor: default; 
+            border: none; 
+            box-shadow: 0 0 15px #ef4444; 
+            padding: 0 !important; 
+        }
+        .mine-tile.opened-bomb video { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+            border-radius: inherit; 
+            display: block; 
+            pointer-events: none; 
+        }
 
         .grid-sizes-row { display: flex; background: #2e3b52; border-radius: 14px; padding: 3px; gap: 2px; width: 100%; box-sizing: border-box; justify-content: space-between; }
         .size-btn { background: transparent; border: none; border-radius: 11px; color: #94a3b8; padding: 10px 0; font-weight: bold; font-size: 13px; cursor: pointer; transition: all 0.2s; flex: 1; text-align: center; }
@@ -228,7 +241,6 @@
                 <input type="range" min="7" max="24" value="7" class="ylie-slider" id="ylieSlider" oninput="updateYlieSliderLabel()">
             </div>
 
-            <!-- ИСПРАВЛЕНИЕ: Отдельный независимый демо-режим для Мин -->
             <div class="toggles-group-box" style="width:100%; margin-bottom: 0;">
                 <label class="fast-spin-container">
                     <input type="checkbox" id="checkboxMinesDemoMode">
@@ -384,7 +396,6 @@
             if (isNaN(finalInputVal) || finalInputVal < 50) minesBet = 50;
             else minesBet = finalInputVal;
 
-            // Читаем ТОЛЬКО демо-режим мин
             const isMinesDemo = document.getElementById('checkboxMinesDemoMode').checked;
 
             if (!isMinesDemo) {
@@ -418,7 +429,6 @@
             const gridContainer = document.getElementById('minesGrid');
             gridContainer.innerHTML = '';
             
-            // Защита CSS Grid от расширения колонок при больших числах
             gridContainer.style.gridTemplateColumns = `repeat(${minesGridSize}, minmax(0, 1fr))`;
 
             if (minesGridSize === 7) {
@@ -468,14 +478,16 @@
                 minesGameState.active = false;
                 document.getElementById('btnMinesCashout').disabled = true;
                 tile.classList.add('opened-bomb');
-                tile.innerHTML = '<img src="ylie.png">';
+                
+                // Вставляем видео-анимацию взрыва вместо статической картинки
+                tile.innerHTML = '<video src="yliea.mp4" autoplay muted playsinline></video>';
 
                 setTimeout(() => {
                     revealMinesField();
                     setTimeout(() => {
                         switchScreen('mines-setup-screen');
-                    }, 1500);
-                }, 40);
+                    }, 1800);
+                }, 100);
             } else {
                 minesGameState.safeCellsOpened++;
                 
