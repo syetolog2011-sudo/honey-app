@@ -61,7 +61,8 @@
         .custom-circle-checkbox { position: relative; width: 22px; height: 22px; background: rgba(255, 255, 255, 0.1); border: 2px solid rgba(255, 255, 255, 0.3); border-radius: 50%; transition: all 0.2s ease; display: inline-block; box-sizing: border-box; flex-shrink: 0; }
         
         #checkboxFastSpin:checked + .custom-circle-checkbox { background: #2563eb; border-color: #2563eb; box-shadow: 0 0 10px rgba(37, 99, 235, 0.5); }
-        #checkboxDemoMode:checked + .custom-circle-checkbox { background: #f97316; border-color: #f97316; box-shadow: 0 0 10px rgba(249, 115, 22, 0.5); }
+        #checkboxDemoMode:checked + .custom-circle-checkbox,
+        #checkboxMinesDemoMode:checked + .custom-circle-checkbox { background: #f97316; border-color: #f97316; box-shadow: 0 0 10px rgba(249, 115, 22, 0.5); }
         .custom-circle-checkbox::after { content: ""; position: absolute; top: 50%; left: 50%; width: 8px; height: 8px; background: #ffffff; border-radius: 50%; transform: translate(-50%, -50%) scale(0); transition: transform 0.2s ease; }
         .fast-spin-container input:checked + .custom-circle-checkbox::after { transform: translate(-50%, -50%) scale(1); }
 
@@ -76,12 +77,12 @@
         .banks-screen-padding { height: 40px; width: 100%; }
 
         /* ИНТЕРФЕЙС ИГРЫ УЛЬИ */
-        .mines-setup-container { width: 94%; max-width: 360px; background: #1e293b; padding: 24px 20px; border-radius: 28px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); box-sizing: border-box; display: flex; flex-direction: column; align-items: center; gap: 20px; position: relative; }
+        .mines-setup-container { width: 94%; max-width: 360px; background: #1e293b; padding: 24px 20px; border-radius: 28px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); box-sizing: border-box; display: flex; flex-direction: column; align-items: center; gap: 18px; position: relative; }
         .game-header-title { font-size: 24px; font-weight: 900; letter-spacing: 0.5px; margin: 0; color: #ffffff; }
         
         .bet-input-wrapper { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 5px 0; width: 100%; }
-        .bet-number-input { background: transparent; border: none; font-size: 46px; font-weight: 900; color: #ffffff; text-align: right; width: 60%; outline: none; font-family: inherit; padding: 0; }
-        .bet-currency-label { font-size: 26px; color: #64748b; font-weight: 800; text-align: left; width: 40%; user-select: none; }
+        .bet-number-input { background: transparent; border: none; font-size: 42px; font-weight: 900; color: #ffffff; text-align: right; width: 60%; outline: none; font-family: inherit; padding: 0; }
+        .bet-currency-label { font-size: 24px; color: #64748b; font-weight: 800; text-align: left; width: 40%; user-select: none; }
         
         .bet-buttons-row { display: flex; gap: 10px; width: 100%; justify-content: center; }
         .bet-circle-btn { background: #2e3b52; border: none; border-radius: 16px; color: #94a3b8; padding: 12px 18px; font-weight: 800; font-size: 14px; cursor: pointer; transition: all 0.1s; min-width: 65px; }
@@ -96,13 +97,43 @@
         .ylie-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 22px; border-radius: 6px; background: #2563eb; cursor: pointer; transition: transform 0.1s; }
         .ylie-slider::-webkit-slider-thumb:active { transform: scale(1.2); }
 
-        /* ИГРОВОЙ ЭКРАН */
+        /* ИГРОВОЙ ЭКРАН - ИСПРАВЛЕНИЯ ТРЯСКИ */
         .mines-board-container { width: 95%; max-width: 360px; display: flex; flex-direction: column; align-items: center; gap: 15px; }
         .mines-grid-display { display: grid; gap: 6px; background: #151f32; padding: 12px; border-radius: 24px; box-sizing: border-box; width: 100%; aspect-ratio: 1 / 1; box-shadow: inset 0 4px 10px rgba(0,0,0,0.4); }
         
-        .mine-tile { background: #202b3e; border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 20px; font-weight: 900; color: #3b4b66; cursor: pointer; transition: all 0.1s ease; aspect-ratio: 1/1; box-sizing: border-box; }
-        .mine-tile.opened-safe { background: rgba(255,255,255,0.05); color: #facc15; font-size: 13px; font-weight: 800; cursor: default; }
+        .mine-tile { 
+            background: #202b3e; 
+            border-radius: 14px; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 16px; 
+            font-weight: 900; 
+            color: #3b4b66; 
+            cursor: pointer; 
+            transition: background 0.1s ease, color 0.1s ease; 
+            aspect-ratio: 1 / 1; 
+            box-sizing: border-box;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            padding: 2px;
+            min-width: 0;
+            min-height: 0;
+        }
         
+        /* Особый размер текста для сетки 7х7, чтобы большие числа не ломали верстку */
+        .mines-grid-7 .mine-tile {
+            font-size: 11px;
+            border-radius: 9px;
+        }
+        .mines-grid-7 .mine-tile.opened-safe {
+            font-size: 10px;
+            font-weight: 800;
+        }
+
+        .mine-tile.opened-safe { background: rgba(255,255,255,0.05); color: #facc15; font-size: 12px; font-weight: 800; cursor: default; }
         .mine-tile.opened-bomb { background: #ef4444; cursor: default; border: none; box-shadow: 0 0 15px #ef4444; }
         .mine-tile.opened-bomb img { width: 75%; height: 75%; object-fit: contain; }
         .mine-tile img { width: 55%; height: 55%; object-fit: contain; }
@@ -110,7 +141,7 @@
         .grid-sizes-row { display: flex; background: #2e3b52; border-radius: 14px; padding: 3px; gap: 2px; width: 100%; box-sizing: border-box; justify-content: space-between; }
         .size-btn { background: transparent; border: none; border-radius: 11px; color: #94a3b8; padding: 10px 0; font-weight: bold; font-size: 13px; cursor: pointer; transition: all 0.2s; flex: 1; text-align: center; }
         .size-btn.active { background: #1e293b; color: #ffffff; font-weight: 900; }
-        .start-game-main-btn { width: 100%; border: none; border-radius: 18px; color: #fff; font-size: 18px; font-weight: 900; padding: 16px; cursor: pointer; }
+        .start-game-main-btn { width: 100%; border: none; border-radius: 18px; color: #fff; font-size: 18px; font-weight: 900; padding: 16px; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     </style>
 </head>
 <body>
@@ -171,7 +202,6 @@
         <div class="mines-setup-container">
             <h2 class="game-header-title">Новая ставка</h2>
             
-            <!-- ИСПРАВЛЕНО: Поле 3x3 убрано -->
             <div class="grid-sizes-row">
                 <button class="size-btn active" id="size-btn-5" onclick="selectMinesGrid(5)">5x5</button>
                 <button class="size-btn" id="size-btn-7" onclick="selectMinesGrid(7)">7x7</button>
@@ -196,6 +226,15 @@
                 </div>
                 <div class="slider-desc-text">Чем больше мин, тем быстрее растет банк, но и выше риск.</div>
                 <input type="range" min="7" max="24" value="7" class="ylie-slider" id="ylieSlider" oninput="updateYlieSliderLabel()">
+            </div>
+
+            <!-- ИСПРАВЛЕНИЕ: Отдельный независимый демо-режим для Мин -->
+            <div class="toggles-group-box" style="width:100%; margin-bottom: 0;">
+                <label class="fast-spin-container">
+                    <input type="checkbox" id="checkboxMinesDemoMode">
+                    <span class="custom-circle-checkbox"></span>
+                    Демо-режим в Минах
+                </label>
             </div>
 
             <button class="start-game-main-btn" style="background:#2563eb;" onclick="startMinesGame()">Старт</button>
@@ -230,7 +269,7 @@
                 <label class="fast-spin-container">
                     <input type="checkbox" id="checkboxDemoMode">
                     <span class="custom-circle-checkbox"></span>
-                    Демо-версия
+                    Демо-версия в Кейсах/Банках
                 </label>
             </div>
 
@@ -290,7 +329,6 @@
             document.getElementById('minesBetInputField').value = minesBet;
         }
 
-        /* ИСПРАВЛЕНО: Ограничения по минам (5x5: мин 7, 7x7: мин 9) */
         function selectMinesGrid(size) {
             minesGridSize = size;
             const btn5 = document.getElementById('size-btn-5');
@@ -346,9 +384,10 @@
             if (isNaN(finalInputVal) || finalInputVal < 50) minesBet = 50;
             else minesBet = finalInputVal;
 
-            const isDemo = document.getElementById('checkboxDemoMode').checked;
+            // Читаем ТОЛЬКО демо-режим мин
+            const isMinesDemo = document.getElementById('checkboxMinesDemoMode').checked;
 
-            if (!isDemo) {
+            if (!isMinesDemo) {
                 if (playerData.honey < minesBet) {
                     alert("Недостаточно мёда для ставки!");
                     return;
@@ -378,7 +417,15 @@
 
             const gridContainer = document.getElementById('minesGrid');
             gridContainer.innerHTML = '';
-            gridContainer.style.gridTemplateColumns = `repeat(${minesGridSize}, 1fr)`;
+            
+            // Защита CSS Grid от расширения колонок при больших числах
+            gridContainer.style.gridTemplateColumns = `repeat(${minesGridSize}, minmax(0, 1fr))`;
+
+            if (minesGridSize === 7) {
+                gridContainer.classList.add('mines-grid-7');
+            } else {
+                gridContainer.classList.remove('mines-grid-7');
+            }
 
             for(let i = 0; i < minesGameState.totalCells; i++) {
                 const tile = document.createElement('div');
@@ -389,22 +436,21 @@
                 gridContainer.appendChild(tile);
             }
 
-            document.getElementById('btnMinesCashout').innerText = `ЗАБРАТЬ ${minesGameState.winBank} 🍯`;
+            document.getElementById('btnMinesCashout').innerText = `ЗАБРАТЬ ${minesGameState.winBank.toLocaleString()} 🍯`;
             document.getElementById('btnMinesCashout').disabled = false;
 
             switchScreen('mines-play-screen');
         }
 
-        /* ИСПРАВЛЕНО: Реалистичный RTP и переработанная математика риска */
         function clickMinesTile(idx) {
             if (!minesGameState.active) return;
             const tile = document.querySelector(`.mine-tile[data-index='${idx}']`);
             if (!tile || tile.classList.contains('opened-safe') || tile.classList.contains('opened-bomb')) return;
 
-            const isDemo = document.getElementById('checkboxDemoMode').checked;
+            const isMinesDemo = document.getElementById('checkboxMinesDemoMode').checked;
             let isYlie = minesGameState.board[idx];
 
-            if (isDemo && isYlie && Math.random() < 0.5) {
+            if (isMinesDemo && isYlie && Math.random() < 0.5) {
                 for(let i = 0; i < minesGameState.totalCells; i++) {
                     if (!minesGameState.board[i] && i !== idx) {
                         const targetTile = document.querySelector(`.mine-tile[data-index='${i}']`);
@@ -437,7 +483,6 @@
                 let m = ylieCount;
                 let k = minesGameState.safeCellsOpened;
                 
-                // Честный вероятностный расчет коэффициента с учетом маржи дома (RTP = 0.92)
                 const RTP = 0.92;
                 let prob = 1.0;
                 for (let i = 0; i < k; i++) {
@@ -455,9 +500,9 @@
                 minesGameState.winBank = newWinBank;
 
                 tile.classList.add('opened-safe');
-                tile.innerText = `+${cellWinProfit}`;
+                tile.innerText = `+${cellWinProfit.toLocaleString()}`;
 
-                document.getElementById('btnMinesCashout').innerText = `ЗАБРАТЬ ${minesGameState.winBank} 🍯`;
+                document.getElementById('btnMinesCashout').innerText = `ЗАБРАТЬ ${minesGameState.winBank.toLocaleString()} 🍯`;
 
                 if (minesGameState.safeCellsOpened === minesGameState.maxSafeCells) {
                     minesCashout();
@@ -469,8 +514,8 @@
             if (!minesGameState.active) return;
             minesGameState.active = false;
             
-            const isDemo = document.getElementById('checkboxDemoMode').checked;
-            if (!isDemo) {
+            const isMinesDemo = document.getElementById('checkboxMinesDemoMode').checked;
+            if (!isMinesDemo) {
                 playerData.honey += minesGameState.winBank;
                 updateUI();
             }
@@ -493,7 +538,7 @@
             }
         }
 
-        // РУЛЕТКА
+        // РУЛЕТКА И КЕЙСЫ
         function openHorizontalSlots(bankId) {
             if (isSpinning) return;
             currentMode = 'bank'; currentBankId = bankId;
