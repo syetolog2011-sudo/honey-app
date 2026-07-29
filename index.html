@@ -76,7 +76,7 @@
         .spin-action-btn img { width: 20px; height: 20px; object-fit: contain; }
         .banks-screen-padding { height: 40px; width: 100%; }
 
-        /* ИНТЕРФЕЙС ИГРЫ УЛЬИ */
+        /* ИНТЕРФЕЙС ИГРЫ МИНЫ */
         .mines-setup-container { width: 94%; max-width: 360px; background: #1e293b; padding: 24px 20px; border-radius: 28px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); box-sizing: border-box; display: flex; flex-direction: column; align-items: center; gap: 18px; position: relative; }
         .game-header-title { font-size: 24px; font-weight: 900; letter-spacing: 0.5px; margin: 0; color: #ffffff; }
         
@@ -123,6 +123,14 @@
             min-height: 0;
         }
         
+        /* Отображение картинки bomba.png внутри ячеек */
+        .mine-tile img {
+            width: 75%;
+            height: 75%;
+            object-fit: contain;
+            display: block;
+        }
+
         .mines-grid-7 .mine-tile {
             font-size: 11px;
             border-radius: 9px;
@@ -479,7 +487,7 @@
                 document.getElementById('btnMinesCashout').disabled = true;
                 tile.classList.add('opened-bomb');
                 
-                // Вставляем видео-анимацию взрыва вместо статической картинки
+                // Вставляем видео-анимацию взрыва для нажатой ячейки
                 tile.innerHTML = '<video src="yliea.mp4" autoplay muted playsinline></video>';
 
                 setTimeout(() => {
@@ -536,6 +544,7 @@
             switchScreen('mines-setup-screen');
         }
 
+        // Показ всех оставшихся мин при завершении раунда
         function revealMinesField() {
             for(let i = 0; i < minesGameState.totalCells; i++) {
                 const tile = document.querySelector(`.mine-tile[data-index='${i}']`);
@@ -543,8 +552,9 @@
                 
                 if (minesGameState.board[i]) {
                     if (!tile.classList.contains('opened-bomb')) {
-                        tile.style.background = 'rgba(239, 68, 68, 0.1)';
-                        tile.innerHTML = '<img src="ylie.png" style="opacity: 0.5;">';
+                        tile.style.background = 'rgba(239, 68, 68, 0.15)';
+                        // Отображаем bomba.png вместо старой картинки
+                        tile.innerHTML = '<img src="bomba.png" style="opacity: 0.8;">';
                     }
                 }
             }
