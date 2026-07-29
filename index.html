@@ -7,7 +7,7 @@
     <style>
         body {
             margin: 0; padding: 0;
-            background: radial-gradient(circle, #334155 0%, #0f172a 100%);
+            background: radial-gradient(circle #334155 0%, #0f172a 100%);
             background-attachment: fixed; color: #ffffff;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             display: flex; flex-direction: column; align-items: center;
@@ -75,12 +75,13 @@
         .spin-action-btn img { width: 20px; height: 20px; object-fit: contain; }
         .banks-screen-padding { height: 40px; width: 100%; }
 
-        /* ИНТЕРФЕЙС ИГРЫ УЛЬИ */
+        /* ИНТЕРФЕЙС ИГРЫ УЛЬИ ПО ВИДЕО */
         .mines-setup-container { width: 94%; max-width: 360px; background: #1e293b; padding: 24px 20px; border-radius: 28px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); box-sizing: border-box; display: flex; flex-direction: column; align-items: center; gap: 20px; position: relative; }
         .game-header-title { font-size: 24px; font-weight: 900; letter-spacing: 0.5px; margin: 0; color: #ffffff; }
         .bet-main-label { font-size: 46px; font-weight: 900; color: #ffffff; display: flex; align-items: center; gap: 8px; margin: 5px 0; }
         .bet-sub-info { font-size: 13px; color: #64748b; margin-top: -15px; font-weight: bold; }
         
+        /* Круглые пресеты ставок */
         .bet-buttons-row { display: flex; gap: 10px; width: 100%; justify-content: center; }
         .bet-circle-btn { background: #2e3b52; border: none; border-radius: 16px; color: #94a3b8; padding: 12px 18px; font-weight: 800; font-size: 14px; cursor: pointer; transition: all 0.1s; min-width: 65px; }
         .bet-circle-btn:active { transform: scale(0.93); background: #3b4b66; color: #ffffff; }
@@ -97,22 +98,20 @@
         .start-game-main-btn { width: 100%; background: #2563eb; color: white; border: none; padding: 16px; font-size: 16px; font-weight: bold; border-radius: 20px; cursor: pointer; box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3); transition: all 0.1s; letter-spacing: 0.5px; }
         .start-game-main-btn:active { transform: scale(0.97); background: #1d4ed8; }
 
-        /* ИГРОВОЙ ПРОЦЕСС */
+        /* ИГРОВОЙ ЭКРАН */
         .mines-board-container { width: 95%; max-width: 360px; display: flex; flex-direction: column; align-items: center; gap: 15px; }
         .mines-grid-display { display: grid; gap: 6px; background: #151f32; padding: 12px; border-radius: 24px; box-sizing: border-box; width: 100%; aspect-ratio: 1 / 1; box-shadow: inset 0 4px 10px rgba(0,0,0,0.4); }
         
         .mine-tile { background: #202b3e; border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 20px; font-weight: 900; color: #3b4b66; cursor: pointer; transition: all 0.1s ease; aspect-ratio: 1/1; box-sizing: border-box; }
         .mine-tile.opened-safe { background: rgba(255,255,255,0.05); color: #facc15; font-size: 13px; font-weight: 800; cursor: default; }
-        /* ИСПРАВЛЕНО: Тряска полностью удалена, осталась только сочная заливка */
         .mine-tile.opened-bomb { background: #ef4444; cursor: default; border: none; box-shadow: 0 0 15px #ef4444; }
         .mine-tile.opened-bomb img { width: 75%; height: 75%; object-fit: contain; }
         .mine-tile img { width: 55%; height: 55%; object-fit: contain; }
 
-        .bottom-controls-panel { width: 100%; display: flex; justify-content: space-between; align-items: center; margin-top: 5px; gap: 10px; }
-        .history-btn { width: 44px; height: 44px; background: #1e293b; border-radius: 12px; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 1px solid rgba(255,255,255,0.05); }
-        .grid-sizes-row { display: flex; background: #1e293b; border-radius: 14px; padding: 3px; gap: 2px; flex: 1; justify-content: space-between; }
-        .size-btn { background: transparent; border: none; border-radius: 11px; color: #64748b; padding: 10px 0; font-weight: bold; font-size: 13px; cursor: pointer; transition: all 0.2s; flex: 1; text-align: center; }
-        .size-btn.active { background: #2e3b52; color: #ffffff; font-weight: 900; }
+        /* НАСТРОЙКИ СЕТКИ ИЗ ВИДЕО */
+        .grid-sizes-row { display: flex; background: #2e3b52; border-radius: 14px; padding: 3px; gap: 2px; width: 100%; box-sizing: border-box; justify-content: space-between; }
+        .size-btn { background: transparent; border: none; border-radius: 11px; color: #94a3b8; padding: 10px 0; font-weight: bold; font-size: 13px; cursor: pointer; transition: all 0.2s; flex: 1; text-align: center; }
+        .size-btn.active { background: #1e293b; color: #ffffff; font-weight: 900; }
     </style>
 </head>
 <body>
@@ -173,6 +172,12 @@
         <div class="mines-setup-container">
             <h2 class="game-header-title">Новая ставка</h2>
             
+            <div class="grid-sizes-row">
+                <button class="size-btn" id="size-btn-3" onclick="selectMinesGrid(3)">3x3</button>
+                <button class="size-btn" id="size-btn-5" onclick="selectMinesGrid(5)">5x5</button>
+                <button class="size-btn active" id="size-btn-7" onclick="selectMinesGrid(7)">7x7</button>
+            </div>
+
             <div class="bet-main-label">
                 <span id="minesBetText">100</span> <span style="font-size: 26px; color:#64748b; font-weight:800;">honey</span>
             </div>
@@ -203,17 +208,6 @@
         <div class="mines-board-container">
             
             <div class="mines-grid-display" id="minesGrid"></div>
-
-            <div class="bottom-controls-panel">
-                <div class="history-btn">
-                    <span style="font-size:20px; opacity:0.6;">🕒</span>
-                </div>
-                <div class="grid-sizes-row">
-                    <button class="size-btn" id="size-btn-3" onclick="selectMinesGridFromField(3)">3x3</button>
-                    <button class="size-btn" id="size-btn-5" onclick="selectMinesGridFromField(5)">5x5</button>
-                    <button class="size-btn" id="size-btn-7" onclick="selectMinesGridFromField(7)">7x7</button>
-                </div>
-            </div>
 
             <button class="start-game-main-btn" id="btnMinesCashout" onclick="minesCashout()">ЗАБРАТЬ 100 🍯</button>
         </div>
@@ -292,7 +286,7 @@
             if (target) target.classList.add('active-screen');
         }
 
-        // МИНЫ: НАСТРОЙКИ СТАВОК И СЕТКИ
+        // МИНЫ: УПРАВЛЕНИЕ НАСТРОЙКАМИ СТАВКИ И ПОЛЯ
         function openMinesSetup() {
             switchScreen('mines-setup-screen');
             selectMinesGrid(7);
@@ -316,13 +310,6 @@
                 slider.value = Math.floor(totalCells / 4);
             }
             updateYlieSliderLabel();
-        }
-
-        // ИСПРАВЛЕНО: Клик по сеткам снизу игрового поля сбрасывает текущую катку и меняет размер
-        function selectMinesGridFromField(size) {
-            minesGameState.active = false; 
-            selectMinesGrid(size);
-            switchScreen('mines-setup-screen');
         }
 
         function changeMinesBet(amount) {
