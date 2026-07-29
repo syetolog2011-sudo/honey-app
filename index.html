@@ -41,7 +41,6 @@
         .bank-card:active, .case-card:active, .game-card:active { background: rgba(255, 255, 255, 0.15); transform: scale(0.96); }
         .bank-img, .case-img, .game-img { width: 95px; height: 95px; object-fit: contain; display: block; filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.5)); }
 
-        /* РУЛЕТКА */
         .roulette-container-horizontal { width: 100%; max-width: 360px; display: flex; flex-direction: column; align-items: center; padding: 0 10px; box-sizing: border-box; }
         .slots-lines-holder { display: flex; flex-direction: column; gap: 10px; width: 100%; margin-bottom: 25px; }
         .roulette-wrapper-horizontal { position: relative; width: 100%; height: 75px; background: #0f172a; border-radius: 16px; border: 2px solid rgba(255, 255, 255, 0.1); overflow: hidden; }
@@ -75,40 +74,33 @@
         .spin-action-btn img { width: 20px; height: 20px; object-fit: contain; }
         .banks-screen-padding { height: 40px; width: 100%; }
 
-        /* ИНТЕРФЕЙС ИГРЫ УЛЬИ */
-        .mines-setup-container { width: 94%; max-width: 360px; background: #1e293b; padding: 24px 20px; border-radius: 28px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); box-sizing: border-box; display: flex; flex-direction: column; align-items: center; gap: 20px; position: relative; }
-        .game-header-title { font-size: 24px; font-weight: 900; letter-spacing: 0.5px; margin: 0; color: #ffffff; }
-        
-        .bet-input-wrapper { display: flex; align-items: center; justify-content: center; gap: 10px; margin: 5px 0; width: 100%; }
-        .bet-number-input { background: transparent; border: none; font-size: 46px; font-weight: 900; color: #ffffff; text-align: right; width: 60%; outline: none; font-family: inherit; padding: 0; }
-        .bet-currency-label { font-size: 26px; color: #64748b; font-weight: 800; text-align: left; width: 40%; user-select: none; }
-        
-        .bet-buttons-row { display: flex; gap: 10px; width: 100%; justify-content: center; }
-        .bet-circle-btn { background: #2e3b52; border: none; border-radius: 16px; color: #94a3b8; padding: 12px 18px; font-weight: 800; font-size: 14px; cursor: pointer; transition: all 0.1s; min-width: 65px; }
-        .bet-circle-btn:active { transform: scale(0.93); background: #3b4b66; color: #ffffff; }
+        /* СТИЛИ ДЛЯ ИГРЫ УЛЬИ */
+        .mines-setup-container { width: 92%; max-width: 360px; background: rgba(30, 41, 59, 0.7); padding: 20px; border-radius: 24px; border: 1px solid rgba(255, 255, 255, 0.1); box-sizing: border-box; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+        .game-title { font-size: 22px; font-weight: 800; text-align: center; margin: 0; color: #facc15; }
+        .grid-sizes-row { display: flex; gap: 8px; width: 100%; justify-content: center; }
+        .size-btn { background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; color: #94a3b8; padding: 10px 20px; font-weight: bold; cursor: pointer; transition: all 0.2s; }
+        .size-btn.active { background: #2563eb; color: #ffffff; border-color: #2563eb; }
+        .bet-buttons-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 100%; }
+        .bet-select-btn { background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 14px; color: #ffffff; padding: 12px 6px; font-weight: 800; cursor: pointer; font-size: 14px; transition: transform 0.1s; }
+        .bet-select-btn:active { transform: scale(0.95); background: rgba(255, 255, 255, 0.15); }
+        .current-bet-display { font-size: 24px; font-weight: 900; color: #ffffff; display: flex; align-items: center; gap: 6px; margin: 5px 0; }
+        .slider-holder { width: 100%; display: flex; flex-direction: column; gap: 6px; }
+        .slider-label { font-size: 14px; color: #94a3b8; display: flex; justify-content: space-between; font-weight: bold; }
+        .ylie-slider { width: 100%; accent-color: #facc15; cursor: pointer; }
+        .start-game-main-btn { width: 100%; background: #10b981; color: white; border: none; padding: 16px; font-size: 18px; font-weight: bold; border-radius: 18px; cursor: pointer; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3); transition: all 0.1s; }
+        .start-game-main-btn:active { transform: scale(0.97); background: #059669; }
+        .start-game-main-btn:disabled { background: #334155; color: #64748b; box-shadow: none; cursor: not-allowed; }
 
-        .slider-holder { width: 100%; display: flex; flex-direction: column; gap: 8px; margin-top: 5px; }
-        .slider-label { font-size: 14px; color: #ffffff; display: flex; justify-content: space-between; font-weight: bold; }
-        .slider-label-count { font-size: 16px; color: #ffffff; font-weight: 900; background: rgba(255,255,255,0.06); padding: 2px 10px; border-radius: 8px; }
-        .slider-desc-text { font-size: 12px; color: #64748b; font-weight: bold; margin-top: -4px; line-height: 1.3; }
-        
-        .ylie-slider { width: 100%; -webkit-appearance: none; height: 6px; border-radius: 3px; background: #2e3b52; outline: none; }
-        .ylie-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 22px; border-radius: 6px; background: #2563eb; cursor: pointer; transition: transform 0.1s; }
-        .ylie-slider::-webkit-slider-thumb:active { transform: scale(1.2); }
-
-        /* ИГРОВОЙ ЭКРАН */
         .mines-board-container { width: 95%; max-width: 360px; display: flex; flex-direction: column; align-items: center; gap: 15px; }
-        .mines-grid-display { display: grid; gap: 6px; background: #151f32; padding: 12px; border-radius: 24px; box-sizing: border-box; width: 100%; aspect-ratio: 1 / 1; box-shadow: inset 0 4px 10px rgba(0,0,0,0.4); }
-        
-        .mine-tile { background: #202b3e; border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 20px; font-weight: 900; color: #3b4b66; cursor: pointer; transition: all 0.1s ease; aspect-ratio: 1/1; box-sizing: border-box; }
-        .mine-tile.opened-safe { background: rgba(255,255,255,0.05); color: #facc15; font-size: 13px; font-weight: 800; cursor: default; }
-        .mine-tile.opened-bomb { background: #ef4444; cursor: default; border: none; box-shadow: 0 0 15px #ef4444; }
-        .mine-tile.opened-bomb img { width: 75%; height: 75%; object-fit: contain; }
-        .mine-tile img { width: 55%; height: 55%; object-fit: contain; }
-
-        .grid-sizes-row { display: flex; background: #2e3b52; border-radius: 14px; padding: 3px; gap: 2px; width: 100%; box-sizing: border-box; justify-content: space-between; }
-        .size-btn { background: transparent; border: none; border-radius: 11px; color: #94a3b8; padding: 10px 0; font-weight: bold; font-size: 13px; cursor: pointer; transition: all 0.2s; flex: 1; text-align: center; }
-        .size-btn.active { background: #1e293b; color: #ffffff; font-weight: 900; }
+        .game-stats-bar { width: 100%; background: rgba(15, 23, 42, 0.6); padding: 12px 20px; border-radius: 16px; box-sizing: border-box; display: flex; justify-content: space-between; font-size: 15px; font-weight: bold; border: 1px solid rgba(255, 255, 255, 0.05); }
+        .stat-orange { color: #f97316; } .stat-green { color: #10b981; }
+        .mines-grid-display { display: grid; gap: 6px; background: rgba(15, 23, 42, 0.4); padding: 10px; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.1); box-sizing: border-box; width: 100%; aspect-ratio: 1 / 1; }
+        .mine-tile { background: #1e293b; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: bold; color: #64748b; cursor: pointer; transition: all 0.1s ease; aspect-ratio: 1/1; box-sizing: border-box; }
+        .mine-tile.opened-safe { background: rgba(16, 185, 129, 0.15); border-color: #10b981; color: #10b981; font-size: 24px; cursor: default; }
+        .mine-tile.opened-bomb { background: rgba(239, 68, 68, 0.2); border-color: #ef4444; cursor: default; }
+        .mine-tile.opened-bomb img { width: 85%; height: 85%; object-fit: contain; animation: shake 0.3s ease-in-out; }
+        .mine-tile img { width: 60%; height: 60%; object-fit: contain; }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-4px); } 40%, 80% { transform: translateX(4px); } }
     </style>
 </head>
 <body>
@@ -167,7 +159,7 @@
     <div id="mines-setup-screen" class="screen">
         <div class="back-arrow-btn" onclick="switchScreen('games-screen')">←</div>
         <div class="mines-setup-container">
-            <h2 class="game-header-title">Новая ставка</h2>
+            <h2 class="game-title">РЕЖИМ: УЛЬИ 🐝</h2>
             
             <div class="grid-sizes-row">
                 <button class="size-btn" id="size-btn-3" onclick="selectMinesGrid(3)">3x3</button>
@@ -175,36 +167,39 @@
                 <button class="size-btn active" id="size-btn-7" onclick="selectMinesGrid(7)">7x7</button>
             </div>
 
-            <div class="bet-input-wrapper">
-                <input type="number" class="bet-input-wrapper bet-number-input" id="minesBetInputField" value="100" min="50" oninput="validateMinesInputOnFly()">
-                <span class="bet-currency-label">honey</span>
+            <div class="current-bet-display">
+                <span id="minesBetText">100</span> <img src="honey.png" style="width:24px;height:24px;">
             </div>
 
-            <div class="bet-buttons-row">
-                <button class="bet-circle-btn" onclick="changeMinesBet(100)">+ 100</button>
-                <button class="bet-circle-btn" onclick="changeMinesBet(500)">+ 500</button>
-                <button class="bet-circle-btn" onclick="changeMinesBet(2500)">+ 2500</button>
-                <button class="bet-circle-btn" style="color:#facc15;" onclick="setMinesMaxBet()">МАКС</button>
+            <div class="bet-buttons-grid">
+                <button class="bet-select-btn" onclick="changeMinesBet(100)">+100</button>
+                <button class="bet-select-btn" onclick="changeMinesBet(500)">+500</button>
+                <button class="bet-select-btn" onclick="changeMinesBet(2500)">+2500</button>
             </div>
 
             <div class="slider-holder">
                 <div class="slider-label">
-                    <span>Количество мин</span>
-                    <span class="slider-label-count" id="ylieCountLabel">11</span>
+                    <span>Количество ульев:</span>
+                    <span id="ylieCountLabel">11</span>
                 </div>
-                <div class="slider-desc-text">Чем больше мин, тем быстрее будет расти банк, но и выше риск.</div>
                 <input type="range" min="1" max="48" value="11" class="ylie-slider" id="ylieSlider" oninput="updateYlieSliderLabel()">
             </div>
 
-            <button class="start-game-main-btn" style="background:#2563eb;" onclick="startMinesGame()">Старт</button>
+            <button class="start-game-main-btn" onclick="startMinesGame()">ИГРАТЬ</button>
         </div>
         <div class="banks-screen-padding"></div>
     </div>
 
     <div id="mines-play-screen" class="screen">
         <div class="mines-board-container">
+            <div class="game-stats-bar">
+                <div>Множитель: <span class="stat-orange" id="minesCurrentX">x1.00</span></div>
+                <div>Банк: <span class="stat-green" id="minesCurrentBankDisplay">100</span> 🍯</div>
+            </div>
+
             <div class="mines-grid-display" id="minesGrid"></div>
-            <button class="start-game-main-btn" id="btnMinesCashout" style="background:#10b981; box-shadow:0 4px 15px rgba(16,185,129,0.3);" onclick="minesCashout()">ЗАБРАТЬ 100 🍯</button>
+
+            <button class="start-game-main-btn" id="btnMinesCashout" style="background:#2563eb; box-shadow:0 4px 15px rgba(37,99,235,0.3);" onclick="minesCashout()">ЗАБРАТЬ 100 🍯</button>
         </div>
         <div class="banks-screen-padding"></div>
     </div>
@@ -285,7 +280,7 @@
             switchScreen('mines-setup-screen');
             selectMinesGrid(7);
             minesBet = 100;
-            document.getElementById('minesBetInputField').value = minesBet;
+            document.getElementById('minesBetText').innerText = minesBet;
         }
 
         function selectMinesGrid(size) {
@@ -293,36 +288,20 @@
             document.getElementById('size-btn-3').classList.remove('active');
             document.getElementById('size-btn-5').classList.remove('active');
             document.getElementById('size-btn-7').classList.remove('active');
-            
-            const targetBtn = document.getElementById(`size-btn-${size}`);
-            if(targetBtn) targetBtn.classList.add('active');
+            document.getElementById(`size-btn-${size}`).classList.add('active');
 
             const slider = document.getElementById('ylieSlider');
-            if (size === 3) slider.max = 8;
-            else if (size === 5) slider.max = 24;
-            else slider.max = 48;
-
-            if (parseInt(slider.value) > slider.max) {
-                slider.value = Math.floor(slider.max / 2);
+            const totalCells = size * size;
+            slider.max = totalCells - 3; 
+            if (parseInt(slider.value) >= totalCells) {
+                slider.value = Math.floor(totalCells / 4);
             }
             updateYlieSliderLabel();
         }
 
-        function validateMinesInputOnFly() {
-            let val = parseInt(document.getElementById('minesBetInputField').value);
-            if (isNaN(val)) minesBet = 50;
-            else minesBet = val;
-        }
-
         function changeMinesBet(amount) {
             minesBet += amount;
-            document.getElementById('minesBetInputField').value = minesBet;
-        }
-
-        function setMinesMaxBet() {
-            minesBet = playerData.honey;
-            if (minesBet < 50) minesBet = 50;
-            document.getElementById('minesBetInputField').value = minesBet;
+            document.getElementById('minesBetText').innerText = minesBet;
         }
 
         function updateYlieSliderLabel() {
@@ -331,22 +310,16 @@
         }
 
         function startMinesGame() {
-            let finalInputVal = parseInt(document.getElementById('minesBetInputField').value);
-            if (isNaN(finalInputVal) || finalInputVal < 50) minesBet = 50;
-            else minesBet = finalInputVal;
-
             const isDemo = document.getElementById('checkboxDemoMode').checked;
+            if (!isDemo && playerData.honey < minesBet) {
+                alert("Недостаточно мёда для ставки!");
+                return;
+            }
 
             if (!isDemo) {
-                if (playerData.honey < minesBet) {
-                    alert("Недостаточно мёда для ставки!");
-                    return;
-                }
                 playerData.honey -= minesBet;
                 updateUI();
             }
-
-            document.getElementById('minesBetInputField').value = minesBet;
 
             minesGameState.active = true;
             minesGameState.totalCells = minesGridSize * minesGridSize;
@@ -378,6 +351,8 @@
                 gridContainer.appendChild(tile);
             }
 
+            document.getElementById('minesCurrentX').innerText = 'x1.00';
+            document.getElementById('minesCurrentBankDisplay').innerText = minesGameState.winBank;
             document.getElementById('btnMinesCashout').innerText = `ЗАБРАТЬ ${minesGameState.winBank} 🍯`;
             document.getElementById('btnMinesCashout').disabled = false;
 
@@ -414,29 +389,24 @@
 
                 setTimeout(() => {
                     revealMinesField();
-                    setTimeout(() => {
-                        switchScreen('mines-setup-screen');
-                    }, 1500);
-                }, 40);
+                    alert(isDemo ? "Упс! Улей разорен (ДЕМО)" : "Упс! Вас искусали пчёлы, ставка сгорела!");
+                    switchScreen('mines-setup-screen');
+                }, 500);
             } else {
                 minesGameState.safeCellsOpened++;
-                
+                tile.classList.add('opened-safe');
+                tile.innerHTML = '🪙';
+
                 let n = minesGameState.totalCells;
                 let m = ylieCount;
                 let k = minesGameState.safeCellsOpened;
                 
-                let baseFactor = 1.0 + (m / (n - m)) * 0.98;
-                let mult = Math.pow(baseFactor, k);
-                
-                let cellWinProfit = Math.floor((minesBet * mult) - minesGameState.winBank);
-                if (cellWinProfit < 1) cellWinProfit = 1;
-                
+                let mult = 1.0 + (m / (n - k)) * 1.15 * k;
                 minesGameState.currentMultiplier = mult;
                 minesGameState.winBank = Math.floor(minesBet * mult);
 
-                tile.classList.add('opened-safe');
-                tile.innerText = `+${cellWinProfit}`;
-
+                document.getElementById('minesCurrentX').innerText = 'x' + mult.toFixed(2);
+                document.getElementById('minesCurrentBankDisplay').innerText = minesGameState.winBank;
                 document.getElementById('btnMinesCashout').innerText = `ЗАБРАТЬ ${minesGameState.winBank} 🍯`;
 
                 if (minesGameState.safeCellsOpened === minesGameState.maxSafeCells) {
@@ -456,6 +426,7 @@
             }
 
             revealMinesField();
+            alert(isDemo ? `Забрано ${minesGameState.winBank} 🍯 (ДЕМО)` : `Победа! Вы забрали ${minesGameState.winBank} мёда!`);
             switchScreen('mines-setup-screen');
         }
 
@@ -466,14 +437,13 @@
                 
                 if (minesGameState.board[i]) {
                     if (!tile.classList.contains('opened-bomb')) {
-                        tile.style.background = 'rgba(239, 68, 68, 0.1)';
-                        tile.innerHTML = '<img src="ylie.png" style="opacity: 0.5;">';
+                        tile.style.background = 'rgba(250, 204, 21, 0.15)';
+                        tile.innerHTML = '<img src="ylie.png" style="opacity: 0.6;">';
                     }
                 }
             }
         }
 
-        // РУЛЕТКА
         function openHorizontalSlots(bankId) {
             if (isSpinning) return;
             currentMode = 'bank'; currentBankId = bankId;
@@ -618,8 +588,8 @@
                     }
                 } else {
                     let rate1 = isDemo ? 98 : 90;
-                    let r2 = isDemo ? 98 : 92;
-                    let r3 = isDemo ? 99 : 95;
+                    let rate2 = isDemo ? 98 : 92;
+                    let rate3 = isDemo ? 99 : 95;
 
                     if (currentCaseId === 1) {
                         if (rand < rate1) { 
@@ -629,14 +599,14 @@
                             prize = { type: 'honey', text: '50', val: 50, img: 'honey.png' }; 
                         }
                     } else if (currentCaseId === 2) {
-                        if (rand < r2) { 
+                        if (rand < rate2) { 
                             let h = Math.floor(Math.random() * (1550 - 900 + 1)) + 900; 
                             prize = { type: 'honey', text: `${h}`, val: h, img: 'honey.png' }; 
                         } else { 
                             prize = { type: 'honey', text: '50', val: 50, img: 'honey.png' }; 
                         }
                     } else if (currentCaseId === 3) {
-                        if (rand < r3) { 
+                        if (rand < rate3) { 
                             let h = Math.floor(Math.random() * (2000 - 1350 + 1)) + 1350; 
                             prize = { type: 'honey', text: `${h}`, val: h, img: 'honey.png' }; 
                         } else { 
