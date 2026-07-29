@@ -103,7 +103,6 @@
         .mine-tile { background: #202b3e; border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 20px; font-weight: 900; color: #3b4b66; cursor: pointer; transition: all 0.1s ease; aspect-ratio: 1/1; box-sizing: border-box; }
         .mine-tile.opened-safe { background: rgba(255,255,255,0.05); color: #facc15; font-size: 13px; font-weight: 800; cursor: default; }
         
-        /* ИСПРАВЛЕНО: Тряска и анимация взрыва убраны насовсем */
         .mine-tile.opened-bomb { background: #ef4444; cursor: default; border: none; box-shadow: 0 0 15px #ef4444; }
         .mine-tile.opened-bomb img { width: 75%; height: 75%; object-fit: contain; }
         .mine-tile img { width: 55%; height: 55%; object-fit: contain; }
@@ -111,6 +110,7 @@
         .grid-sizes-row { display: flex; background: #2e3b52; border-radius: 14px; padding: 3px; gap: 2px; width: 100%; box-sizing: border-box; justify-content: space-between; }
         .size-btn { background: transparent; border: none; border-radius: 11px; color: #94a3b8; padding: 10px 0; font-weight: bold; font-size: 13px; cursor: pointer; transition: all 0.2s; flex: 1; text-align: center; }
         .size-btn.active { background: #1e293b; color: #ffffff; font-weight: 900; }
+        .start-game-main-btn { width: 100%; border: none; border-radius: 18px; color: #fff; font-size: 18px; font-weight: 900; padding: 16px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -171,10 +171,10 @@
         <div class="mines-setup-container">
             <h2 class="game-header-title">Новая ставка</h2>
             
+            <!-- ИСПРАВЛЕНО: Поле 3x3 убрано -->
             <div class="grid-sizes-row">
-                <button class="size-btn" id="size-btn-3" onclick="selectMinesGrid(3)">3x3</button>
-                <button class="size-btn" id="size-btn-5" onclick="selectMinesGrid(5)">5x5</button>
-                <button class="size-btn active" id="size-btn-7" onclick="selectMinesGrid(7)">7x7</button>
+                <button class="size-btn active" id="size-btn-5" onclick="selectMinesGrid(5)">5x5</button>
+                <button class="size-btn" id="size-btn-7" onclick="selectMinesGrid(7)">7x7</button>
             </div>
 
             <div class="bet-input-wrapper">
@@ -192,10 +192,10 @@
             <div class="slider-holder">
                 <div class="slider-label">
                     <span>Количество мин</span>
-                    <span class="slider-label-count" id="ylieCountLabel">11</span>
+                    <span class="slider-label-count" id="ylieCountLabel">7</span>
                 </div>
-                <div class="slider-desc-text">Чем больше мин, тем быстрее будет расти банк, но и выше риск.</div>
-                <input type="range" min="1" max="48" value="11" class="ylie-slider" id="ylieSlider" oninput="updateYlieSliderLabel()">
+                <div class="slider-desc-text">Чем больше мин, тем быстрее растет банк, но и выше риск.</div>
+                <input type="range" min="7" max="24" value="7" class="ylie-slider" id="ylieSlider" oninput="updateYlieSliderLabel()">
             </div>
 
             <button class="start-game-main-btn" style="background:#2563eb;" onclick="startMinesGame()">Старт</button>
@@ -206,7 +206,7 @@
     <div id="mines-play-screen" class="screen">
         <div class="mines-board-container">
             <div class="mines-grid-display" id="minesGrid"></div>
-            <button class="start-game-main-btn" id="btnMinesCashout" onclick="minesCashout()">ЗАБРАТЬ 100 🍯</button>
+            <button class="start-game-main-btn" style="background:#10b981;" id="btnMinesCashout" onclick="minesCashout()">ЗАБРАТЬ 100 🍯</button>
         </div>
         <div class="banks-screen-padding"></div>
     </div>
@@ -247,10 +247,10 @@
         let currentLines = 1, isSpinning = false, currentMode = 'bank', currentBankId = 1, currentCaseId = 1;
         const itemWidth = 110; 
         
-        let minesGridSize = 7;
+        let minesGridSize = 5;
         let minesBet = 100;
-        let ylieCount = 11;
-        let minesGameState = { active: false, board: [], totalCells: 49, safeCellsOpened: 0, maxSafeCells: 38, winBank: 0, currentMultiplier: 1.0 };
+        let ylieCount = 7;
+        let minesGameState = { active: false, board: [], totalCells: 25, safeCellsOpened: 0, maxSafeCells: 18, winBank: 0, currentMultiplier: 1.0 };
 
         const bankPools = {
             1: [ { type: 'honey', text: '300', img: 'honey.png' }, { type: 'empty', text: 'Ничего', img: '' }, { type: 'key', text: 'Ключ', img: 'key1.png' } ],
@@ -285,28 +285,36 @@
 
         function openMinesSetup() {
             switchScreen('mines-setup-screen');
-            selectMinesGrid(7);
+            selectMinesGrid(5);
             minesBet = 100;
             document.getElementById('minesBetInputField').value = minesBet;
         }
 
+        /* ИСПРАВЛЕНО: Ограничения по минам (5x5: мин 7, 7x7: мин 9) */
         function selectMinesGrid(size) {
             minesGridSize = size;
-            document.getElementById('size-btn-3').classList.remove('active');
-            document.getElementById('size-btn-5').classList.remove('active');
-            document.getElementById('size-btn-7').classList.remove('active');
-            
+            const btn5 = document.getElementById('size-btn-5');
+            const btn7 = document.getElementById('size-btn-7');
+
+            if(btn5) btn5.classList.remove('active');
+            if(btn7) btn7.classList.remove('active');
+
             const targetBtn = document.getElementById(`size-btn-${size}`);
             if(targetBtn) targetBtn.classList.add('active');
 
             const slider = document.getElementById('ylieSlider');
-            if (size === 3) slider.max = 8;
-            else if (size === 5) slider.max = 24;
-            else slider.max = 48;
-
-            if (parseInt(slider.value) > slider.max) {
-                slider.value = Math.floor(slider.max / 2);
+            if (size === 5) {
+                slider.min = 7;
+                slider.max = 24;
+            } else {
+                slider.min = 9;
+                slider.max = 48;
             }
+
+            let currentVal = parseInt(slider.value);
+            if (currentVal < parseInt(slider.min)) slider.value = slider.min;
+            if (currentVal > parseInt(slider.max)) slider.value = slider.max;
+
             updateYlieSliderLabel();
         }
 
@@ -328,7 +336,8 @@
         }
 
         function updateYlieSliderLabel() {
-            ylieCount = parseInt(document.getElementById('ylieSlider').value);
+            const slider = document.getElementById('ylieSlider');
+            ylieCount = parseInt(slider.value);
             document.getElementById('ylieCountLabel').innerText = ylieCount;
         }
 
@@ -386,6 +395,7 @@
             switchScreen('mines-play-screen');
         }
 
+        /* ИСПРАВЛЕНО: Реалистичный RTP и переработанная математика риска */
         function clickMinesTile(idx) {
             if (!minesGameState.active) return;
             const tile = document.querySelector(`.mine-tile[data-index='${idx}']`);
@@ -427,14 +437,22 @@
                 let m = ylieCount;
                 let k = minesGameState.safeCellsOpened;
                 
-                let baseFactor = 1.0 + (m / (n - m)) * 0.98;
-                let mult = Math.pow(baseFactor, k);
+                // Честный вероятностный расчет коэффициента с учетом маржи дома (RTP = 0.92)
+                const RTP = 0.92;
+                let prob = 1.0;
+                for (let i = 0; i < k; i++) {
+                    prob *= (n - m - i) / (n - i);
+                }
                 
-                let cellWinProfit = Math.floor((minesBet * mult) - minesGameState.winBank);
+                let mult = (1.0 / prob) * RTP;
+                if (mult < 1.01) mult = 1.01;
+
+                let newWinBank = Math.floor(minesBet * mult);
+                let cellWinProfit = newWinBank - minesGameState.winBank;
                 if (cellWinProfit < 1) cellWinProfit = 1;
                 
                 minesGameState.currentMultiplier = mult;
-                minesGameState.winBank = Math.floor(minesBet * mult);
+                minesGameState.winBank = newWinBank;
 
                 tile.classList.add('opened-safe');
                 tile.innerText = `+${cellWinProfit}`;
