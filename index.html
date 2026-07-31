@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Mini App</title>
+    
+    <!-- Telegram WebApp SDK -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <!-- Supabase JS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
     <style>
         body {
             margin: 0; padding: 0;
@@ -41,20 +47,9 @@
         .bank-card:active, .case-card:active, .game-card:active { background: rgba(255, 255, 255, 0.15); transform: scale(0.96); }
         .bank-img, .case-img, .game-img { width: 95px; height: 95px; object-fit: contain; display: block; filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.5)); }
 
-        /* Иконка игры на всю ширину и на весь лоток */
-        .games-list .game-card {
-            width: 100%;
-            height: 160px;
-            aspect-ratio: auto;
-            padding: 10px;
-        }
-        .games-list .game-img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
+        .games-list .game-card { width: 100%; height: 160px; aspect-ratio: auto; padding: 10px; }
+        .games-list .game-img { width: 100%; height: 100%; object-fit: contain; }
 
-        /* РУЛЕТКА */
         .roulette-container-horizontal { width: 100%; max-width: 360px; display: flex; flex-direction: column; align-items: center; padding: 0 10px; box-sizing: border-box; }
         .slots-lines-holder { display: flex; flex-direction: column; gap: 10px; width: 100%; margin-bottom: 25px; }
         .roulette-wrapper-horizontal { position: relative; width: 100%; height: 75px; background: #0f172a; border-radius: 16px; border: 2px solid rgba(255, 255, 255, 0.1); overflow: hidden; }
@@ -89,7 +84,6 @@
         .spin-action-btn img { width: 20px; height: 20px; object-fit: contain; }
         .banks-screen-padding { height: 40px; width: 100%; }
 
-        /* ИНТЕРФЕЙС ИГРЫ МИНЫ */
         .mines-setup-container { width: 94%; max-width: 360px; background: #1e293b; padding: 24px 20px; border-radius: 28px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); box-sizing: border-box; display: flex; flex-direction: column; align-items: center; gap: 18px; position: relative; }
         .game-header-title { font-size: 24px; font-weight: 900; letter-spacing: 0.5px; margin: 0; color: #ffffff; }
         
@@ -110,67 +104,22 @@
         .ylie-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 22px; border-radius: 6px; background: #2563eb; cursor: pointer; transition: transform 0.1s; }
         .ylie-slider::-webkit-slider-thumb:active { transform: scale(1.2); }
 
-        /* ИГРОВОЙ ЭКРАН */
         .mines-board-container { width: 95%; max-width: 360px; display: flex; flex-direction: column; align-items: center; gap: 15px; }
         .mines-grid-display { display: grid; gap: 6px; background: #151f32; padding: 12px; border-radius: 24px; box-sizing: border-box; width: 100%; aspect-ratio: 1 / 1; box-shadow: inset 0 4px 10px rgba(0,0,0,0.4); }
         
         .mine-tile { 
-            background: #202b3e; 
-            border-radius: 14px; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            justify-content: center; 
-            font-size: 16px; 
-            font-weight: 900; 
-            color: #3b4b66; 
-            cursor: pointer; 
-            transition: background 0.1s ease, color 0.1s ease; 
-            aspect-ratio: 1 / 1; 
-            box-sizing: border-box;
-            overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-            padding: 2px;
-            min-width: 0;
-            min-height: 0;
+            background: #202b3e; border-radius: 14px; display: flex; flex-direction: column; 
+            align-items: center; justify-content: center; font-size: 16px; font-weight: 900; 
+            color: #3b4b66; cursor: pointer; transition: background 0.1s ease, color 0.1s ease; 
+            aspect-ratio: 1 / 1; box-sizing: border-box; overflow: hidden; white-space: nowrap; 
+            text-overflow: ellipsis; padding: 2px; min-width: 0; min-height: 0;
         }
-        
-        /* Отображение картинки bomba.png внутри ячеек */
-        .mine-tile img {
-            width: 75%;
-            height: 75%;
-            object-fit: contain;
-            display: block;
-        }
-
-        .mines-grid-7 .mine-tile {
-            font-size: 11px;
-            border-radius: 9px;
-        }
-        .mines-grid-7 .mine-tile.opened-safe {
-            font-size: 10px;
-            font-weight: 800;
-        }
-
+        .mine-tile img { width: 75%; height: 75%; object-fit: contain; display: block; }
+        .mines-grid-7 .mine-tile { font-size: 11px; border-radius: 9px; }
+        .mines-grid-7 .mine-tile.opened-safe { font-size: 10px; font-weight: 800; }
         .mine-tile.opened-safe { background: rgba(255,255,255,0.05); color: #facc15; font-size: 12px; font-weight: 800; cursor: default; }
-        
-        /* ВЗРЫВ С ВИДЕО */
-        .mine-tile.opened-bomb { 
-            background: #ef4444; 
-            cursor: default; 
-            border: none; 
-            box-shadow: 0 0 15px #ef4444; 
-            padding: 0 !important; 
-        }
-        .mine-tile.opened-bomb video { 
-            width: 100%; 
-            height: 100%; 
-            object-fit: cover; 
-            border-radius: inherit; 
-            display: block; 
-            pointer-events: none; 
-        }
+        .mine-tile.opened-bomb { background: #ef4444; cursor: default; border: none; box-shadow: 0 0 15px #ef4444; padding: 0 !important; }
+        .mine-tile.opened-bomb video { width: 100%; height: 100%; object-fit: cover; border-radius: inherit; display: block; pointer-events: none; }
 
         .grid-sizes-row { display: flex; background: #2e3b52; border-radius: 14px; padding: 3px; gap: 2px; width: 100%; box-sizing: border-box; justify-content: space-between; }
         .size-btn { background: transparent; border: none; border-radius: 11px; color: #94a3b8; padding: 10px 0; font-weight: bold; font-size: 13px; cursor: pointer; transition: all 0.2s; flex: 1; text-align: center; }
@@ -313,7 +262,85 @@
     </div>
 
     <script>
+        // 🔑 ТВОИ ДАННЫЕ ИЗ SUPABASE УЖЕ ВСТАВЛЕНЫ:
+        const SUPABASE_URL = 'https://rrhhubzibepaolbbedfr.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_saPZ5j1Ap_2GMEqHeRlZoQ_EFNEUXam';
+
+        let supabase = null;
+        if (window.supabase) {
+            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        }
+
+        const tg = window.Telegram?.WebApp;
+        if (tg) {
+            tg.expand();
+            tg.ready();
+        }
+
+        const tgUser = tg?.initDataUnsafe?.user;
+        const telegramId = tgUser ? tgUser.id : 123456789;
+
         let playerData = { honey: 12500, key1: 0, key2: 0, key3: 0, key4: 0, key5: 0 };
+
+        async function loadUserData() {
+            if (!supabase || !telegramId) return;
+
+            try {
+                let { data: user, error } = await supabase
+                    .from('users')
+                    .select('*')
+                    .eq('telegram_id', telegramId)
+                    .maybeSingle();
+
+                if (!user) {
+                    const { data: newUser } = await supabase
+                        .from('users')
+                        .insert([{ 
+                            telegram_id: telegramId, 
+                            username: tgUser?.username || tgUser?.first_name || 'User',
+                            honey: 12500,
+                            key1: 0, key2: 0, key3: 0, key4: 0, key5: 0
+                        }])
+                        .select()
+                        .single();
+                    user = newUser;
+                }
+
+                if (user) {
+                    playerData.honey = user.honey;
+                    playerData.key1 = user.key1 || 0;
+                    playerData.key2 = user.key2 || 0;
+                    playerData.key3 = user.key3 || 0;
+                    playerData.key4 = user.key4 || 0;
+                    playerData.key5 = user.key5 || 0;
+                    updateUI();
+                }
+            } catch (e) {
+                console.error("Ошибка загрузки из Supabase:", e);
+            }
+        }
+
+        async function syncDataToSupabase() {
+            if (!supabase || !telegramId) return;
+
+            try {
+                await supabase
+                    .from('users')
+                    .update({ 
+                        honey: playerData.honey,
+                        key1: playerData.key1,
+                        key2: playerData.key2,
+                        key3: playerData.key3,
+                        key4: playerData.key4,
+                        key5: playerData.key5,
+                        updated_at: new Date()
+                    })
+                    .eq('telegram_id', telegramId);
+            } catch (e) {
+                console.error("Ошибка сохранения в Supabase:", e);
+            }
+        }
+
         let currentLines = 1, isSpinning = false, currentMode = 'bank', currentBankId = 1, currentCaseId = 1;
         const itemWidth = 110; 
         
@@ -424,6 +451,7 @@
                 }
                 playerData.honey -= minesBet;
                 updateUI();
+                syncDataToSupabase();
             }
 
             document.getElementById('minesBetInputField').value = minesBet;
@@ -447,14 +475,10 @@
 
             const gridContainer = document.getElementById('minesGrid');
             gridContainer.innerHTML = '';
-            
             gridContainer.style.gridTemplateColumns = `repeat(${minesGridSize}, minmax(0, 1fr))`;
 
-            if (minesGridSize === 7) {
-                gridContainer.classList.add('mines-grid-7');
-            } else {
-                gridContainer.classList.remove('mines-grid-7');
-            }
+            if (minesGridSize === 7) gridContainer.classList.add('mines-grid-7');
+            else gridContainer.classList.remove('mines-grid-7');
 
             for(let i = 0; i < minesGameState.totalCells; i++) {
                 const tile = document.createElement('div');
@@ -548,6 +572,7 @@
             if (!isMinesDemo) {
                 playerData.honey += minesGameState.winBank;
                 updateUI();
+                syncDataToSupabase();
             }
 
             revealMinesField();
@@ -568,7 +593,6 @@
             }
         }
 
-        // РУЛЕТКА И КЕЙСЫ
         function openHorizontalSlots(bankId) {
             if (isSpinning) return;
             currentMode = 'bank'; currentBankId = bankId;
@@ -683,9 +707,11 @@
                     if (playerData[requiredKey] < currentLines) { alert('Недостаточно ключей!'); return; }
                     playerData[requiredKey] -= currentLines;
                 }
+                updateUI();
+                syncDataToSupabase();
             }
 
-            isSpinning = true; updateUI();
+            isSpinning = true;
             
             const btnHoney = document.getElementById('btnSpinHoney'); if (btnHoney) btnHoney.disabled = true;
             const btnKey = document.getElementById('btnSpinKey'); if (btnKey) btnKey.disabled = true;
@@ -773,33 +799,27 @@
                 }
             }
 
-            if (isFastSpin) {
-                setTimeout(() => {
-                    isSpinning = false; 
-                    if (btnHoney) btnHoney.disabled = false; 
-                    if (btnKey) btnKey.disabled = false;
-                    
-                    if (!isDemo) {
-                        calculatedResults.forEach(res => { if (res.type === 'honey') playerData.honey += res.val; else if (playerData[res.type] !== undefined) playerData[res.type] += 1; });
-                    }
+            const finishSpin = () => {
+                isSpinning = false; 
+                if (btnHoney) btnHoney.disabled = false; 
+                if (btnKey) btnKey.disabled = false;
+                
+                if (!isDemo) {
+                    calculatedResults.forEach(res => { 
+                        if (res.type === 'honey') playerData.honey += res.val; 
+                        else if (playerData[res.type] !== undefined) playerData[res.type] += 1; 
+                    });
                     updateUI();
-                }, 850); 
-            } else {
-                setTimeout(() => {
-                    isSpinning = false; 
-                    if (btnHoney) btnHoney.disabled = false; 
-                    if (btnKey) btnKey.disabled = false;
-                    
-                    if (!isDemo) {
-                        calculatedResults.forEach(res => { if (res.type === 'honey') playerData.honey += res.val; else if (playerData[res.type] !== undefined) playerData[res.type] += 1; });
-                    }
-                    updateUI();
-                }, 4100);
-            }
+                    syncDataToSupabase();
+                }
+            };
+
+            if (isFastSpin) setTimeout(finishSpin, 850);
+            else setTimeout(finishSpin, 4100);
         }
 
         document.addEventListener('DOMContentLoaded', () => {
-            updateUI();
+            loadUserData();
         });
     </script>
 </body>
