@@ -280,7 +280,7 @@
         const tgUser = tg?.initDataUnsafe?.user;
         const telegramId = tgUser ? tgUser.id : 123456789;
 
-        let playerData = { honey: 12500, key1: 0, key2: 0, key3: 0, key4: 0, key5: 0 };
+        let playerData = { honey: 0, key1: 0, key2: 0, key3: 0, key4: 0, key5: 0 };
 
         async function loadUserData() {
             if (!supabaseClient || !telegramId) return;
