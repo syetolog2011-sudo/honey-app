@@ -261,14 +261,14 @@
         <div class="banks-screen-padding"></div>
     </div>
 
-    <script>
-        // 🔑 ТВОИ ДАННЫЕ ИЗ SUPABASE УЖЕ ВСТАВЛЕНЫ:
+   <script>
+        // 🔑 ТВОИ ДАННЫЕ ИЗ SUPABASE:
         const SUPABASE_URL = 'https://rrhhubzibepaolbbedfr.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_saPZ5j1Ap_2GMEqHeRlZoQ_EFNEUXam';
 
-        let supabase = null;
-        if (window.supabase) {
-            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        let supabaseClient = null;
+        if (window.supabase && window.supabase.createClient) {
+            supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         }
 
         const tg = window.Telegram?.WebApp;
@@ -283,17 +283,17 @@
         let playerData = { honey: 12500, key1: 0, key2: 0, key3: 0, key4: 0, key5: 0 };
 
         async function loadUserData() {
-            if (!supabase || !telegramId) return;
+            if (!supabaseClient || !telegramId) return;
 
             try {
-                let { data: user, error } = await supabase
+                let { data: user, error } = await supabaseClient
                     .from('users')
                     .select('*')
                     .eq('telegram_id', telegramId)
                     .maybeSingle();
 
                 if (!user) {
-                    const { data: newUser } = await supabase
+                    const { data: newUser } = await supabaseClient
                         .from('users')
                         .insert([{ 
                             telegram_id: telegramId, 
@@ -321,10 +321,10 @@
         }
 
         async function syncDataToSupabase() {
-            if (!supabase || !telegramId) return;
+            if (!supabaseClient || !telegramId) return;
 
             try {
-                await supabase
+                await supabaseClient
                     .from('users')
                     .update({ 
                         honey: playerData.honey,
@@ -822,5 +822,3 @@
             loadUserData();
         });
     </script>
-</body>
-</html>
