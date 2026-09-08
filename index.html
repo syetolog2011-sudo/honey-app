@@ -7,8 +7,6 @@
     
     <!-- Telegram WebApp SDK -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <!-- Supabase JS SDK -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
     <style>
         body {
@@ -136,7 +134,7 @@
         <div class="key-slot"><img src="key5.png"><div class="key-count" id="ui-key5">0</div></div>
     </div>
     <div class="balance-container">
-        <div class="balance-number" id="ui-balance">12 500</div>
+        <div class="balance-number" id="ui-balance">0</div>
         <img src="honey.png" alt="🍯" class="honey-icon">
     </div>
 
@@ -261,15 +259,9 @@
         <div class="banks-screen-padding"></div>
     </div>
 
-   <script>
-        // 🔑 ТВОИ ДАННЫЕ ИЗ SUPABASE:
-        const SUPABASE_URL = 'https://rrhhubzibepaolbbedfr.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_saPZ5j1Ap_2GMEqHeRlZoQ_EFNEUXam';
-
-        let supabaseClient = null;
-        if (window.supabase && window.supabase.createClient) {
-            supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        }
+    <script>
+        // 🔗 УКАЖИ ССЫЛКУ НА СВОЙ PYTHON-СЕРВЕР НИЖЕ:
+        const API_URL = 'https://твой-домен.com/api'; 
 
         const tg = window.Telegram?.WebApp;
         if (tg) {
@@ -283,61 +275,45 @@
         let playerData = { honey: 0, key1: 0, key2: 0, key3: 0, key4: 0, key5: 0 };
 
         async function loadUserData() {
-            if (!supabaseClient || !telegramId) return;
+            if (!telegramId) return;
 
             try {
-                let { data: user, error } = await supabaseClient
-                    .from('users')
-                    .select('*')
-                    .eq('telegram_id', telegramId)
-                    .maybeSingle();
-
-                if (!user) {
-                    const { data: newUser } = await supabaseClient
-                        .from('users')
-                        .insert([{ 
-                            telegram_id: telegramId, 
-                            username: tgUser?.username || tgUser?.first_name || 'User',
-                            honey: 12500,
-                            key1: 0, key2: 0, key3: 0, key4: 0, key5: 0
-                        }])
-                        .select()
-                        .single();
-                    user = newUser;
-                }
+                const response = await fetch(`${API_URL}/get_user?user_id=${telegramId}&username=${encodeURIComponent(tgUser?.username || tgUser?.first_name || 'User')}`);
+                const user = await response.json();
 
                 if (user) {
-                    playerData.honey = user.honey;
-                    playerData.key1 = user.key1 || 0;
-                    playerData.key2 = user.key2 || 0;
-                    playerData.key3 = user.key3 || 0;
-                    playerData.key4 = user.key4 || 0;
-                    playerData.key5 = user.key5 || 0;
+                    playerData.honey = user.honey ?? 0;
+                    playerData.key1 = user.key1 ?? 0;
+                    playerData.key2 = user.key2 ?? 0;
+                    playerData.key3 = user.key3 ?? 0;
+                    playerData.key4 = user.key4 ?? 0;
+                    playerData.key5 = user.key5 ?? 0;
                     updateUI();
                 }
             } catch (e) {
-                console.error("Ошибка загрузки из Supabase:", e);
+                console.error("Ошибка загрузки данных с сервера:", e);
             }
         }
 
-        async function syncDataToSupabase() {
-            if (!supabaseClient || !telegramId) return;
+        async function syncDataToBackend() {
+            if (!telegramId) return;
 
             try {
-                await supabaseClient
-                    .from('users')
-                    .update({ 
+                await fetch(`${API_URL}/update_user`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        telegram_id: telegramId,
                         honey: playerData.honey,
                         key1: playerData.key1,
                         key2: playerData.key2,
                         key3: playerData.key3,
                         key4: playerData.key4,
-                        key5: playerData.key5,
-                        updated_at: new Date()
+                        key5: playerData.key5
                     })
-                    .eq('telegram_id', telegramId);
+                });
             } catch (e) {
-                console.error("Ошибка сохранения в Supabase:", e);
+                console.error("Ошибка сохранения на сервер:", e);
             }
         }
 
@@ -451,7 +427,7 @@
                 }
                 playerData.honey -= minesBet;
                 updateUI();
-                syncDataToSupabase();
+                syncDataToBackend();
             }
 
             document.getElementById('minesBetInputField').value = minesBet;
@@ -572,7 +548,7 @@
             if (!isMinesDemo) {
                 playerData.honey += minesGameState.winBank;
                 updateUI();
-                syncDataToSupabase();
+                syncDataToBackend();
             }
 
             revealMinesField();
@@ -708,7 +684,7 @@
                     playerData[requiredKey] -= currentLines;
                 }
                 updateUI();
-                syncDataToSupabase();
+                syncDataToBackend();
             }
 
             isSpinning = true;
@@ -810,7 +786,7 @@
                         else if (playerData[res.type] !== undefined) playerData[res.type] += 1; 
                     });
                     updateUI();
-                    syncDataToSupabase();
+                    syncDataToBackend();
                 }
             };
 
@@ -822,3 +798,5 @@
             loadUserData();
         });
     </script>
+</body>
+</html>
